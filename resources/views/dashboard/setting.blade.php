@@ -3,6 +3,7 @@
 
 <div class="container-fluid">
     <button type="button" onclick="goBack()" style="float: right;" class="btn btn-info">Back To Dashboard</button>
+    <br /><br />
     <div class="row">
         <div class="col-xl-3 col-lg-6 col-md-12 col-12 mt-6">
             <!-- card -->
@@ -26,7 +27,8 @@
                         <p class="mb-0">
                             <span class="text-dark me-8"></span>
 
-                            <span class="text-dark me-2"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal">Add</button></span>
+                            <span class="text-dark me-2"><button class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#productModal">Add</button></span>
 
                         </p>
                     </div>
@@ -55,7 +57,8 @@
                         <p class="mb-0">
                             <span class="text-dark me-8"></span>
 
-                            <span class="text-dark me-2"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">Add</button></span>
+                            <span class="text-dark me-2"><button class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#categoryModal">Add</button></span>
                         </p>
                     </div>
                 </div>
@@ -84,8 +87,8 @@
 
                             <span class="text-dark me-8"></span>
 
-                            <span class="text-dark me-2"><button
-                                    class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#subcategoryModal">Add</button></span>
+                            <span class="text-dark me-2"><button class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#subcategoryModal">Add</button></span>
                         </p>
                     </div>
                 </div>
@@ -114,8 +117,8 @@
 
                             <span class="text-dark me-8"></span>
 
-                            <span class="text-dark me-2"><button
-                                    class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#taxesModal">Add</button></span>
+                            <span class="text-dark me-2"><button class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#taxesModal">Add</button></span>
                         </p>
                     </div>
                 </div>
@@ -145,8 +148,8 @@
 
                             <span class="text-dark me-8"></span>
 
-                            <span class="text-dark me-2"><button
-                                    class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#passwordModal">Add</button></span>
+                            <span class="text-dark me-2"><button class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#passwordModal">Add</button></span>
                         </p>
                     </div>
                 </div>
@@ -161,9 +164,11 @@
 @php
 $products = \App\Models\Product::all();
 $categorys = \App\Models\Category::all();
+$taxs = \App\Models\Tax::where('status','1')->get();
 @endphp
 <!-- Category Modal -->
-<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -215,7 +220,8 @@ $categorys = \App\Models\Category::all();
 <!-- Category Model END -->
 
 <!-- Sub Category Modal -->
-<div class="modal fade" id="subcategoryModal" tabindex="-1" aria-labelledby="subcategoryModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="subcategoryModal" tabindex="-1" aria-labelledby="subcategoryModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -278,7 +284,8 @@ $categorys = \App\Models\Category::all();
 <!-- Sub Category Model END -->
 
 <!-- Sub Category Modal -->
-<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -319,7 +326,8 @@ $categorys = \App\Models\Category::all();
 <!-- Product Model END -->
 
 <!-- Taxes Modal -->
-<div class="modal fade" id="taxesModal" tabindex="-1" aria-labelledby="taxesModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="taxesModal" tabindex="-1" aria-labelledby="taxesModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -335,17 +343,78 @@ $categorys = \App\Models\Category::all();
 
                     <div class="mb-3">
                         <label for="name" class="form-label">GST</label>
-                        <input type="text" class="form-control" id="gst" name="gst" required>
+                        <input type="text" class="form-control"
+                            value="<?php echo ($taxs[0]->gst) ? $taxs[0]->gst :'' ?>" id="gst" name="gst" required>
                     </div>
+                    @if ($taxs->isNotEmpty())
+                    @foreach ($taxs as $key => $value)
+                    <div class="mb-3">
+                        @if ($loop->first)
+                        <label for="name" class="form-label">Additional Tax</label>
+                        @endif
+                        @if ($value->tax != '' || $value->tax !=null)
+                        <div id="tax-container">
+                            <div class="mb-3 d-flex align-items-center">
+                                <input type="text" class="form-control" value="<?php echo $value->tax ?>" name="tax[]"
+                                    required>
+
+                                @if ($loop->first)
+                                <button type="button" class="btn btn-success add-tax ms-2">+</button>
+                                @else
+                                <button type="button" class="btn btn-danger remove-tax ms-2">-</button>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                    @endforeach
+                    @else
                     <div class="mb-3">
                         <label for="name" class="form-label">Additional Tax</label>
-                        <input type="text" class="form-control" id="tax" name="tax" required>
+                        <div id="tax-container">
+                            <div class="mb-3 d-flex align-items-center">
+                                <input type="text" class="form-control" name="tax[]" required>
+                                <button type="button" class="btn btn-success add-tax ms-2">+</button>
+                            </div>
+                        </div>
                     </div>
+                    @endif
+                    <div id="additional-taxes"></div>
+                    @if ($taxs->isNotEmpty())
+                    @foreach ($taxs as $key => $value)
+                    <div class="mb-3">
+                        @if ($loop->first)
+                        <label for="name" class="form-label">Flange</label>
+                        @endif
+                        @if ($value->flange != '' || $value->flange !=null)
+                        <div id="flange-container">
+                            <div class="mb-3 d-flex align-items-center">
+                                <input type="text" class="form-control" value="<?php echo $value->flange ?>"
+                                    name="flange[]" required>
+
+                                @if ($loop->first)
+                                <button type="button" class="btn btn-success add-flange ms-2">+</button>
+                                @else
+                                <button type="button" class="btn btn-danger remove-flange ms-2">-</button>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                    @endforeach
+                    @else
                     <div class="mb-3">
                         <label for="name" class="form-label">Flange %</label>
-                        <input type="text" class="form-control" id="flange" name="flange" required>
+                        <div id="flange-container">
+                            <div class="mb-3 d-flex align-items-center">
+                                <input type="text" class="form-control" name="flange[]" required>
+                                <button type="button" class="btn btn-success add-flange ms-2">+</button>
+                            </div>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    @endif
+                    <div id="additional-flange"></div>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
         </div>
@@ -354,7 +423,8 @@ $categorys = \App\Models\Category::all();
 <!-- Taxes Model END -->
 
 <!-- Password Modal -->
-<div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -442,7 +512,6 @@ $categorys = \App\Models\Category::all();
                 showAlert('success', 'Category added successfully!');
                 $('#categoryForm')[0].reset();
                 table.ajax.reload(); // Reload DataTable
-                location.reload();
             },
             error: function(error) {
                 console.error(error);
@@ -590,7 +659,6 @@ $categorys = \App\Models\Category::all();
                 showAlert('success', 'Product added successfully!');
                 $('#productForm')[0].reset();
                 table3.ajax.reload(); // Reload DataTable
-                location.reload();
             },
             error: function(error) {
                 console.error(error);
@@ -608,11 +676,8 @@ $categorys = \App\Models\Category::all();
             method: "POST",
             data: $(this).serialize(),
             success: function(response) {
-                // alert('Taxes added successfully!');
                 showAlert('success', 'Taxes added successfully!');
                 $('#taxesForm')[0].reset();
-                // table.ajax.reload(); // Reload DataTable
-                location.reload();
             },
             error: function(error) {
                 console.error(error);
@@ -630,18 +695,41 @@ $categorys = \App\Models\Category::all();
             type: "POST",
             data: $(this).serialize(),
             success: function(response) {
-                // alert('Password changed successfully!');
                 showAlert('success', 'Password changed successfully!');
-                $('#passwordForm')[0].reset();
-                // table.ajax.reload(); // Reload DataTable
-                location.reload();
             },
             error: function(error) {
                 console.error(error);
-                // alert('Something went wrong!');
                 showAlert('danger', 'Something went wrong. Please try again.');
             }
         });
+    });
+
+    $(document).on('click', '.add-tax', function () {
+        const newTaxField = `
+        <div class="mb-3 d-flex align-items-center">
+            <input type="text" class="form-control" name="tax[]" required>
+            <button type="button" class="btn btn-danger remove-tax ms-2">-</button>
+        </div>
+        `;
+        $('#additional-taxes').append(newTaxField);
+    });
+
+    // Handler for removing a text box
+    $(document).on('click', '.remove-tax', function () {
+        $(this).closest('.mb-3').remove();
+    });
+
+    $(document).on('click', '.add-flange', function () {
+        const newTaxField = `<div class="mb-3 d-flex align-items-center">
+            <input type="text" class="form-control" name="flange[]" required>
+            <button type="button" class="btn btn-danger remove-flange ms-2">-</button>
+        </div>`;
+        $('#additional-flange').append(newTaxField);
+    });
+
+    // Handler for removing a text box
+    $(document).on('click', '.remove-flange', function () {
+        $(this).closest('.mb-3').remove();
     });
 
     function showAlert(type, message) {
@@ -649,8 +737,7 @@ $categorys = \App\Models\Category::all();
         <div class="alert alert-${type} alert-dismissible fade show" role="alert">
             ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    `;
+        </div>`;
         $('.alert-container').html(alertHTML); // Insert alert into container
     }
 

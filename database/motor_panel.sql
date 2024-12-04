@@ -216,6 +216,28 @@ INSERT INTO `users` (`id`, `name`, `role`, `email`, `email_verified_at`, `passwo
 -- Indexes for dumped tables
 --
 
+CREATE TABLE `products_add_data` (
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `subcategory_id` int(11) NOT NULL,
+  `flange` varchar(100) NOT NULL,
+  `footval` varchar(100) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+ALTER TABLE `products_add_data` CHANGE `flange` `flange` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
+ALTER TABLE `products_add_data` CHANGE `footval` `footval` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `products_add_data`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `products_add_data`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
+
 --
 -- Indexes for table `categories`
 --

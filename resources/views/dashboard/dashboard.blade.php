@@ -94,7 +94,8 @@
 
                             <span class="text-dark me-8"></span>
 
-                            <span class="text-dark me-2"><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFormModal">Add</button></span>
+                            <span class="text-dark me-2"><button class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#addFormModal">Add</button></span>
                         </p>
                     </div>
                 </div>
@@ -139,7 +140,8 @@
 $products = \App\Models\Product::where('status', '1')->get();
 @endphp
 <!-- Sub Category Modal -->
-<div class="modal fade" id="addFormModal" tabindex="-1" aria-labelledby="addFormModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="addFormModal" tabindex="-1" aria-labelledby="addFormModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -147,13 +149,20 @@ $products = \App\Models\Product::where('status', '1')->get();
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="alert-container">
+                    <!-- Alerts will be dynamically inserted here -->
+                </div>
                 <form id="addForm">
                     @csrf
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                                <a href="#" data-bs-toggle="modal" class="productClick" data-bs-target="#catFormModal" data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button class="btn btn-primary" style="width: 20%; "><?php echo $value->product_name; ?></button>&nbsp;&nbsp;
-                                </a>
+                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
+                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                class="btn btn-primary mt-6" style="width: 20%; ">
+                                <?php echo $value->product_name; ?>
+                            </button>&nbsp;&nbsp;
+                        </a>
                         <?php }
                         } ?>
                     </div>
@@ -164,10 +173,14 @@ $products = \App\Models\Product::where('status', '1')->get();
 </div>
 <!-- Product Model END -->
 @php
-$categorys = \App\Models\Category::select(['categories.id', 'categories.category_name', 'categories.product_id', 'products.product_name', 'products.id as productID', 'categories.created_at'])->leftJoin('products', 'products.id', '=', 'categories.product_id')->get();
+$categorys = \App\Models\Category::select(['categories.id', 'categories.category_name', 'categories.product_id',
+'products.product_name', 'products.id as productID', 'categories.created_at'])->leftJoin('products', 'products.id', '=',
+'categories.product_id')->get();
+$taxs = \App\Models\Tax::where('status','1')->get();
 @endphp
 <!-- Sub Category Modal -->
-<div class="modal fade" id="catFormModal" tabindex="-1" aria-labelledby="catFormModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="catFormModal" tabindex="-1" aria-labelledby="catFormModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -175,6 +188,9 @@ $categorys = \App\Models\Category::select(['categories.id', 'categories.category
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="alert-container">
+                    <!-- Alerts will be dynamically inserted here -->
+                </div>
                 <form id="catForm">
                     @csrf
                     <div class="mb-3">
@@ -188,25 +204,37 @@ $categorys = \App\Models\Category::select(['categories.id', 'categories.category
                     </div>
                     <div id="subcategory-container">
                     </div>
+                    <input type="hidden" name="product_id" id="product_ids" value="" />
                     <div class="mb-3">
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" id="option1" checked name="typeOption" value="option1">
-                            <label class="form-check-label" for="option1">Foot</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" checked name="typeOption" id="inlineRadio1"
+                                value="Foot">
+                            <label class="form-check-label" for="inlineRadio1">Foot</label>
                         </div>
-                        <div class="mb-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="typeOption" id="inlineRadio2"
+                                value="Flange">
+                            <label class="form-check-label" for="inlineRadio2">Flange</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check" id="FootvalDiv">
                             <input type="text" class="form-control" id="Footval" name="Footval" required>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" id="option2" name="typeOption" value="option2">
-                            <label class="form-check-label" for="option2">Flange</label>
-                        </div>
-                    </div>
+
                     <div class="mb-3 flangeShow">
-                        <div class="form-check">
-                            <input type="text" class="form-control" id="flange1" name="flange1" value="">
-                        </div>
+                        @if ($taxs->isNotEmpty())
+                        @foreach ($taxs as $key => $value)
+                        @if ($value->flange != '' || $value->flange !=null)
+                        <input type="radio" class="btn-check" name="flange" id="flange{{ $value->flange }}"
+                            autocomplete="off" value="{{ $value->flange }}" checked>
+                        <label class="btn btn-outline-success" for="flange{{ $value->flange }}">{{ $value->flange
+                            }}</label>&nbsp;&nbsp;
+
+                        @endif
+                        @endforeach
+                        @endif
                     </div>
 
                     <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
@@ -224,6 +252,22 @@ $categorys = \App\Models\Category::select(['categories.id', 'categories.category
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
 <script>
+    $('#catForm').on('submit', function(e) {
+    e.preventDefault();
+    $.ajax({
+            url: "{{ route('addform.store') }}",
+            method: "POST",
+            data: $(this).serialize(),
+            success: function(response) {
+                showAlert('success', 'Product added successfully!');
+                $('#catForm')[0].reset();
+            },
+            error: function(error) {
+                console.error(error);
+                showAlert('danger', 'Something went wrong. Please try again.');
+            }
+        });
+    })
     document.getElementById('resetButton').addEventListener('click', function() {
         document.getElementById('catForm').reset();
     });
@@ -235,7 +279,6 @@ $categorys = \App\Models\Category::select(['categories.id', 'categories.category
             method: "POST",
             data: $(this).serialize(),
             success: function(response) {
-                // alert('Product added successfully!');
                 showAlert('success', 'Product added successfully!');
                 $('#productForm')[0].reset();
                 table3.ajax.reload(); // Reload DataTable
@@ -248,14 +291,16 @@ $categorys = \App\Models\Category::select(['categories.id', 'categories.category
         });
     });
     $(".flangeShow").css('display', 'none');
-    $('#option2').on('click', function(e) {
-        e.preventDefault();
-        if ($(this).val() == 'option2') {
+    $('.form-check-input').on('click', function(e) {
+        if ($(this).val() == 'Flange') {
             $(".flangeShow").css('display', 'block');
-            $("#Footval").css('display', 'none');
+            $(".flangeShow").css('margin-left','16px');
+            $("#FootvalDiv").css('display', 'none');
+            $("#Footval").removeAttr('required');
         } else {
             $(".flangeShow").css('display', 'none');
-            $("#Footval").css('display', 'block');
+            $("#FootvalDiv").css('display', 'block');
+            $("#Footval").attr('required',true);
         }
     });
 
@@ -264,6 +309,9 @@ $categorys = \App\Models\Category::select(['categories.id', 'categories.category
         $('#product-dropdown').html('<option value="">Select Product</option>');
         $('#subcategory-dropdown').html('<option value="">Select Subcategory</option>');
         var product_id = $(this).data('id');
+        var product_title = $(this).data('title');
+        $("#catFormModalLabel").html(product_title);
+        $("#product_ids").val(product_id);
         if (product_id) {
             $.ajax({
                 url: '{{ route("get.categorys", "") }}/' + product_id,
@@ -277,7 +325,6 @@ $categorys = \App\Models\Category::select(['categories.id', 'categories.category
                 },
                 error: function(error) {
                     console.error(error);
-                    // alert('Something went wrong!');
                     showAlert('danger', 'Something went wrong. Please try again.');
                 }
             });
@@ -294,13 +341,13 @@ $categorys = \App\Models\Category::select(['categories.id', 'categories.category
                 type: 'GET',
                 success: function(data) {
                     console.log(' - data - ', data);
-
+                    $("#subcategory-container").html('');
                     var newSubcategory = ``;
                     if (data) {
                         $.each(data, function(id, category_name) {
                             newSubcategory = `<div class="mb-3 row">
-                                                    <label for="subname" class="col-sm-3 col-form-label ">` + category_name + `</label>
-                                                    <div class="col-sm-9">
+                                                    <label for="subname" class="col-sm-2 col-form-label "><b>` + category_name + `</b></label>
+                                                    <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="subname" name="subcategory_name[]" required>
                                                     </div>
                                                 </div>`;
@@ -315,12 +362,10 @@ $categorys = \App\Models\Category::select(['categories.id', 'categories.category
     });
 
     function showAlert(type, message) {
-        const alertHTML = `
-        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+        const alertHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
             ${message}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    `;
+        </div>`;
         $('.alert-container').html(alertHTML); // Insert alert into container
     }
 

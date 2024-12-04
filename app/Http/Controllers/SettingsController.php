@@ -48,10 +48,27 @@ class SettingsController extends Controller
         $request->validate([
             'gst' => 'required',
             'tax' => 'required',
-            'flange' => 'required'
+            'tax.*' => 'required|numeric|min:0',
+            'flange' => 'required',
+            'flange.*' => 'required|numeric|min:0',
         ]);
 
-        Tax::create($request->except('_token'));
+        // Get common fields (like GST)
+        $gst = $request->input('gst');
+
+        // Process each tax and flange value
+        foreach ($request->input('tax') as $index => $taxValue) {
+            $flangeValue = $request->input('flange')[$index] ?? null;
+            // Create or update record
+            Tax::updateOrCreate(
+                // Matching conditions (update if these match)
+                ['gst' => $gst, 'tax' => $taxValue],
+                // Fields to update or create
+                ['flange' => $flangeValue]
+            );
+        }
+
+        // Tax::create($request->except('_token'));
         return response()->json(['success' => 'Taxes added successfully']);
     }
 
