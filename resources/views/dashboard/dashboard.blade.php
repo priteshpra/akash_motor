@@ -65,7 +65,8 @@
                             {{-- <span class="text-dark me-2"><button class="btn btn-info">Details</button></span> --}}
                             <span class="text-dark me-8"></span>
 
-                            <span class="text-dark me-2"><button class="btn btn-primary">Details</button></span>
+                            <span class="text-dark me-2"><button class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#viewModal">Details</button></span>
                         </p>
                     </div>
                 </div>
@@ -136,6 +137,9 @@
     </div>
 </div>
 <!-- /.container-fluid -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 @php
 $products = \App\Models\Product::where('status', '1')->get();
 @endphp
@@ -246,6 +250,39 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 </div>
 <!-- Product Model END -->
 
+<!-- View Modal -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModalLabel">View Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert-container">
+                    <!-- Alerts will be dynamically inserted here -->
+                </div>
+                <h6>View List</h6>
+                <table style="width: 100%;" id="viewTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Product Name</th>
+                            <th>Category Name</th>
+                            <th>Sub-Category Name</th>
+                            <th>Sub Cordinates</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- View Model END -->
+
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables JS -->
@@ -346,9 +383,10 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     if (data) {
                         $.each(data, function(id, category_name) {
                             newSubcategory = `<div class="mb-3 row">
+                                <input type="hidden" class="form-control" id="subname" name="subcategory_id[]" value='`+ id +`'>
                                                     <label for="subname" class="col-sm-2 col-form-label "><b>` + category_name + `</b></label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="subname" name="subcategory_name[]" required>
+                                                        <input type="text" class="form-control" id="subname" name="subcategory_val[]" required>
                                                     </div>
                                                 </div>`;
                             $('#subcategory-container').append(newSubcategory);
@@ -372,5 +410,36 @@ $taxs = \App\Models\Tax::where('status','1')->get();
     $(document).on('click', '.btn-close', function() {
         location.reload(); // Reload the page
     });
+
+    // Load DataTables for main table
+        var table = $('#viewTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('addform.index') }}",
+            columns: [
+                {
+                    data: 'id',
+                    name: 'id'
+                },
+                {
+                    data: 'product_name',
+                    name: 'product_name'
+                },
+                {
+                    data: 'category_name',
+                    name: 'category_name'
+                },
+                {
+                    data: 'subcategory_name',
+                    name: 'subcategory_name'
+                },
+                {
+                    data: 'subcategory_val',
+                    name: 'subcategory_val'
+                },
+                { data: 'action', name: 'action', orderable: false, searchable: false } // Action column
+            ]
+        });
+        // Handle form submission
 </script>
 @endsection

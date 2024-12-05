@@ -45,6 +45,12 @@ Route::post('/product', [ProductController::class, 'store'])->name('product.stor
 Route::get('/get-categorys/{categoryId}', [CategoryController::class, 'geCategorys'])->name('get.categorys');
 Route::get('/get-subcategorys/{categoryId}', [SubCategoryController::class, 'geSubCategorys'])->name('get.subcategorys');
 Route::put('/settings/{id}', [SettingsController::class, 'update']);
+
+// Route for editing a product
+Route::get('/addform/{id}/edit', [AddformController::class, 'edit'])->name('addform.edit');
+
+// Route for deleting a product
+Route::delete('/addform/{id}', [AddformController::class, 'destroy'])->name('addform.delete');
 // });
 
 
