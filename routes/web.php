@@ -47,10 +47,14 @@ Route::get('/get-subcategorys/{categoryId}', [SubCategoryController::class, 'geS
 Route::put('/settings/{id}', [SettingsController::class, 'update']);
 
 // Route for editing a product
-Route::get('/addform/{id}/edit', [AddformController::class, 'edit'])->name('addform.edit');
+// Route::get('/addform/{id}/edit', [AddformController::class, 'edit'])->name('addform.edit');
+Route::post('/addform/{id}/edit', [AddformController::class, 'edit'])->name('addform.edit');
+
 
 // Route for deleting a product
-Route::delete('/addform/{id}', [AddformController::class, 'destroy'])->name('addform.delete');
+// Route::delete('/addform/{id}', [AddformController::class, 'destroy'])->name('addform.delete');
+Route::delete('/addform/{id}/delete', [AddformController::class, 'destroy'])->name('addform.delete');
+
 // });
 
 

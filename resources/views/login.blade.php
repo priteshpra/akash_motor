@@ -26,7 +26,8 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="custom-control custom-checkbox small">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                                        <input type="checkbox" class="custom-control-input" name="remember"
+                                            id="customCheck">
                                         <label class="custom-control-label" for="customCheck">Remember
                                             Me</label>
                                     </div>
@@ -48,9 +49,9 @@
                             {{-- <div class="text-center">
                                 <a class="small" href="forgot-password.html">Forgot Password?</a>
                             </div> --}}
-                            <div class="text-center">
+                            {{-- <div class="text-center">
                                 <a class="small" href="/register">Create an Account!</a>
-                            </div>
+                            </div> --}}
                             <ul class="nav flex-column"">
                                 @foreach ($errors->all() as $item)
                                     <li class=" nav-item text-danger">{{ $item }}</li>

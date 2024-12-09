@@ -48,7 +48,8 @@
                     <div>
                         <h1 class="fw-bold">0</h1>
                         <p class="mb-0">
-                            <span class="text-dark me-2"><button class="btn btn-info">Details</button></span>
+                            <span class="text-dark me-2"><button class="btn btn-info" data-bs-toggle="modal"
+                                    data-bs-target="#calculateModal">Details</button></span>
                             <span class="text-dark me-8"></span>
 
                             {{-- <span class="text-dark me-2"><button class="btn btn-primary">Details</button></span>
@@ -159,7 +160,7 @@
 @php
 $products = \App\Models\Product::where('status', '1')->get();
 @endphp
-<!-- Sub Category Modal -->
+<!-- Add Form Modal -->
 <div class="modal fade" id="addFormModal" tabindex="-1" aria-labelledby="addFormModalLabel" aria-hidden="true"
     data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
@@ -177,12 +178,12 @@ $products = \App\Models\Product::where('status', '1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
-                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                        class="btn btn-primary mt-6" style="width: 20%; ">
-                                        <?php echo $value->product_name; ?>
-                                    </button>&nbsp;&nbsp;
-                                </a>
+                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
+                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                class="btn btn-primary mt-6" style="width: 20%; ">
+                                <?php echo $value->product_name; ?>
+                            </button>&nbsp;&nbsp;
+                        </a>
                         <?php }
                         } ?>
                     </div>
@@ -191,7 +192,8 @@ $products = \App\Models\Product::where('status', '1')->get();
         </div>
     </div>
 </div>
-<!-- Product Model END -->
+<!-- Add Form END -->
+
 @php
 $categorys = \App\Models\Category::select(['categories.id', 'categories.category_name', 'categories.product_id',
 'products.product_name', 'products.id as productID', 'categories.created_at'])->leftJoin('products', 'products.id', '=',
@@ -225,16 +227,18 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div id="subcategory-container">
                     </div>
                     <input type="hidden" name="product_id" id="product_ids" value="" />
-                    <div class="" id="FootvalDiv">
+                    <div class="FootvalDiv" id="FootvalDiv">
                         <div class="mb-33 d-flex justify-content-between">
                             <label for="name" class="form-label">Price</label>
-                            <input type="text" class="form-controls numericInput" id="Footval" name="Footval" placeholder="Price" required>
+                            <input type="text" class="form-controls numericInput Footval" id="Footval" name="Footval"
+                                placeholder="Price" required>
                         </div>
                     </div>
-                    <div class="" id="FlangevalDiv">
+                    <div class="FlangevalDiv" id="FlangevalDiv">
                         <div class="mb-33 d-flex justify-content-between">
                             <label for="name" class="form-label">Price</label>
-                            <input type="text" class="form-controls numericInput" id="Flangeval" name="Flangeval" placeholder="Price" required>
+                            <input type="text" class="form-controls numericInput Flangeval" id="Flangeval"
+                                name="Flangeval" placeholder="Price" required>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -254,8 +258,8 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         @if ($taxs->isNotEmpty())
                         @foreach ($taxs as $key => $value)
                         @if ($value->flange != '' || $value->flange !=null)
-                        <input type="radio" class="btn-check form-control" placeholder="Price" name="flange" id="flange{{ $value->flange }}"
-                            autocomplete="off" value="{{ $value->flange }}" checked>
+                        <input type="radio" class="btn-check form-control" placeholder="Price" name="flange"
+                            id="flange{{ $value->flange }}" autocomplete="off" value="{{ $value->flange }}" checked>
                         <label class="btn btn-outline-success" for="flange{{ $value->flange }}">{{ $value->flange
                             }}</label>&nbsp;&nbsp;
 
@@ -274,6 +278,84 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 </div>
 <!-- Product Model END -->
 
+<!-- Edit Form Modal -->
+<div class="modal fade" id="editFormModal" tabindex="-1" aria-labelledby="editFormModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editFormModalLabel">Products</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert-container">
+                    <!-- Alerts will be dynamically inserted here -->
+                </div>
+                <form id="catForm">
+                    @csrf
+                    <div class="mb-33 d-flex justify-content-between">
+                        <label for="name" class="form-label">Select Category</label>
+                        <select id="categorys_d" name="category_id" class="form-controls form-select" required>
+                            <option value="">Select Category</option>
+                            @foreach ($categorys as $category)
+                            <option value="{{$category->id}}">{{$category->category_name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div id="subcategorys-containers">
+                    </div>
+                    <input type="hidden" name="product_id" id="product_ids" value="" />
+                    <div class="FootvalDiv" id="FootvalDiv">
+                        <div class="mb-33 d-flex justify-content-between">
+                            <label for="name" class="form-label">Price</label>
+                            <input type="text" class="form-controls numericInput Footval" id="Footval" name="Footval"
+                                placeholder="Price" required>
+                        </div>
+                    </div>
+                    <div class="FlangevalDiv" id="FlangevalDiv">
+                        <div class="mb-33 d-flex justify-content-between">
+                            <label for="name" class="form-label">Price</label>
+                            <input type="text" class="form-controls numericInput Flangeval" id="Flangeval"
+                                name="Flangeval" placeholder="Price" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" checked name="typeOption" id="inlineRadio1"
+                                value="Foot">
+                            <label class="form-check-label" for="inlineRadio1">Foot</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="typeOption" id="inlineRadio2"
+                                value="Flange">
+                            <label class="form-check-label" for="inlineRadio2">Flange</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 flangeShow">
+                        @if ($taxs->isNotEmpty())
+                        @foreach ($taxs as $key => $value)
+                        @if ($value->flange != '' || $value->flange !=null)
+                        <input type="radio" class="btn-check form-control" placeholder="Price" name="flange"
+                            id="flange{{ $value->flange }}" autocomplete="off" value="{{ $value->flange }}" checked>
+                        <label class="btn btn-outline-success" for="flange{{ $value->flange }}">{{ $value->flange
+                            }}</label>&nbsp;&nbsp;
+
+                        @endif
+                        @endforeach
+                        @endif
+                    </div>
+
+
+                    <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit Form Model END -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- View Modal -->
 <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true"
     data-bs-backdrop="static" data-bs-keyboard="false">
@@ -307,12 +389,94 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 </div>
 <!-- View Model END -->
 
+<!-- Calculate Modal -->
+<div class="modal fade" id="calculateModal" tabindex="-1" aria-labelledby="calculateModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="calculateModalLabel">Products</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert-container">
+                    <!-- Alerts will be dynamically inserted here -->
+                </div>
+                <form id="catForm">
+                    @csrf
+                    <div class="mb-33 d-flex justify-content-between">
+                        <label for="name" class="form-label">Select Category</label>
+                        <select id="categorys" name="category_id" class="form-controls form-select" required>
+                            <option value="">Select Category</option>
+                            @foreach ($categorys as $category)
+                            <option value="{{$category->id}}">{{$category->category_name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div id="subcategory-container">
+                    </div>
+                    <input type="hidden" name="product_id" id="product_ids" value="" />
+                    <div class="FootvalDiv" id="FootvalDiv">
+                        <div class="mb-33 d-flex justify-content-between">
+                            <label for="name" class="form-label">Price</label>
+                            <input type="text" class="form-controls numericInput Footval" id="Footval" name="Footval"
+                                placeholder="Price" required>
+                        </div>
+                    </div>
+                    <div class="FlangevalDiv" id="FlangevalDiv">
+                        <div class="mb-33 d-flex justify-content-between">
+                            <label for="name" class="form-label">Price</label>
+                            <input type="text" class="form-controls numericInput Flangeval" id="Flangeval"
+                                name="Flangeval" placeholder="Price" required>
+                        </div>
+                    </div>
+                    <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
+                    <button type="submit" class="btn btn-primary">Calculate</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Calculate Model END -->
+
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
 <script>
+    function getFormData(ID) {
+        $.ajaxSetup({
+            headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: "{{ route('addform.edit', ':id') }}".replace(':id', ID),
+            method: "POST",
+            data: {ID},
+            success: function(response) {
+                $("#categorys_d").val(response.data.category_id);
+                $("#categorys_d").trigger('change');
+                var newSubcategory = `<div class="mb-3 row">
+                    <input type="hidden" class="form-control" id="subname" name="subcategory_id[]" value='` + response.data.id + `'>
+                    <label for="subname" class="col-sm-3 col-form-label "><b>` + response.data.subcategory_name + `</b></label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="subname" value="`+ response.data.subcategory_val +`" name="subcategory_val[]" required>
+                    </div>
+                </div>`;
+                $('#subcategorys-containers').append(newSubcategory);
+                $(".footval").val(response.data.footval);
+                $(".flange").val(response.data.flange);
+                console.log(' === response === ', response.data);
+
+            },
+            error: function(error) {
+                console.error(error);
+                showAlert('danger', 'Something went wrong. Please try again.');
+            }
+        });
+    }
     $('#catForm').on('submit', function(e) {
         e.preventDefault();
         $.ajax({
@@ -355,21 +519,21 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         });
     });
     $(".flangeShow").css('display', 'none');
-    $("#FlangevalDiv").css('display', 'none');
+    $(".FlangevalDiv").css('display', 'none');
     $('.form-check-input').on('click', function(e) {
         if ($(this).val() == 'Flange') {
             $(".flangeShow").css('display', 'block');
-            $("#FlangevalDiv").css('display', 'block');
+            $(".FlangevalDiv").css('display', 'block');
             $(".flangeShow").css('margin-left', '16px');
-            $("#FootvalDiv").css('display', 'none');
-            $("#Footval").removeAttr('required');
-            $("#Flangeval").attr('required', true);
+            $(".FootvalDiv").css('display', 'none');
+            $(".Footval").removeAttr('required');
+            $(".Flangeval").attr('required', true);
         } else {
             $(".flangeShow").css('display', 'none');
-            $("#FlangevalDiv").css('display', 'none');
-            $("#FootvalDiv").css('display', 'block');
-            $("#Footval").attr('required', true);
-            $("#Flangeval").removeAttr('required');
+            $(".FlangevalDiv").css('display', 'none');
+            $(".FootvalDiv").css('display', 'block');
+            $(".Footval").attr('required', true);
+            $(".Flangeval").removeAttr('required');
         }
     });
 
