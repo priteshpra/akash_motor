@@ -55,18 +55,27 @@ class SettingsController extends Controller
 
         // Get common fields (like GST)
         $gst = $request->input('gst');
+        $taxValues = $request->input('tax');
+        $flangeValues = $request->input('flange');
 
-        // Process each tax and flange value
-        foreach ($request->input('tax') as $index => $taxValue) {
-            $flangeValue = $request->input('flange')[$index] ?? null;
-            // Create or update record
-            Tax::updateOrCreate(
+        $maxCount = max(count($taxValues), count($flangeValues));
+        Tax::where('gst', $gst)->delete();
+        // Iterate over the maximum length
+        for ($index = 0; $index < $maxCount; $index++) {
+            // Get the tax and flange values for the current index
+            $taxValue = $taxValues[$index] ?? null; // If tax is missing, use null
+            $flangeValue = $flangeValues[$index] ?? null; // If flange is missing, use null
+
+            // Create or update record for tax and flange
+            $record = Tax::updateOrCreate(
                 // Matching conditions (update if these match)
                 ['gst' => $gst, 'tax' => $taxValue],
                 // Fields to update or create
                 ['flange' => $flangeValue]
             );
         }
+
+
 
         // Tax::create($request->except('_token'));
         return response()->json(['success' => 'Taxes added successfully']);

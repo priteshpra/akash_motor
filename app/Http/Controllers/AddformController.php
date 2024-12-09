@@ -52,15 +52,16 @@ class AddformController extends Controller
         // Get common fields (like GST)
         $category_id = $request->input('category_id');
         $product_id = $request->input('product_id');
-        $flangeValue = ($request->input('Footval')) ? '' : $request->input('flange');
+        $flangePercentage = ($request->input('Footval')) ? '' : $request->input('flange');
         $Footval = $request->input('Footval');
+        $Flangeval = $request->input('Flangeval');
         // Process each tax and flange value
         foreach ($request->input('subcategory_val') as $index => $subCatValues) {
             $subCatId = $request->input('subcategory_id')[$index] ?? null;
             DB::enableQueryLog();
             ProductAddData::create(
                 // Matching conditions (update if these match)
-                ['category_id' => $category_id, 'subcategory_val' => $subCatValues, 'subcategory_id' => $subCatId, 'product_id' => $product_id, 'flange' => $flangeValue, 'footval' => $Footval],
+                ['category_id' => $category_id, 'subcategory_val' => $subCatValues, 'subcategory_id' => $subCatId, 'product_id' => $product_id, 'flange_percentage' => $flangePercentage, 'flange_val' => $Flangeval, 'footval' => $Footval],
                 // Fields to update or create
                 // ['flange' => $flangeValue, 'footval' => $Footval]
             );

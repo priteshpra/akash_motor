@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 03, 2024 at 07:02 PM
+-- Generation Time: Dec 09, 2024 at 03:40 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -90,6 +90,25 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `notification`
+--
+
+CREATE TABLE `notification` (
+  `NotificationID` int(11) NOT NULL,
+  `UserID` int(11) NOT NULL,
+  `Description` text NOT NULL,
+  `TypeID` int(11) NOT NULL,
+  `ActionType` varchar(50) DEFAULT NULL,
+  `IsRead` int(11) NOT NULL DEFAULT 0,
+  `CreatedBy` int(11) NOT NULL,
+  `CreatedDate` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `password_resets`
 --
 
@@ -145,6 +164,42 @@ INSERT INTO `products` (`id`, `product_name`, `status`, `created_at`, `updated_a
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `products_add_data`
+--
+
+CREATE TABLE `products_add_data` (
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `subcategory_id` int(11) NOT NULL,
+  `subcategory_val` varchar(200) DEFAULT NULL,
+  `flange_percentage` varchar(100) DEFAULT NULL,
+  `flange_val` varchar(100) DEFAULT NULL,
+  `footval` varchar(100) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `products_add_data`
+--
+
+INSERT INTO `products_add_data` (`id`, `category_id`, `product_id`, `subcategory_id`, `subcategory_val`, `flange_percentage`, `flange_val`, `footval`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 5, '55', NULL, NULL, '12', 1, '2024-12-07 03:45:49', '2024-12-07 03:45:49'),
+(2, 1, 1, 6, '22', NULL, NULL, '12', 1, '2024-12-07 03:45:49', '2024-12-07 03:45:49'),
+(7, 3, 2, 2, '50', '18', '100', NULL, 1, '2024-12-07 03:49:19', '2024-12-07 03:49:19'),
+(8, 3, 2, 4, '40', '18', '100', NULL, 1, '2024-12-07 03:49:19', '2024-12-07 03:49:19'),
+(9, 3, 2, 7, '30', '18', '100', NULL, 1, '2024-12-07 03:49:19', '2024-12-07 03:49:19'),
+(10, 3, 2, 8, '20', '18', '100', NULL, 1, '2024-12-07 03:49:19', '2024-12-07 03:49:19'),
+(11, 3, 2, 2, '1', '', NULL, '5', 1, '2024-12-07 03:59:55', '2024-12-07 03:59:55'),
+(12, 3, 2, 4, '2', '', NULL, '5', 1, '2024-12-07 03:59:55', '2024-12-07 03:59:55'),
+(13, 3, 2, 7, '3', '', NULL, '5', 1, '2024-12-07 03:59:55', '2024-12-07 03:59:55'),
+(14, 3, 2, 8, '4', '', NULL, '5', 1, '2024-12-07 03:59:55', '2024-12-07 03:59:55');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `sub_categories`
 --
 
@@ -187,6 +242,15 @@ CREATE TABLE `tax` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `tax`
+--
+
+INSERT INTO `tax` (`id`, `gst`, `tax`, `flange`, `status`, `created_at`, `updated_at`) VALUES
+(18, '10', '12', '12', 1, '2024-12-07 02:43:33', '2024-12-07 02:43:33'),
+(19, '10', '10', '18', 1, '2024-12-07 02:43:33', '2024-12-07 02:43:33'),
+(20, '10', NULL, '20', 1, '2024-12-07 02:43:33', '2024-12-07 02:43:33');
+
 -- --------------------------------------------------------
 
 --
@@ -215,28 +279,6 @@ INSERT INTO `users` (`id`, `name`, `role`, `email`, `email_verified_at`, `passwo
 --
 -- Indexes for dumped tables
 --
-
-CREATE TABLE `products_add_data` (
-  `id` int(11) NOT NULL,
-  `category_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `subcategory_id` int(11) NOT NULL,
-  `flange` varchar(100) NOT NULL,
-  `footval` varchar(100) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-ALTER TABLE `products_add_data` CHANGE `flange` `flange` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
-ALTER TABLE `products_add_data` CHANGE `footval` `footval` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
-
-ALTER TABLE `products_add_data`
-  ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `products_add_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-COMMIT;
 
 --
 -- Indexes for table `categories`
@@ -275,6 +317,12 @@ ALTER TABLE `personal_access_tokens`
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `products_add_data`
+--
+ALTER TABLE `products_add_data`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -331,6 +379,12 @@ ALTER TABLE `products`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `products_add_data`
+--
+ALTER TABLE `products_add_data`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
 -- AUTO_INCREMENT for table `sub_categories`
 --
 ALTER TABLE `sub_categories`
@@ -340,7 +394,7 @@ ALTER TABLE `sub_categories`
 -- AUTO_INCREMENT for table `tax`
 --
 ALTER TABLE `tax`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -352,6 +406,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
-ALTER TABLE `products_add_data` ADD `subcategory_val` VARCHAR(200) NULL DEFAULT NULL AFTER `subcategory_id`;

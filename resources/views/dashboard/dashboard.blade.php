@@ -8,7 +8,23 @@
 @endif
 @endif
 <!-- Begin Page Content -->
+<style>
+    a.productClick.mt-6 {
+        text-decoration: none;
+    }
 
+    .col-sm-9 {
+        width: 71%;
+        margin-left: 4%;
+    }
+
+    @media (min-width: 576px) {
+        .col-sm-9 {
+            width: 71% !important;
+            margin-left: 4% !important;
+        }
+    }
+</style>
 <div class="container-fluid">
 
     <div class="row">
@@ -161,12 +177,12 @@ $products = \App\Models\Product::where('status', '1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
-                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                class="btn btn-primary mt-6" style="width: 20%; ">
-                                <?php echo $value->product_name; ?>
-                            </button>&nbsp;&nbsp;
-                        </a>
+                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
+                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                        class="btn btn-primary mt-6" style="width: 20%; ">
+                                        <?php echo $value->product_name; ?>
+                                    </button>&nbsp;&nbsp;
+                                </a>
                         <?php }
                         } ?>
                     </div>
@@ -197,9 +213,9 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                 </div>
                 <form id="catForm">
                     @csrf
-                    <div class="mb-3">
+                    <div class="mb-33 d-flex justify-content-between">
                         <label for="name" class="form-label">Select Category</label>
-                        <select id="categorys" name="category_id" class="form-control" required>
+                        <select id="categorys" name="category_id" class="form-controls form-select" required>
                             <option value="">Select Category</option>
                             @foreach ($categorys as $category)
                             <option value="{{$category->id}}">{{$category->category_name}}</option>
@@ -209,6 +225,18 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div id="subcategory-container">
                     </div>
                     <input type="hidden" name="product_id" id="product_ids" value="" />
+                    <div class="" id="FootvalDiv">
+                        <div class="mb-33 d-flex justify-content-between">
+                            <label for="name" class="form-label">Price</label>
+                            <input type="text" class="form-controls numericInput" id="Footval" name="Footval" placeholder="Price" required>
+                        </div>
+                    </div>
+                    <div class="" id="FlangevalDiv">
+                        <div class="mb-33 d-flex justify-content-between">
+                            <label for="name" class="form-label">Price</label>
+                            <input type="text" class="form-controls numericInput" id="Flangeval" name="Flangeval" placeholder="Price" required>
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" checked name="typeOption" id="inlineRadio1"
@@ -221,17 +249,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                             <label class="form-check-label" for="inlineRadio2">Flange</label>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <div class="form-check" id="FootvalDiv">
-                            <input type="text" class="form-control" id="Footval" name="Footval" required>
-                        </div>
-                    </div>
 
                     <div class="mb-3 flangeShow">
                         @if ($taxs->isNotEmpty())
                         @foreach ($taxs as $key => $value)
                         @if ($value->flange != '' || $value->flange !=null)
-                        <input type="radio" class="btn-check" name="flange" id="flange{{ $value->flange }}"
+                        <input type="radio" class="btn-check form-control" placeholder="Price" name="flange" id="flange{{ $value->flange }}"
                             autocomplete="off" value="{{ $value->flange }}" checked>
                         <label class="btn btn-outline-success" for="flange{{ $value->flange }}">{{ $value->flange
                             }}</label>&nbsp;&nbsp;
@@ -240,6 +263,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         @endforeach
                         @endif
                     </div>
+
 
                     <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -290,14 +314,17 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 
 <script>
     $('#catForm').on('submit', function(e) {
-    e.preventDefault();
-    $.ajax({
+        e.preventDefault();
+        $.ajax({
             url: "{{ route('addform.store') }}",
             method: "POST",
             data: $(this).serialize(),
             success: function(response) {
                 showAlert('success', 'Product added successfully!');
                 $('#catForm')[0].reset();
+                // setTimeout(function() {
+                //     location.reload();
+                // }, 3000);
             },
             error: function(error) {
                 console.error(error);
@@ -328,16 +355,21 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         });
     });
     $(".flangeShow").css('display', 'none');
+    $("#FlangevalDiv").css('display', 'none');
     $('.form-check-input').on('click', function(e) {
         if ($(this).val() == 'Flange') {
             $(".flangeShow").css('display', 'block');
-            $(".flangeShow").css('margin-left','16px');
+            $("#FlangevalDiv").css('display', 'block');
+            $(".flangeShow").css('margin-left', '16px');
             $("#FootvalDiv").css('display', 'none');
             $("#Footval").removeAttr('required');
+            $("#Flangeval").attr('required', true);
         } else {
             $(".flangeShow").css('display', 'none');
+            $("#FlangevalDiv").css('display', 'none');
             $("#FootvalDiv").css('display', 'block');
-            $("#Footval").attr('required',true);
+            $("#Footval").attr('required', true);
+            $("#Flangeval").removeAttr('required');
         }
     });
 
@@ -383,9 +415,9 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     if (data) {
                         $.each(data, function(id, category_name) {
                             newSubcategory = `<div class="mb-3 row">
-                                <input type="hidden" class="form-control" id="subname" name="subcategory_id[]" value='`+ id +`'>
-                                                    <label for="subname" class="col-sm-2 col-form-label "><b>` + category_name + `</b></label>
-                                                    <div class="col-sm-10">
+                                <input type="hidden" class="form-control" id="subname" name="subcategory_id[]" value='` + id + `'>
+                                                    <label for="subname" class="col-sm-3 col-form-label "><b>` + category_name + `</b></label>
+                                                    <div class="col-sm-9">
                                                         <input type="text" class="form-control" id="subname" name="subcategory_val[]" required>
                                                     </div>
                                                 </div>`;
@@ -412,34 +444,47 @@ $taxs = \App\Models\Tax::where('status','1')->get();
     });
 
     // Load DataTables for main table
-        var table = $('#viewTable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('addform.index') }}",
-            columns: [
-                {
-                    data: 'id',
-                    name: 'id'
-                },
-                {
-                    data: 'product_name',
-                    name: 'product_name'
-                },
-                {
-                    data: 'category_name',
-                    name: 'category_name'
-                },
-                {
-                    data: 'subcategory_name',
-                    name: 'subcategory_name'
-                },
-                {
-                    data: 'subcategory_val',
-                    name: 'subcategory_val'
-                },
-                { data: 'action', name: 'action', orderable: false, searchable: false } // Action column
-            ]
-        });
-        // Handle form submission
+    var table = $('#viewTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('addform.index') }}",
+        columns: [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'product_name',
+                name: 'product_name'
+            },
+            {
+                data: 'category_name',
+                name: 'category_name'
+            },
+            {
+                data: 'subcategory_name',
+                name: 'subcategory_name'
+            },
+            {
+                data: 'subcategory_val',
+                name: 'subcategory_val'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            } // Action column
+        ]
+    });
+    // Handle form submission
+
+    $('.numericInput').on('keypress', function(event) {
+        // Allow digits only (ASCII codes 48-57 for '0' to '9')
+        var charCode = event.which ? event.which : event.keyCode;
+
+        if (charCode < 48 || charCode > 57) {
+            event.preventDefault(); // Prevent non-digit input
+        }
+    });
 </script>
 @endsection

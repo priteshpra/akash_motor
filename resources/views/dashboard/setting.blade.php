@@ -1,6 +1,8 @@
 @extends('layouts.page')
 @section('content')
+<style type="text/css">
 
+</style>
 <div class="container-fluid">
     <button type="button" onclick="goBack()" style="float: right;" class="btn btn-info">Back To Dashboard</button>
     <br /><br />
@@ -181,9 +183,9 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                 </div>
                 <form id="categoryForm">
                     @csrf
-                    <div class="mb-3">
+                    <div class="mb-33 d-flex justify-content-between">
                         <label for="name" class="form-label">Select Product</label>
-                        <select id="product" name="product_id" class="form-control" required>
+                        <select id="product" name="product_id" class="form-controls form-select" required>
                             <option value="">Select Product</option>
                             @foreach ($products as $product)
                             <option value="{{$product->id}}">{{$product->product_name}}</option>
@@ -191,9 +193,9 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         </select>
                         <!-- <input type="text" class="form-control" id="name" name="category_name" required> -->
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-33">
                         <label for="name" class="form-label">Category Name</label>
-                        <input type="text" class="form-control" id="name" name="category_name" required>
+                        <input type="text" class="form-controls" id="name" name="category_name" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -234,29 +236,24 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                 </div>
                 <form id="SubcategoryForm">
                     @csrf
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Select Product</label>
-                        <select id="product_ids" name="product_id" class="form-control" required>
+                    <div class="mb-33 d-flex justify-content-between">
+                        <label for="product_ids" class="form-label">Select Product</label>
+                        <select id="product_ids" name="product_id" class="form-controls form-select" required>
                             <option value="">Select Product</option>
                             @foreach ($products as $product)
                             <option value="{{$product->id}}">{{$product->product_name}}</option>
                             @endforeach
                         </select>
-                        <!-- <input type="text" class="form-control" id="name" name="category_name" required> -->
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-33 d-flex justify-content-between">
                         <label for="name" class="form-label">Select Category</label>
-                        <select id="category_ids" name="category_id" class="form-control" required>
+                        <select id="category_ids" name="category_id" class="form-controls form-select" required>
                             <option value="">Select Category</option>
-                            <!-- @foreach ($categorys as $cat)
-                            <option value="{{$cat->id}}">{{$cat->category_name}}</option>
-                            @endforeach -->
                         </select>
-                        <!-- <input type="text" class="form-control" id="name" name="category_name" required> -->
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-33 d-flex justify-content-between">
                         <label for="name" class="form-label">Sub Category Name</label>
-                        <input type="text" class="form-control" id="subcategory_name" name="subcategory_name" required>
+                        <input type="text" class="form-controls" id="subcategory_name" name="subcategory_name" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -344,7 +341,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div class="mb-3">
                         <label for="name" class="form-label">GST</label>
                         <input type="text" class="form-control"
-                            value="<?php echo ($taxs[0]->gst) ? $taxs[0]->gst :'' ?>" id="gst" name="gst" required>
+                            value="<?php echo isset($taxs[0]->gst) ? $taxs[0]->gst : '' ?>" id="gst" name="gst" required>
                     </div>
                     @if ($taxs->isNotEmpty())
                     @foreach ($taxs as $key => $value)
@@ -677,7 +674,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
             data: $(this).serialize(),
             success: function(response) {
                 showAlert('success', 'Taxes added successfully!');
-                $('#taxesForm')[0].reset();
+                // location.reload();
             },
             error: function(error) {
                 console.error(error);
@@ -704,7 +701,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         });
     });
 
-    $(document).on('click', '.add-tax', function () {
+    $(document).on('click', '.add-tax', function() {
         const newTaxField = `
         <div class="mb-3 d-flex align-items-center">
             <input type="text" class="form-control" name="tax[]" required>
@@ -715,11 +712,11 @@ $taxs = \App\Models\Tax::where('status','1')->get();
     });
 
     // Handler for removing a text box
-    $(document).on('click', '.remove-tax', function () {
+    $(document).on('click', '.remove-tax', function() {
         $(this).closest('.mb-3').remove();
     });
 
-    $(document).on('click', '.add-flange', function () {
+    $(document).on('click', '.add-flange', function() {
         const newTaxField = `<div class="mb-3 d-flex align-items-center">
             <input type="text" class="form-control" name="flange[]" required>
             <button type="button" class="btn btn-danger remove-flange ms-2">-</button>
@@ -728,7 +725,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
     });
 
     // Handler for removing a text box
-    $(document).on('click', '.remove-flange', function () {
+    $(document).on('click', '.remove-flange', function() {
         $(this).closest('.mb-3').remove();
     });
 
