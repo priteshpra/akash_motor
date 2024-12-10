@@ -143,4 +143,27 @@ class AddformController extends Controller
         $banner->save();
         return redirect()->back()->with('success', 'Products deleted Successfully!');
     }
+
+    public function geSubCordinate($category_id, $product_id)
+    {
+        // DB::enableQueryLog();
+
+        $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
+            ->where('products_add_data.subcategory_id', $category_id)->pluck('products_add_data.subcategory_val', 'sub_categories.id');
+        $queryLog = DB::getQueryLog();
+        // dd(end($queryLog));
+        return response()->json($subcat);
+    }
+
+    public function geSubCategory($category_id, $product_id)
+    {
+        // DB::enableQueryLog();
+
+        $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
+            ->where('products_add_data.category_id', $category_id)->pluck('sub_categories.subcategory_name', 'sub_categories.id');
+        $queryLog = DB::getQueryLog();
+        // dd(end($queryLog));
+        // dd($subcat);
+        return response()->json($subcat);
+    }
 }

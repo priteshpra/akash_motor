@@ -44,6 +44,8 @@ Route::get('/product', [ProductController::class, 'index'])->name('product.index
 Route::post('/product', [ProductController::class, 'store'])->name('product.store');
 Route::get('/get-categorys/{categoryId}', [CategoryController::class, 'geCategorys'])->name('get.categorys');
 Route::get('/get-subcategorys/{categoryId}', [SubCategoryController::class, 'geSubCategorys'])->name('get.subcategorys');
+Route::get('/get-subcordinate/{categoryId}/{productId}', [AddformController::class, 'geSubCordinate'])->name('get.subcordinate');
+Route::get('/get-subcategory/{categoryId}/{productId}', [AddformController::class, 'geSubCategory'])->name('get.subcategory');
 Route::put('/settings/{id}', [SettingsController::class, 'update']);
 
 // Route for editing a product

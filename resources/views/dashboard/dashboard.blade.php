@@ -206,7 +206,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="catFormModalLabel">Products</h5>
+                <h5 class="modal-title catFormModalLabel" id="catFormModalLabel">Products</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -402,42 +402,68 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                 <div class="alert-container">
                     <!-- Alerts will be dynamically inserted here -->
                 </div>
-                <form id="catForm">
+                <form id="addForm">
                     @csrf
-                    <div class="mb-33 d-flex justify-content-between">
-                        <label for="name" class="form-label">Select Category</label>
-                        <select id="categorys" name="category_id" class="form-controls form-select" required>
-                            <option value="">Select Category</option>
-                            @foreach ($categorys as $category)
-                            <option value="{{$category->id}}">{{$category->category_name}}</option>
-                            @endforeach
-                        </select>
+                    <div class="mb-3 text-center">
+                        <?php if ($products) {
+                         foreach ($products as $key => $value) { ?>
+                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
+                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                class="btn btn-primary mt-6" style="width: 20%; ">
+                                <?php echo $value->product_name; ?>
+                            </button>&nbsp;&nbsp;
+                        </a>
+                        <?php } } ?>
                     </div>
-                    <div id="subcategory-container">
-                    </div>
-                    <input type="hidden" name="product_id" id="product_ids" value="" />
-                    <div class="FootvalDiv" id="FootvalDiv">
-                        <div class="mb-33 d-flex justify-content-between">
-                            <label for="name" class="form-label">Price</label>
-                            <input type="text" class="form-controls numericInput Footval" id="Footval" name="Footval"
-                                placeholder="Price" required>
-                        </div>
-                    </div>
-                    <div class="FlangevalDiv" id="FlangevalDiv">
-                        <div class="mb-33 d-flex justify-content-between">
-                            <label for="name" class="form-label">Price</label>
-                            <input type="text" class="form-controls numericInput Flangeval" id="Flangeval"
-                                name="Flangeval" placeholder="Price" required>
-                        </div>
-                    </div>
-                    <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
-                    <button type="submit" class="btn btn-primary">Calculate</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 <!-- Calculate Model END -->
+
+<!-- Calculate Form Modal -->
+<div class="modal fade" id="calFormModal" tabindex="-1" aria-labelledby="calFormModalLabel" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title catFormModalLabel" id="catFormModalLabel">Products</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert-container">
+                    <!-- Alerts will be dynamically inserted here -->
+                </div>
+                <form id="calForm">
+                    @csrf
+                    <div class="mb-33 d-flex justify-content-between">
+                        <label for="name" class="form-label">Select Category</label>
+                        <select id="category_cal" name="category_id" class="form-controls form-select" required>
+                            <option value="">Select Category</option>
+                            @foreach ($categorys as $category)
+                            <option value="{{$category->id}}">{{$category->category_name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div id="subcategorycal-containercal">
+                    </div>
+                    <div id="subcategorycordinate">
+                    </div>
+                    <div class="mb-33 finalDiscount" style="display: none !important">
+                        <label for="name" class="form-label">Discount %</label>
+                        <input type="text" class="form-controls numericInput" id="finaldiscount" name="finaldiscount"
+                            required>
+                    </div>
+                    <div id="calculateData"></div>
+                    <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Calculate Form Model END -->
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -542,8 +568,9 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         $('#product-dropdown').html('<option value="">Select Product</option>');
         $('#subcategory-dropdown').html('<option value="">Select Subcategory</option>');
         var product_id = $(this).data('id');
+        window.product_id = product_id;
         var product_title = $(this).data('title');
-        $("#catFormModalLabel").html(product_title);
+        $(".catFormModalLabel").html(product_title);
         $("#product_ids").val(product_id);
         if (product_id) {
             $.ajax({
@@ -594,6 +621,74 @@ $taxs = \App\Models\Tax::where('status','1')->get();
             });
         }
     });
+
+    $('#category_cal').change(function() {
+        var category_id = $(this).val();
+        $('#subcategory-dropdown').html('<option value="">Select Subcategory</option>');
+        let productId = window.product_id;
+        let url = "{{ route('get.subcategory', [':categoryId', ':productId']) }}";
+        url = url.replace(':categoryId', category_id).replace(':productId', productId);
+        if (category_id) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(data) {
+                    $("#subcategorycal-containercal").html('');
+                    if (data) {
+                        var newSubcategory = `<div class="mb-33 d-flex justify-content-between">
+                        <label for="subname" class="form-label">Select Sub-Category</label>
+                        <div class="col-sm-9">
+                            <select onchange="getSabCatval(this);" id="subcategorycal_val" name="subcategory_val" class="form-controlss form-select" required>
+                                <option value="">Select Sub-Category</option>`;
+                        $.each(data, function(id, subcategory_name) {
+                            newSubcategory += `<option value="${id}">${subcategory_name}</option>`;
+                        });
+                        newSubcategory += `</select>
+                        </div>
+                        </div>`;
+                        $('#subcategorycal-containercal').append(newSubcategory);
+
+                    } else {
+                        $('#subcategorycal-containercal').append(newSubcategory);
+                    }
+                }
+            });
+        }
+    });
+    function getSabCatval(sel)
+    {
+        var category_id = sel.value;
+        $('#subcategory-dropdown').html('<option value="">Select Subcategory</option>');
+        let url = "{{ route('get.subcordinate', [':categoryId', ':productId']) }}";
+        url = url.replace(':categoryId', category_id).replace(':productId', window.product_id);
+        if (category_id) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(data) {
+                    $("#subcategorycordinate").html('');
+                    if (data) {
+                    var newSubcategory = `<div class="mb-33 d-flex justify-content-between">
+                        <label for="subname" class="form-label">Select Sub-Cordinate</label>
+                        <div class="col-sm-9">
+                            <select id="subcordinate_val" name="subcordinate_val" class="form-controlss form-select" required>
+                                <option value="">Select Sub-Cordinate</option>`;
+                                $.each(data, function(id, subcategory_val) {
+                                newSubcategory += `<option value="${id}">${subcategory_val}</option>`;
+                                });
+                                newSubcategory += `
+                            </select>
+                        </div>
+                    </div>`;
+                    $('#subcategorycordinate').append(newSubcategory);
+                    $(".finalDiscount").removeAttr('style');
+                    } else {
+                        $('#subcategorycordinate').append(newSubcategory);
+                    }
+                }
+            });
+        }
+    }
 
     function showAlert(type, message) {
         const alertHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">

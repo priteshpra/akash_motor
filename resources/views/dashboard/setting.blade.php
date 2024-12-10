@@ -341,7 +341,8 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div class="mb-3">
                         <label for="name" class="form-label">GST</label>
                         <input type="text" class="form-control"
-                            value="<?php echo isset($taxs[0]->gst) ? $taxs[0]->gst : '' ?>" id="gst" name="gst" required>
+                            value="<?php echo isset($taxs[0]->gst) ? $taxs[0]->gst : '' ?>" id="gst" name="gst"
+                            required>
                     </div>
                     @if ($taxs->isNotEmpty())
                     @foreach ($taxs as $key => $value)
