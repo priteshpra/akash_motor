@@ -210,7 +210,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                             <th>Product Name</th>
                             <th>Category Name</th>
                             <th>Created At</th>
-                            <!-- <th>Action</th> -->
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -269,7 +269,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                             <th>Category Name</th>
                             <th>Sub-Category Name</th>
                             <th>Created At</th>
-                            <!-- <th>Action</th> -->
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -311,7 +311,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                             <th>ID</th>
                             <th>Name</th>
                             <th>Created At</th>
-                            <!-- <th>Action</th> -->
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -480,20 +480,18 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     }
                     return '';
                 }
+            },
+            {
+                data: 'id',
+                name: 'actions',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    return `
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        `;
+                }
             }
-            // ,
-            // {
-            //     data: 'id',
-            //     name: 'actions',
-            //     orderable: false,
-            //     searchable: false,
-            //     render: function(data, type, row) {
-            //         return `
-            //                 <button class="btn btn-warning btn-sm">Edit</button>
-            //                 <button class="btn btn-danger btn-sm">Delete</button>
-            //             `;
-            //     }
-            // }
         ]
     });
     // Handle form submission
@@ -567,20 +565,18 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     }
                     return '';
                 }
+            },
+            {
+                data: 'id',
+                name: 'actions',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    return `
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        `;
+                }
             }
-            // ,
-            // {
-            //     data: 'id',
-            //     name: 'actions',
-            //     orderable: false,
-            //     searchable: false,
-            //     render: function(data, type, row) {
-            //         return `
-            //                 <button class="btn btn-warning btn-sm">Edit</button>
-            //                 <button class="btn btn-danger btn-sm">Delete</button>
-            //             `;
-            //     }
-            // }
         ]
     });
     // Handle form submission
@@ -627,20 +623,18 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     }
                     return '';
                 }
+            },
+            {
+                data: 'id',
+                name: 'actions',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    return `
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        `;
+                }
             }
-            // ,
-            // {
-            //     data: 'id',
-            //     name: 'actions',
-            //     orderable: false,
-            //     searchable: false,
-            //     render: function(data, type, row) {
-            //         return `
-            //                 <button class="btn btn-warning btn-sm">Edit</button>
-            //                 <button class="btn btn-danger btn-sm">Delete</button>
-            //             `;
-            //     }
-            // }
         ]
     });
     // Handle form submission

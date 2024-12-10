@@ -62,13 +62,15 @@ class AddformController extends Controller
         $flangePercentage = ($request->input('Footval')) ? '' : $request->input('flange');
         $Footval = $request->input('Footval');
         $Flangeval = $request->input('Flangeval');
+        $size = $request->input('size');
+        $typeOption = $request->input('typeOption');
         // Process each tax and flange value
         foreach ($request->input('subcategory_val') as $index => $subCatValues) {
             $subCatId = $request->input('subcategory_id')[$index] ?? null;
             DB::enableQueryLog();
             ProductAddData::create(
                 // Matching conditions (update if these match)
-                ['category_id' => $category_id, 'subcategory_val' => $subCatValues, 'subcategory_id' => $subCatId, 'product_id' => $product_id, 'flange_percentage' => $flangePercentage, 'flange_val' => $Flangeval, 'footval' => $Footval],
+                ['category_id' => $category_id, 'subcategory_val' => $subCatValues, 'subcategory_id' => $subCatId, 'product_id' => $product_id, 'flange_percentage' => $flangePercentage, 'flange_val' => $Flangeval, 'footval' => $Footval, 'size' => $size, 'typeOption' => $typeOption],
                 // Fields to update or create
                 // ['flange' => $flangeValue, 'footval' => $Footval]
             );
