@@ -21,7 +21,7 @@ class SubCategoryController extends Controller
         $current = $userModel->getUserbyID($userID);
 
         if (request()->ajax()) {
-            $categories = SubCategory::select(['sub_categories.id', 'sub_categories.subcategory_name', 'sub_categories.category_id', 'sub_categories.product_id', 'products.product_name', 'categories.category_name', 'sub_categories.created_at'])->leftJoin('products', 'products.id', '=', 'sub_categories.product_id')->leftJoin('categories', 'categories.id', '=', 'sub_categories.category_id');
+            $categories = SubCategory::select(['sub_categories.id', 'sub_categories.subcategory_name', 'sub_categories.category_id', 'sub_categories.product_id', 'products.product_name', 'categories.category_name', 'sub_categories.created_at'])->leftJoin('products', 'products.id', '=', 'sub_categories.product_id')->leftJoin('categories', 'categories.id', '=', 'sub_categories.category_id')->where('sub_categories.status', '1');
             return DataTables::of($categories)->make(true);
         }
         return view('dashboard.categories.index', compact('categories', 'data', 'current'));
@@ -29,7 +29,7 @@ class SubCategoryController extends Controller
 
     public function geSubCategorys($category_id)
     {
-        $subcat = SubCategory::where('category_id', $category_id)->pluck('subcategory_name', 'id');
+        $subcat = SubCategory::where('category_id', $category_id)->where('status', '1')->pluck('subcategory_name', 'id');
         return response()->json($subcat);
     }
 
@@ -101,8 +101,22 @@ class SubCategoryController extends Controller
      * @param  \App\Models\SubCategory  $subCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SubCategory $subCategory)
+    public function destroy($id)
     {
-        //
+        try {
+            $record = SubCategory::findOrFail($id);
+            $record->status = 0;
+            $record->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Record deleted successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete the record.'
+            ], 500);
+        }
     }
 }

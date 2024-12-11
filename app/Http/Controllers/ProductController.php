@@ -21,7 +21,7 @@ class ProductController extends Controller
         $current = $userModel->getUserbyID($userID);
 
         if (request()->ajax()) {
-            $categories = Product::select(['id', 'product_name', 'created_at']);
+            $categories = Product::select(['id', 'product_name', 'created_at'])->where('status', '1');
             return DataTables::of($categories)->make(true);
         }
         return view('dashboard.categories.index', compact('categories', 'data', 'current'));
@@ -93,8 +93,22 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        //
+        try {
+            $record = Product::findOrFail($id);
+            $record->status = 0;
+            $record->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Record deleted successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete the record.'
+            ], 500);
+        }
     }
 }

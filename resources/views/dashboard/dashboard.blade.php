@@ -178,12 +178,12 @@ $products = \App\Models\Product::where('status', '1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
-                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                        class="btn btn-primary mt-6" style="width: 20%; ">
-                                        <?php echo $value->product_name; ?>
-                                    </button>&nbsp;&nbsp;
-                                </a>
+                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
+                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                class="btn btn-primary mt-6" style="width: 20%; ">
+                                <?php echo $value->product_name; ?>
+                            </button>&nbsp;&nbsp;
+                        </a>
                         <?php }
                         } ?>
                     </div>
@@ -197,7 +197,7 @@ $products = \App\Models\Product::where('status', '1')->get();
 @php
 $categorys = \App\Models\Category::select(['categories.id', 'categories.category_name', 'categories.product_id',
 'products.product_name', 'products.id as productID', 'categories.created_at'])->leftJoin('products', 'products.id', '=',
-'categories.product_id')->get();
+'categories.product_id')->where('categories.status','1')->get();
 $taxs = \App\Models\Tax::where('status','1')->get();
 @endphp
 <!-- Sub Category Modal -->
@@ -323,12 +323,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" checked name="typeOption" id="inlineRadio1"
+                            <input class="form-check-input" type="checkbox" checked name="typeOption" id="inlineRadio11"
                                 value="Foot">
                             <label class="form-check-label" for="inlineRadio1">Foot</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="typeOption" id="inlineRadio2"
+                            <input class="form-check-input" type="checkbox" name="typeOption" id="inlineRadio22"
                                 value="Flange">
                             <label class="form-check-label" for="inlineRadio2">Flange</label>
                         </div>
@@ -352,6 +352,13 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                             <label for="name" class="form-label">Price</label>
                             <input type="text" class="form-controls numericInput Flangeval" id="Flangeval"
                                 name="Flangeval" placeholder="Price" required>
+                        </div>
+                    </div>
+                    <div class="" id="">
+                        <div class="mb-33 d-flex justify-content-between">
+                            <label for="name" class="form-label">SIZE</label>
+                            <input type="text" class="form-controls numericInput sizeVal" id="size" name="size"
+                                placeholder="FRAME SIZE" required>
                         </div>
                     </div>
 
@@ -415,12 +422,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
-                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                        class="btn btn-primary mt-6" style="width: 20%; ">
-                                        <?php echo $value->product_name; ?>
-                                    </button>&nbsp;&nbsp;
-                                </a>
+                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
+                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                class="btn btn-primary mt-6" style="width: 20%; ">
+                                <?php echo $value->product_name; ?>
+                            </button>&nbsp;&nbsp;
+                        </a>
                         <?php }
                         } ?>
                     </div>
@@ -522,8 +529,19 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     </div>
                 </div>`;
                 $('#subcategorys-containers').append(newSubcategory);
+                $('.form-check-input').prop('checked', false);
+                if(response.data.typeOption == 'Foot') {
+                    $('#inlineRadio11').click();
+                    $('#inlineRadio11').prop('checked',true);
+                } else {
+                    $('#inlineRadio22').click();
+                    $('#inlineRadio22').prop('checked',true);
+                }
                 $(".footval").val(response.data.footval);
                 $(".flange").val(response.data.flange);
+                $(".Flangeval").val(response.data.flange_val);
+                $(".sizeVal").val(response.data.size);
+                $('input[name="flange"][value="'+response.data.flange_percentage+'"]').prop('checked', true);
                 console.log(' === response === ', response.data);
 
             },
@@ -617,6 +635,33 @@ $taxs = \App\Models\Tax::where('status','1')->get();
             $(".Footval").removeAttr('required');
         }
     });
+    //start edit form
+    $('#inlineRadio22').on('change', function() {
+        if ($(this).is(':checked')) {
+            $(".flangeShow").css('display', 'block');
+            $(".FlangevalDiv").css('display', 'block');
+            $(".flangeShow").css('margin-left', '16px');
+            $(".FootvalDiv").css('display', 'none');
+            $(".Footval").removeAttr('required');
+            $(".Flangeval").attr('required', true);
+        } else {
+            $(".flangeShow").css('display', 'none');
+            $(".FlangevalDiv").css('display', 'none');
+            $(".FootvalDiv").css('display', 'block');
+            $(".Footval").attr('required', true);
+            $(".Flangeval").removeAttr('required');
+        }
+    });
+    $('#inlineRadio11').on('change', function() {
+        if ($(this).is(':checked')) {
+            $(".FootvalDivs").css('display', 'block');
+            $(".Footval").attr('required', true);
+        } else {
+            $(".FootvalDivs").css('display', 'none');
+            $(".Footval").removeAttr('required');
+        }
+    });
+    //end edit form
     $('.productClick').on('click', function(e) {
         e.preventDefault();
         $('#product-dropdown').html('<option value="">Select Product</option>');

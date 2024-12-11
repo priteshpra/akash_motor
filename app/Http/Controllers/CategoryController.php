@@ -21,7 +21,7 @@ class CategoryController extends Controller
         $current = $userModel->getUserbyID($userID);
 
         if (request()->ajax()) {
-            $categories = Category::select(['categories.id', 'categories.category_name', 'categories.product_id', 'products.product_name', 'products.id as productID', 'categories.created_at'])->leftJoin('products', 'products.id', '=', 'categories.product_id');
+            $categories = Category::select(['categories.id', 'categories.category_name', 'categories.product_id', 'products.product_name', 'products.id as productID', 'categories.created_at'])->leftJoin('products', 'products.id', '=', 'categories.product_id')->where('categories.status', '1');
             return DataTables::of($categories)->make(true);
         }
         return view('dashboard.categories.index', compact('categories', 'data', 'current'));
@@ -100,8 +100,22 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        try {
+            $record = Category::findOrFail($id);
+            $record->status = 0;
+            $record->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Record deleted successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete the record.'
+            ], 500);
+        }
     }
 }

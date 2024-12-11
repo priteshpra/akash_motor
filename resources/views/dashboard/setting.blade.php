@@ -3,6 +3,7 @@
 <style type="text/css">
 
 </style>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid">
     <button type="button" onclick="goBack()" style="float: right;" class="btn btn-info">Back To Dashboard</button>
     <br /><br />
@@ -164,8 +165,8 @@
 <!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 @php
-$products = \App\Models\Product::all();
-$categorys = \App\Models\Category::all();
+$products = \App\Models\Product::where('status','1')->get();
+$categorys = \App\Models\Category::where('status','1')->get();
 $taxs = \App\Models\Tax::where('status','1')->get();
 @endphp
 <!-- Category Modal -->
@@ -455,7 +456,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 <script>
     // Load DataTables for main table
-    var table = $('#categoryTable').DataTable({
+    let table = $('#categoryTable').DataTable({
         processing: true,
         serverSide: true,
         ajax: "{{ route('categories.index') }}", // Replace with your route for fetching categories
@@ -488,7 +489,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                 searchable: false,
                 render: function(data, type, row) {
                     return `
-                            <button class="btn btn-danger btn-sm">Delete</button>
+                            <button class="btn btn-danger btn-sm delete-button-cat" data-id="${row.id}">Delete</button>
                         `;
                 }
             }
@@ -536,10 +537,10 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         }
     });
 
-    var table2 = $('#subcategoryTable').DataTable({
+    let table2 = $('#subcategoryTable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('subcategories.index') }}", // Replace with your route for fetching categories
+        ajax: "{{ route('subcategories.index') }}", // Replace with your route for fetching subcategories
         columns: [{
                 data: 'id',
                 name: 'id'
@@ -573,7 +574,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                 searchable: false,
                 render: function(data, type, row) {
                     return `
-                            <button class="btn btn-danger btn-sm">Delete</button>
+                            <button class="btn btn-danger btn-sm delete-button-subcat" data-id="${row.id}">Delete</button>
                         `;
                 }
             }
@@ -602,10 +603,10 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         });
     });
 
-    var table3 = $('#productTable').DataTable({
+    let table3 = $('#productTable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('product.index') }}", // Replace with your route for fetching categories
+        ajax: "{{ route('product.index') }}", // Replace with your route for fetching product
         columns: [{
                 data: 'id',
                 name: 'id'
@@ -631,7 +632,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                 searchable: false,
                 render: function(data, type, row) {
                     return `
-                            <button class="btn btn-danger btn-sm">Delete</button>
+                            <button class="btn btn-danger btn-sm delete-button-product" data-id="${row.id}">Delete</button>
                         `;
                 }
             }
@@ -735,6 +736,69 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 
     $(document).on('click', '.btn-close', function() {
         location.reload(); // Reload the page
+    });
+
+    $(document).on('click', '.delete-button-cat', function() {
+        let id = $(this).data('id');
+
+        if (confirm('Are you sure you want to delete this record?')) {
+            $.ajax({
+                url: `categories/${id}`, // Update the route as needed
+                type: 'DELETE',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+                },
+                success: function(response) {
+                    showAlert('success', 'Record deleted successfully!');
+                    table.ajax.reload();
+                },
+                error: function(xhr) {
+                    showAlert('danger', 'Failed to delete the record. Please try again.');
+                }
+            });
+        }
+    });
+
+    $(document).on('click', '.delete-button-subcat', function() {
+        let id = $(this).data('id');
+
+        if (confirm('Are you sure you want to delete this record?')) {
+            $.ajax({
+                url: `subcategories/${id}`, // Update the route as needed
+                type: 'DELETE',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+                },
+                success: function(response) {
+                    showAlert('success', 'Record deleted successfully!');
+                    table2.ajax.reload();
+                },
+                error: function(xhr) {
+                    showAlert('danger', 'Failed to delete the record. Please try again.');
+                }
+            });
+        }
+    });
+
+    $(document).on('click', '.delete-button-product', function() {
+        let id = $(this).data('id');
+
+        if (confirm('Are you sure you want to delete this record?')) {
+            $.ajax({
+                url: `product/${id}`, // Update the route as needed
+                type: 'DELETE',
+                data: {
+                 _token: $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+                },
+                success: function(response) {
+                    showAlert('success', 'Record deleted successfully!');
+                    table3.ajax.reload();
+                },
+                    error: function(xhr) {
+                    showAlert('danger', 'Failed to delete the record. Please try again.');
+                }
+            });
+        }
     });
 </script>
 @endsection

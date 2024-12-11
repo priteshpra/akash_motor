@@ -48,6 +48,10 @@ Route::get('/get-subcordinate/{categoryId}/{productId}', [AddformController::cla
 Route::get('/get-subcategory/{categoryId}/{productId}', [AddformController::class, 'geSubCategory'])->name('get.subcategory');
 Route::put('/settings/{id}', [SettingsController::class, 'update']);
 
+Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+Route::delete('/subcategories/{id}', [SubCategoryController::class, 'destroy'])->name('subcategories.destroy');
+Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+
 // Route for editing a product
 // Route::get('/addform/{id}/edit', [AddformController::class, 'edit'])->name('addform.edit');
 Route::post('/addform/{id}/edit', [AddformController::class, 'edit'])->name('addform.edit');

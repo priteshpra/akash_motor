@@ -407,5 +407,6 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
-ALTER TABLE `products_add_data` ADD `size` VARCHAR(100) NULL DEFAULT NULL AFTER `footval`; 
-ALTER TABLE `products_add_data` ADD `typeOption` VARCHAR(100) NULL DEFAULT NULL AFTER `subcategory_val`; 
+ALTER TABLE `products_add_data` ADD `size` VARCHAR(100) NULL DEFAULT NULL AFTER `footval`;
+ALTER TABLE `products_add_data` ADD `typeOption` VARCHAR(100) NULL DEFAULT NULL AFTER `subcategory_val`;
+ALTER TABLE `sub_categories` ADD `status` TINYINT NOT NULL DEFAULT '1' AFTER `subcategory_name`;
