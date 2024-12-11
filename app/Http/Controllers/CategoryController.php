@@ -29,7 +29,7 @@ class CategoryController extends Controller
 
     public function geCategorys($productId)
     {
-        $products = Category::where('product_id', $productId)->pluck('category_name', 'id');
+        $products = Category::where('product_id', $productId)->where('status', '1')->pluck('category_name', 'id');
         return response()->json($products);
     }
 

@@ -59,7 +59,7 @@ class AddformController extends Controller
         // Get common fields (like GST)
         $category_id = $request->input('category_id');
         $product_id = $request->input('product_id');
-        $flangePercentage = ($request->input('Footval')) ? '' : $request->input('flange');
+        $flangePercentage = $request->input('flange');
         $Footval = $request->input('Footval');
         $Flangeval = $request->input('Flangeval');
         $size = $request->input('size');
@@ -162,10 +162,29 @@ class AddformController extends Controller
         // DB::enableQueryLog();
 
         $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
-            ->where('products_add_data.category_id', $category_id)->pluck('sub_categories.subcategory_name', 'sub_categories.id');
+            ->where('products_add_data.category_id', $category_id)->where('products_add_data.status', '1')->distinct()->get();
+        // Structure the response
+        $response = $subcat->map(function ($item) {
+            // Fetch associated options for the subcategory (adjust relationship/model as needed)
+            $options = ProductAddData::where('subcategory_id', $item->subcategory_id)->get();
+
+            return [
+                'id' => $item->subcategory_id,
+                'name' => $item->subcategory_name,
+                'flange_percentage' => $item->flange_percentage,
+                'footval' => $item->footval,
+                'typeOption' => $item->typeOption,
+                'options' => $options->map(function ($option) {
+                    return [
+                        'value' => $option->subcategory_val,   // Replace `id` with the column for option's value
+                        'label' => $option->subcategory_val // Replace `name` with the column for option's label
+                    ];
+                })
+            ];
+        });
         $queryLog = DB::getQueryLog();
         // dd(end($queryLog));
         // dd($subcat);
-        return response()->json($subcat);
+        return response()->json($response);
     }
 }
