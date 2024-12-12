@@ -63,7 +63,8 @@ class AddformController extends Controller
         $Footval = $request->input('Footval');
         $Flangeval = $request->input('Flangeval');
         $size = $request->input('size');
-        $typeOption = $request->input('typeOption');
+        $typeOption = $request->input('typeOption', []);
+        $typeOption = is_array($typeOption) ? implode(', ', $typeOption) : $typeOption;
         // Process each tax and flange value
         foreach ($request->input('subcategory_val') as $index => $subCatValues) {
             $subCatId = $request->input('subcategory_id')[$index] ?? null;
@@ -163,25 +164,29 @@ class AddformController extends Controller
 
         $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
             ->where('products_add_data.category_id', $category_id)->where('products_add_data.status', '1')->distinct()->get();
+        $groupedSubcat = $subcat->groupBy('subcategory_name');
         // Structure the response
-        $response = $subcat->map(function ($item) {
-            // Fetch associated options for the subcategory (adjust relationship/model as needed)
-            $options = ProductAddData::where('subcategory_id', $item->subcategory_id)->get();
+        $response = $groupedSubcat->map(function ($items, $name) {
+            // Use the first item for fixed fields like `flange_percentage`, `footval`, `typeOption`
+            $firstItem = $items->first();
+
+            // Consolidate options
+            $options = $items->map(function ($item) {
+                return [
+                    'value' => $item->subcategory_val,
+                    'label' => $item->subcategory_val
+                ];
+            });
 
             return [
-                'id' => $item->subcategory_id,
-                'name' => $item->subcategory_name,
-                'flange_percentage' => $item->flange_percentage,
-                'footval' => $item->footval,
-                'typeOption' => $item->typeOption,
-                'options' => $options->map(function ($option) {
-                    return [
-                        'value' => $option->subcategory_val,   // Replace `id` with the column for option's value
-                        'label' => $option->subcategory_val // Replace `name` with the column for option's label
-                    ];
-                })
+                'id' => $firstItem->subcategory_id,
+                'name' => $name,
+                'flange_percentage' => $firstItem->flange_percentage,
+                'footval' => $firstItem->footval,
+                'typeOption' => $firstItem->typeOption,
+                'options' => $options->unique('value')->values()
             ];
-        });
+        })->values();
         $queryLog = DB::getQueryLog();
         // dd(end($queryLog));
         // dd($subcat);

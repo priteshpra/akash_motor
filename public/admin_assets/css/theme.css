@@ -45613,3 +45613,8 @@ select#subcategorycal_val, select#subcordinate_val {
     min-width: 104% !important;
     margin-left: -7px !important;
 }
+
+select.form-select.form-controlss {
+    width: 104%;
+    margin-left: -7px;
+}

@@ -178,12 +178,12 @@ $products = \App\Models\Product::where('status', '1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
-                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                        class="btn btn-primary mt-6" style="width: 20%; ">
-                                        <?php echo $value->product_name; ?>
-                                    </button>&nbsp;&nbsp;
-                                </a>
+                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
+                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                class="btn btn-primary mt-6" style="width: 20%; ">
+                                <?php echo $value->product_name; ?>
+                            </button>&nbsp;&nbsp;
+                        </a>
                         <?php }
                         } ?>
                     </div>
@@ -244,13 +244,13 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" checked name="typeOption" id="inlineRadio1"
-                                value="Foot">
+                            <input class="form-check-input toggleRadio" type="checkbox" checked name="typeOption[]"
+                                id="inlineRadio1" value="Foot">
                             <label class="form-check-label" for="inlineRadio1">Foot</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="typeOption" id="inlineRadio2"
-                                value="Flange">
+                            <input class="form-check-input toggleRadio" type="checkbox" name="typeOption[]"
+                                id="inlineRadio2" value="Flange">
                             <label class="form-check-label" for="inlineRadio2">Flange</label>
                         </div>
                     </div>
@@ -314,7 +314,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div id="subcategorys-containers">
                     </div>
                     <input type="hidden" name="product_id" id="product_ids" value="" />
-                    <div class="FootvalDiv" id="FootvalDiv">
+                    <div class="" id="FootvalDiv">
                         <div class="mb-33 d-flex justify-content-between">
                             <label for="name" class="form-label">Price</label>
                             <input type="text" class="form-controls numericInput Footval" id="Footval" name="Footval"
@@ -324,13 +324,13 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" checked name="typeOption" id="inlineRadio11"
-                                value="Foot">
+                            <input class="form-check-input toggleRadio" type="checkbox" checked name="typeOption[]"
+                                id="inlineRadio11" value="Foot">
                             <label class="form-check-label" for="inlineRadio1">Foot</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="typeOption" id="inlineRadio22"
-                                value="Flange">
+                            <input class="form-check-input toggleRadio" type="checkbox" name="typeOption[]"
+                                id="inlineRadio22" value="Flange">
                             <label class="form-check-label" for="inlineRadio2">Flange</label>
                         </div>
                     </div>
@@ -340,7 +340,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         @foreach ($taxs as $key => $value)
                         @if ($value->flange != '' || $value->flange !=null)
                         <input type="radio" class="btn-check form-control" placeholder="Price" name="flange"
-                            id="flange{{ $value->flange }}" autocomplete="off" value="{{ $value->flange }}" checked>
+                            id="flange{{ $value->flange }}" autocomplete="off" value="{{ $value->flange }}">
                         <label class="btn btn-outline-success" for="flange{{ $value->flange }}">{{ $value->flange
                             }}</label>&nbsp;&nbsp;
 
@@ -348,13 +348,13 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         @endforeach
                         @endif
                     </div>
-                    <div class="FlangevalDiv" id="FlangevalDiv">
+                    {{-- <div class="FlangevalDiv" id="FlangevalDiv">
                         <div class="mb-33 d-flex justify-content-between">
                             <label for="name" class="form-label">Price</label>
                             <input type="text" class="form-controls numericInput Flangeval" id="Flangeval"
                                 name="Flangeval" placeholder="Price" required>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="" id="">
                         <div class="mb-33 d-flex justify-content-between">
                             <label for="name" class="form-label">SIZE</label>
@@ -423,12 +423,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
-                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                        class="btn btn-primary mt-6" style="width: 20%; ">
-                                        <?php echo $value->product_name; ?>
-                                    </button>&nbsp;&nbsp;
-                                </a>
+                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
+                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                class="btn btn-primary mt-6" style="width: 20%; ">
+                                <?php echo $value->product_name; ?>
+                            </button>&nbsp;&nbsp;
+                        </a>
                         <?php }
                         } ?>
                     </div>
@@ -491,15 +491,28 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     </div>
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" checked name="typeOption" id="inlineRadio1"
-                                value="Foot">
+                            <input class="form-check-input toggleRadio" type="checkbox" checked name="typeOption[]"
+                                id="inlineRadio1" value="Foot">
                             <label class="form-check-label" for="inlineRadio1">Foot</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="typeOption" id="inlineRadio2"
-                                value="Flange">
+                            <input class="form-check-input toggleRadio" type="checkbox" name="typeOption[]"
+                                id="inlineRadio2" value="Flange">
                             <label class="form-check-label" for="inlineRadio2">Flange</label>
                         </div>
+                    </div>
+                    <div class="mb-3 flangeShow">
+                        @if ($taxs->isNotEmpty())
+                        @foreach ($taxs as $key => $value)
+                        @if ($value->flange != '' || $value->flange !=null)
+                        <input type="radio" class="btn-check form-control flangePerc" placeholder="Price" name="flange"
+                            id="flanges{{ $value->flange }}" autocomplete="off" value="{{ $value->flange }}">
+                        <label class="btn btn-outline-success" for="flanges{{ $value->flange }}">{{ $value->flange
+                            }}</label>&nbsp;&nbsp;
+
+                        @endif
+                        @endforeach
+                        @endif
                     </div>
                     <div class="flangeShow">
                         @if ($taxs->isNotEmpty())
@@ -524,9 +537,11 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         <input type="text" class="form-controls numericInput" id="finaldiscount" name="finaldiscount"
                             required>
                     </div>
-                    <div id="calculateData"></div>
+                    <div class="mb-3">
+                        <div id="calculateData"></div>
+                    </div>
                     <button type="button" id="calculateButton" class="btn btn-secondary">Calculate</button>
-                    <button type="submit" class="btn btn-primary">Download</button>
+                    <button type="button" class="btn btn-primary">Download</button>
                 </form>
             </div>
         </div>
@@ -540,6 +555,10 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
 <script>
+    $("#calculateButton").click(function(){
+        $("#finaldiscount").val();
+        $("#calculateData").html('here some show the calculation');
+    });
     function getFormData(ID) {
         $.ajaxSetup({
             headers: {
@@ -629,71 +648,22 @@ $taxs = \App\Models\Tax::where('status','1')->get();
     $(".flangeShow").css('display', 'none');
     $(".flangePerShow").css('display', 'none');
     $(".FlangevalDiv").css('display', 'none');
-    // $('.form-check-input').on('click', function(e) {
-    //     if ($(this).val() == 'Flange') {
-    //         $(".flangeShow").css('display', 'block');
-    //         $(".FlangevalDiv").css('display', 'block');
-    //         $(".flangeShow").css('margin-left', '16px');
-    //         $(".FootvalDiv").css('display', 'none');
-    //         $(".Footval").removeAttr('required');
-    //         $(".Flangeval").attr('required', true);
-    //     } else {
-    //         $(".flangeShow").css('display', 'none');
-    //         $(".FlangevalDiv").css('display', 'none');
-    //         $(".FootvalDiv").css('display', 'block');
-    //         $(".Footval").attr('required', true);
-    //         $(".Flangeval").removeAttr('required');
-    //     }
-    // });
-    $('#inlineRadio2').on('change', function() {
-        if ($(this).is(':checked')) {
+
+    $('.toggleRadio').on('change', function () {
+        // Check if the current radio button is checked
+        if ($(this).is(':checked') && $(this).val() === 'Flange') {
             $(".flangeShow").css('display', 'block');
             $(".FlangevalDiv").css('display', 'block');
             $(".flangeShow").css('margin-left', '16px');
-            $(".FootvalDiv").css('display', 'none');
             $(".Footval").removeAttr('required');
             $(".Flangeval").attr('required', true);
         } else {
-            $(".flangeShow").css('display', 'none');
-            $(".FlangevalDiv").css('display', 'none');
-            $(".FootvalDiv").css('display', 'block');
-            $(".Footval").attr('required', true);
-            $(".Flangeval").removeAttr('required');
-        }
-    });
-    $('#inlineRadio1').on('change', function() {
-        if ($(this).is(':checked')) {
-            $(".FootvalDivs").css('display', 'block');
-            $(".Footval").attr('required', true);
-        } else {
-            $(".FootvalDivs").css('display', 'none');
-            $(".Footval").removeAttr('required');
-        }
-    });
-    //start edit form
-    $('#inlineRadio22').on('change', function() {
-        if ($(this).is(':checked')) {
-            $(".flangeShow").css('display', 'block');
-            $(".FlangevalDiv").css('display', 'block');
-            $(".flangeShow").css('margin-left', '16px');
-            $(".FootvalDiv").css('display', 'none');
-            $(".Footval").removeAttr('required');
-            $(".Flangeval").attr('required', true);
-        } else {
-            $(".flangeShow").css('display', 'none');
-            $(".FlangevalDiv").css('display', 'none');
-            $(".FootvalDiv").css('display', 'block');
-            $(".Footval").attr('required', true);
-            $(".Flangeval").removeAttr('required');
-        }
-    });
-    $('#inlineRadio11').on('change', function() {
-        if ($(this).is(':checked')) {
-            $(".FootvalDivs").css('display', 'block');
-            $(".Footval").attr('required', true);
-        } else {
-            $(".FootvalDivs").css('display', 'none');
-            $(".Footval").removeAttr('required');
+            if ($(this).val() === 'Flange') {
+                $(".flangeShow").css('display', 'none');
+                $(".FlangevalDiv").css('display', 'none');
+                $(".Footval").attr('required', true);
+                $(".Flangeval").removeAttr('required');
+            }
         }
     });
     //end edit form
@@ -817,8 +787,9 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         $('.priceOriginal').val(data[0].footval);
                         if (data[0].flange_percentage != '') {
                             $(".flangePerShow").css('display', 'block');
-                            $('button.btn-flange:contains("' + data[0].flange_percentage + '")').addClass('btn-success active').attr('disabled', true);
-                            $('button.btn-flange').attr('disabled', true);
+                            // $('button.btn-flange:contains("' + data[0].flange_percentage + '")').addClass('btn-success active').attr('disabled', true);
+                            // $('button.btn-flange').attr('disabled', true);
+                            $('input[name="flange"][value="' + data[0].flange_percentage + '"]').prop('checked', true);
                         } else {
                             $(".flangePerShow").css('display', 'none');
                         }
@@ -827,8 +798,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         var percentage = parseFloat(data[0].flange_percentage);
 
                         var finalPrice = price + (price * percentage / 100);
-                        $('input[name="typeOption"]').prop('checked', false);
-                        $('input[name="typeOption"][value="' + data[0].typeOption + '"]').prop('checked', true);
+                        let typeOptionCheckBoc = data[0].typeOption.split(', ');
+                        $('input[name="typeOption[]"]').prop('checked', false);
+                        typeOptionCheckBoc.forEach(function(optionCheckbox) {
+                            $('input[name="typeOption[]"][value="' + optionCheckbox + '"]').prop('checked', true);
+                        });
+                        // $('input[name="typeOption[]"][value="' + data[0].typeOption + '"]').prop('checked', true);
                         $(".calFlangePrice").text(finalPrice);
                         $(".finalDiscount").removeAttr('style');
                         $(".flangeShow").css('display', 'block');
