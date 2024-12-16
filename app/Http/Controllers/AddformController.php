@@ -182,6 +182,7 @@ class AddformController extends Controller
                 'id' => $firstItem->subcategory_id,
                 'name' => $name,
                 'flange_percentage' => $firstItem->flange_percentage,
+                'size' => $firstItem->size,
                 'footval' => $firstItem->footval,
                 'typeOption' => $firstItem->typeOption,
                 'options' => $options->unique('value')->values()

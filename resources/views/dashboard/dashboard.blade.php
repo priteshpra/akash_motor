@@ -229,9 +229,9 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <input type="hidden" name="product_id" id="product_ids" value="" />
                     <div class="" id="">
                         <div class="mb-33 d-flex justify-content-between">
-                            <label for="name" class="form-label">Size</label>
+                            <label for="name" class="form-label">Frame Size</label>
                             <input type="text" class="form-controls numericInput Footval" id="size" name="size"
-                                placeholder="FRAME SIZE" required>
+                                placeholder="Frame Size" required>
                         </div>
                     </div>
                     <div class="" id="FootvalDiv">
@@ -357,9 +357,9 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     </div> --}}
                     <div class="" id="">
                         <div class="mb-33 d-flex justify-content-between">
-                            <label for="name" class="form-label">SIZE</label>
+                            <label for="name" class="form-label">Frame Size</label>
                             <input type="text" class="form-controls numericInput sizeVal" id="size" name="size"
-                                placeholder="FRAME SIZE" required>
+                                placeholder="Frame Size" required>
                         </div>
                     </div>
 
@@ -466,6 +466,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 
                     <div id="subcategorycal-containercal">
                     </div>
+                    <div class="mb-33 d-flex justify-content-between">
+                        <label for="name" class="form-label">Frame Size</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="frameOriginal numericInput form-control" readonly name="frame" value="">
+                        </div>
+                    </div>
                     <!-- <div id="subcategorycordinate">
                     </div> -->
                     <div class="mb-33 d-flex justify-content-between">
@@ -536,9 +542,19 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                                 @endif
                             </div>
                         </div>
-
                     </div>
 
+                    <div class="mb-33 d-flex justify-content-between">
+                        <label for="name" class="form-label">Tax</label>
+                        <div class="col-sm-9">
+                            @if ($taxs->isNotEmpty())
+                            @foreach ($taxs as $key => $value)
+                            <?php $gstVal = $value->gst; ?>
+                            @endforeach
+                            @endif
+                            <input type="text" class="taxOriginal numericInput form-control" readonly name="tax" value="{{ $gstVal }}">
+                        </div>
+                    </div>
                     <div class="mb-33 finalDiscount" style="display: none !important">
                         <label for="name" class="form-label">Discount %</label>
                         <input type="text" class="form-controls numericInput" id="finaldiscount" name="finaldiscount"
@@ -563,8 +579,31 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 
 <script>
     $("#calculateButton").click(function() {
-        $("#finaldiscount").val();
-        $("#calculateData").html('here some show the calculation');
+        $(".frameOriginal").val();
+        originalPrice = parseFloat($(".priceOriginal").val());
+        taxOriginal = parseFloat($(".taxOriginal").val());
+        let selectedValues = $('input[name="typeOption[]"]:checked').map(function() {
+            return $(this).val(); // Return the value of each checked checkbox
+        }).get();
+
+        if (selectedValues == 'Flange') {
+            var price = parseFloat($(".calFlangePrice").html());
+        } else if (selectedValues == 'Foot') {
+            var price = parseFloat($(".priceOriginal").val());
+        } else {
+            var price = parseFloat($(".priceOriginal").val());
+        }
+        discountRate = parseFloat($("#finaldiscount").val());
+        AdditionalTax = parseFloat($('input[name="flange"]:checked').val());
+
+        let taxAmount = (price * AdditionalTax) / 100;
+        let priceAfterTax = price + taxAmount;
+        let discountAmount = (priceAfterTax * discountRate) / 100;
+        let totalAfterDiscount = priceAfterTax - discountAmount;
+        let extraTaxAmount = (totalAfterDiscount * taxOriginal) / 100;
+        let finalTotal = totalAfterDiscount + extraTaxAmount;
+
+        $("#calculateData").html(finalTotal.toFixed(2) + (" Formula => (((FinalPrice(flange/foot) + AdditionalTax%) - discout%) + tax%) "));
     });
 
     function getFormData(ID) {
@@ -748,26 +787,6 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                 type: 'GET',
                 success: function(data) {
                     // console.log(data);
-
-                    $("#subcategorycal-containercal").html('');
-                    // if (data) {
-                    //     var newSubcategory = `<div class="mb-33 d-flex justify-content-between">
-                    //     <label for="subname" class="form-label">Select Sub-Category</label>
-                    //     <div class="col-sm-9">
-                    //         <select onchange="getSabCatval(this);" id="subcategorycal_val" name="subcategory_val" class="form-controlss form-select" required>
-                    //             <option value="">Select Sub-Category</option>`;
-                    //     $.each(data, function(id, subcategory_name) {
-                    //         newSubcategory += `<option value="${id}">${subcategory_name}</option>`;
-                    //     });
-                    //     newSubcategory += `</select>
-                    //     </div>
-                    //     </div>`;
-                    //     $('#subcategorycal-containercal').append(newSubcategory);
-
-                    // } else {
-                    //     $('#subcategorycal-containercal').append(newSubcategory);
-                    // }
-
                     $("#subcategorycal-containercal").html('');
                     if (data) {
                         $.each(data, function(id, subcategory_val) {
@@ -816,11 +835,14 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         $("#bracketFlangeVal").html(percentage + '%');
                         $(".finalDiscount").removeAttr('style');
                         $(".flangeShow").css('display', 'block');
+                        $(".frameOriginal").val(data[0].size).addAttr('readonly', true);
                     } else {
                         $('#subcategorycal-containercal').append(newSubcategory);
                     }
                 }
             });
+        } else {
+            $("#subcategorycal-containercal").html('');
         }
     });
 
