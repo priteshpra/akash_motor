@@ -178,12 +178,12 @@ $products = \App\Models\Product::where('status', '1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
-                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                class="btn btn-primary mt-6" style="width: 20%; ">
-                                <?php echo $value->product_name; ?>
-                            </button>&nbsp;&nbsp;
-                        </a>
+                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
+                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                        class="btn btn-primary mt-6" style="width: 20%; ">
+                                        <?php echo $value->product_name; ?>
+                                    </button>&nbsp;&nbsp;
+                                </a>
                         <?php }
                         } ?>
                     </div>
@@ -423,12 +423,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
-                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                class="btn btn-primary mt-6" style="width: 20%; ">
-                                <?php echo $value->product_name; ?>
-                            </button>&nbsp;&nbsp;
-                        </a>
+                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
+                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                        class="btn btn-primary mt-6" style="width: 20%; ">
+                                        <?php echo $value->product_name; ?>
+                                    </button>&nbsp;&nbsp;
+                                </a>
                         <?php }
                         } ?>
                     </div>
@@ -474,21 +474,6 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                             <input type="text" class="priceOriginal form-control" readonly name="price" value="">
                         </div>
                     </div>
-                    <div class="flangePerShow">
-                        @if ($taxs->isNotEmpty())
-                        <div class="mb-33 d-flex justify-content-between">
-                            <label for="name" class="form-label">flange </label>
-                            <div class="col-sm-9">
-                                <span class="calFlangePrice"></span>
-                                <!-- @foreach ($taxs as $key => $value)
-                                @if ($value->flange != '' || $value->flange !=null)
-                                <button class="btn btn-flange">{{ $value->flange }}</button>
-                                @endif
-                                @endforeach -->
-                            </div>
-                        </div>
-                        @endif
-                    </div>
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input toggleRadio" type="checkbox" checked name="typeOption[]"
@@ -501,7 +486,23 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                             <label class="form-check-label" for="inlineRadio2">Flange</label>
                         </div>
                     </div>
-                    <div class="mb-3 flangeShow">
+                    <div class="flangePerShow flangeShow">
+                        @if ($taxs->isNotEmpty())
+                        <div class="mb-33 d-flex justify-content-between">
+                            <label for="name" class="form-label">Flange ( <span id="bracketFlangeVal"></span> )</label>
+                            <div class=" col-sm-9">
+                                <span class="calFlangePrice"></span>
+                                <!-- @foreach ($taxs as $key => $value)
+                                @if ($value->flange != '' || $value->flange !=null)
+                                <button class="btn btn-flange">{{ $value->flange }}</button>
+                                @endif
+                                @endforeach -->
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+
+                    <!-- <div class="mb-3 flangeShow">
                         @if ($taxs->isNotEmpty())
                         @foreach ($taxs as $key => $value)
                         @if ($value->flange != '' || $value->flange !=null)
@@ -513,23 +514,29 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         @endif
                         @endforeach
                         @endif
-                    </div>
-                    <div class="flangeShow">
-                        @if ($taxs->isNotEmpty())
-                        @foreach ($taxs as $key => $value)
-                        @if ($value->tax != '' || $value->tax !=null)
-                        <?php $no = $key + 1; ?>
-                        <div class="mb-33 d-flex justify-content-between">
+                    </div> -->
+                    <div class="">
 
-                            <label for="name" class="form-label">Additional Tax {{ $no }}</label>
+                        <div class="mb-3 d-flex justify-content-between">
+                            @if ($taxs->isNotEmpty())
+                            <label for="name" class="form-label">Additional Tax</label>
                             <div class="col-sm-9">
+                                @foreach ($taxs as $key => $value)
+                                @if ($value->tax != '' || $value->tax !=null)
+                                <?php $no = $key + 1; ?>
+                                <!-- <div class="col-sm-9">
                                 <label for="name" class="form-label">{{ $value->tax }}</label>
+                            </div> -->
+                                <input type="radio" class="btn-check form-control flangePerc" placeholder="Price" name="flange"
+                                    id="flanges{{ $value->tax }}" autocomplete="off" value="{{ $value->tax }}">
+                                <label class="btn btn-outline-success" for="flanges{{ $value->tax }}">{{ $value->tax
+                            }}</label>&nbsp;&nbsp;
+                                @endif
+                                @endforeach
+                                @endif
                             </div>
-
                         </div>
-                        @endif
-                        @endforeach
-                        @endif
+
                     </div>
 
                     <div class="mb-33 finalDiscount" style="display: none !important">
@@ -555,10 +562,11 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
 <script>
-    $("#calculateButton").click(function(){
+    $("#calculateButton").click(function() {
         $("#finaldiscount").val();
         $("#calculateData").html('here some show the calculation');
     });
+
     function getFormData(ID) {
         $.ajaxSetup({
             headers: {
@@ -649,7 +657,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
     $(".flangePerShow").css('display', 'none');
     $(".FlangevalDiv").css('display', 'none');
 
-    $('.toggleRadio').on('change', function () {
+    $('.toggleRadio').on('change', function() {
         // Check if the current radio button is checked
         if ($(this).is(':checked') && $(this).val() === 'Flange') {
             $(".flangeShow").css('display', 'block');
@@ -805,6 +813,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         });
                         // $('input[name="typeOption[]"][value="' + data[0].typeOption + '"]').prop('checked', true);
                         $(".calFlangePrice").text(finalPrice);
+                        $("#bracketFlangeVal").html(percentage + '%');
                         $(".finalDiscount").removeAttr('style');
                         $(".flangeShow").css('display', 'block');
                     } else {
