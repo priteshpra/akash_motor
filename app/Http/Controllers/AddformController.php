@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ProductAddData;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -71,7 +72,7 @@ class AddformController extends Controller
             DB::enableQueryLog();
             ProductAddData::create(
                 // Matching conditions (update if these match)
-                ['category_id' => $category_id, 'subcategory_val' => $subCatValues, 'subcategory_id' => $subCatId, 'product_id' => $product_id, 'flange_percentage' => $flangePercentage, 'flange_val' => $Flangeval, 'footval' => $Footval, 'size' => $size, 'typeOption' => $typeOption],
+                ['category_id' => $category_id, 'subcategory_val' => $subCatValues, 'subcategory_id' => $subCatId, 'product_id' => $product_id, 'flange_percentage' => $flangePercentage, 'flange_val' => $Flangeval, 'footval' => $Footval, 'size' => $size, 'typeOption' => $typeOption, 'date' => date('Y-m-d H:i:s')],
                 // Fields to update or create
                 // ['flange' => $flangeValue, 'footval' => $Footval]
             );
@@ -163,7 +164,7 @@ class AddformController extends Controller
         // DB::enableQueryLog();
 
         $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
-            ->where('products_add_data.category_id', $category_id)->where('products_add_data.status', '1')->distinct()->get();
+            ->where('products_add_data.category_id', $category_id)->where('products_add_data.product_id', $product_id)->where('products_add_data.status', '1')->distinct()->get();
         $groupedSubcat = $subcat->groupBy('subcategory_name');
         // Structure the response
         $response = $groupedSubcat->map(function ($items, $name) {
@@ -173,18 +174,48 @@ class AddformController extends Controller
             // Consolidate options
             $options = $items->map(function ($item) {
                 return [
-                    'value' => $item->subcategory_val,
+                    'value' => $item->date,
                     'label' => $item->subcategory_val
                 ];
             });
 
             return [
                 'id' => $firstItem->subcategory_id,
+                'cat_id' => $firstItem->category_id,
                 'name' => $name,
                 'flange_percentage' => $firstItem->flange_percentage,
                 'size' => $firstItem->size,
                 'footval' => $firstItem->footval,
                 'typeOption' => $firstItem->typeOption,
+                'options' => $options->unique('label')->values()
+            ];
+        })->values();
+        $queryLog = DB::getQueryLog();
+        // dd(end($queryLog));
+        // dd($subcat);
+        return response()->json($response);
+    }
+
+    public function geSubValCategory($created_at, $product_id, $cat_id)
+    {
+        // DB::enableQueryLog();
+        $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
+            ->where('products_add_data.date', $created_at)->where('products_add_data.product_id', $product_id)->where('products_add_data.category_id', $cat_id)->where('products_add_data.status', '1')->distinct()->get();
+        $groupedSubcat = $subcat->groupBy('subcategory_name');
+        // Structure the response
+        $response = $groupedSubcat->map(function ($items, $name) {
+            // Use the first item for fixed fields like `flange_percentage`, `footval`, `typeOption`
+            $firstItem = $items->first();
+
+            // Consolidate options
+            $options = $items->map(function ($item) {
+                return [
+                    'value' => $item->date
+                ];
+            });
+
+            return [
+                'id' => $firstItem->subcategory_id,
                 'options' => $options->unique('value')->values()
             ];
         })->values();

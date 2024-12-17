@@ -178,12 +178,12 @@ $products = \App\Models\Product::where('status', '1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
-                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                        class="btn btn-primary mt-6" style="width: 20%; ">
-                                        <?php echo $value->product_name; ?>
-                                    </button>&nbsp;&nbsp;
-                                </a>
+                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
+                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                class="btn btn-primary mt-6" style="width: 20%; ">
+                                <?php echo $value->product_name; ?>
+                            </button>&nbsp;&nbsp;
+                        </a>
                         <?php }
                         } ?>
                     </div>
@@ -423,12 +423,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
-                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                        class="btn btn-primary mt-6" style="width: 20%; ">
-                                        <?php echo $value->product_name; ?>
-                                    </button>&nbsp;&nbsp;
-                                </a>
+                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
+                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                class="btn btn-primary mt-6" style="width: 20%; ">
+                                <?php echo $value->product_name; ?>
+                            </button>&nbsp;&nbsp;
+                        </a>
                         <?php }
                         } ?>
                     </div>
@@ -469,7 +469,8 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div class="mb-33 d-flex justify-content-between">
                         <label for="name" class="form-label">Frame Size</label>
                         <div class="col-sm-9">
-                            <input type="text" class="frameOriginal numericInput form-control" readonly name="frame" value="">
+                            <input type="text" class="frameOriginal numericInput form-control" readonly name="frame"
+                                value="">
                         </div>
                     </div>
                     <!-- <div id="subcategorycordinate">
@@ -533,10 +534,11 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                                 <!-- <div class="col-sm-9">
                                 <label for="name" class="form-label">{{ $value->tax }}</label>
                             </div> -->
-                                <input type="radio" class="btn-check form-control flangePerc" placeholder="Price" name="flange"
-                                    id="flanges{{ $value->tax }}" autocomplete="off" value="{{ $value->tax }}">
+                                <input type="radio" class="btn-check form-control flangePerc" placeholder="Price"
+                                    name="flange" id="flanges{{ $value->tax }}" autocomplete="off"
+                                    value="{{ $value->tax }}">
                                 <label class="btn btn-outline-success" for="flanges{{ $value->tax }}">{{ $value->tax
-                            }}</label>&nbsp;&nbsp;
+                                    }}</label>&nbsp;&nbsp;
                                 @endif
                                 @endforeach
                                 @endif
@@ -552,7 +554,8 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                             <?php $gstVal = $value->gst; ?>
                             @endforeach
                             @endif
-                            <input type="text" class="taxOriginal numericInput form-control" readonly name="tax" value="{{ $gstVal }}">
+                            <input type="text" class="taxOriginal numericInput form-control" readonly name="tax"
+                                value="{{ $gstVal }}">
                         </div>
                     </div>
                     <div class="mb-33 finalDiscount" style="display: none !important">
@@ -803,7 +806,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                                 <div class="mb-33 d-flex justify-content-between">
                                     <label for="subname" class="form-label">${subcategory_val.name}</label>
                                     <div class="col-sm-9">
-                                        <select name="subCat"  class="form-select form-controlss subCat">
+                                        <select name="subCat" data-idval="${subcategory_val.id}" onchange="getSabCatval(this, ${subcategory_val.cat_id});" class="form-select form-controlss subCat">
                                             ${options}
                                         </select>
                                     </div>
@@ -835,7 +838,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         $("#bracketFlangeVal").html(percentage + '%');
                         $(".finalDiscount").removeAttr('style');
                         $(".flangeShow").css('display', 'block');
-                        $(".frameOriginal").val(data[0].size).addAttr('readonly', true);
+                        $(".frameOriginal").val(data[0].size);
                     } else {
                         $('#subcategorycal-containercal').append(newSubcategory);
                     }
@@ -846,38 +849,29 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         }
     });
 
-    // function getSabCatval(sel) {
-    //     var category_id = sel.value;
-    //     $('#subcategory-dropdown').html('<option value="">Select Subcategory</option>');
-    //     let url = "{{ route('get.subcordinate', [':categoryId', ':productId']) }}";
-    //     url = url.replace(':categoryId', category_id).replace(':productId', window.product_id);
-    //     if (category_id) {
-    //         $.ajax({
-    //             url: url,
-    //             type: 'GET',
-    //             success: function(data) {
-    //                 $("#subcategorycordinate").html('');
-    //                 if (data) {
-    //                     var newSubcategory = `<div class="mb-33 d-flex justify-content-between">
-    //                     <label for="subname" class="form-label"> Sub-Cordinate</label>
-    //                     <div class="col-sm-9">`;
-    //                     $.each(data, function(id, subcategory_val) {
-    //                         // newSubcategory += `<option value="${id}">${subcategory_val}</option>`;
-    //                         newSubcategory += `<label for="subname" class="form-label">${subcategory_val}</label>`;
-    //                     });
-    //                     newSubcategory += `
-    //                     </div>
-    //                 </div>`;
-    //                     $('#subcategorycordinate').append(newSubcategory);
-    //                     $(".finalDiscount").removeAttr('style');
-    //                     $(".flangeShow").css('display', 'block');
-    //                 } else {
-    //                     $('#subcategorycordinate').append(newSubcategory);
-    //                 }
-    //             }
-    //         });
-    //     }
-    // }
+    function getSabCatval(sel, cat_id) {
+        var created_at = sel.value;
+        let productId = window.product_id;
+        let url = "{{ route('get.subvalcategory', [':created_at', ':productId', ':catId']) }}";
+        url = url.replace(':created_at', created_at).replace(':productId', productId).replace(':catId', cat_id);
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(data) {
+                if (data) {
+                    $.each(data, function(id, subcategory_val) {
+                        let options = ''; // Initialize an empty string for options
+                        if (subcategory_val.options && Array.isArray(subcategory_val.options)) {
+                            $.each(subcategory_val.options, function(index, option) {
+                                var $selectElement = $('select[data-idval="' + subcategory_val.id + '"]');
+                                $selectElement.find('option[value="'+option.value+'"]').prop('selected', true);
+                            });
+                        }
+                    });
+                }
+            }
+        });
+    }
 
     function showAlert(type, message) {
         const alertHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">

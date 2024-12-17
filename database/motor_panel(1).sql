@@ -410,3 +410,4 @@ COMMIT;
 ALTER TABLE `products_add_data` ADD `size` VARCHAR(100) NULL DEFAULT NULL AFTER `footval`;
 ALTER TABLE `products_add_data` ADD `typeOption` VARCHAR(100) NULL DEFAULT NULL AFTER `subcategory_val`;
 ALTER TABLE `sub_categories` ADD `status` TINYINT NOT NULL DEFAULT '1' AFTER `subcategory_name`;
+ALTER TABLE `products_add_data` ADD `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `status`;

@@ -46,6 +46,8 @@ Route::get('/get-categorys/{categoryId}', [CategoryController::class, 'geCategor
 Route::get('/get-subcategorys/{categoryId}', [SubCategoryController::class, 'geSubCategorys'])->name('get.subcategorys');
 Route::get('/get-subcordinate/{categoryId}/{productId}', [AddformController::class, 'geSubCordinate'])->name('get.subcordinate');
 Route::get('/get-subcategory/{categoryId}/{productId}', [AddformController::class, 'geSubCategory'])->name('get.subcategory');
+Route::get('/get-subvalcategory/{createddate}/{productId}/{categoryId}', [AddformController::class, 'geSubValCategory'])->name('get.subvalcategory');
+
 Route::put('/settings/{id}', [SettingsController::class, 'update']);
 
 Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
