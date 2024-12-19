@@ -535,7 +535,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                                 <label for="name" class="form-label">{{ $value->tax }}</label>
                             </div> -->
                                 <input type="radio" class="btn-check form-control flangePerc" placeholder="Price"
-                                    name="flange" id="flanges{{ $value->tax }}" autocomplete="off"
+                                    name="flange_cal" id="flanges{{ $value->tax }}" autocomplete="off"
                                     value="{{ $value->tax }}">
                                 <label class="btn btn-outline-success" for="flanges{{ $value->tax }}">{{ $value->tax
                                     }}</label>&nbsp;&nbsp;
@@ -588,25 +588,37 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         let selectedValues = $('input[name="typeOption[]"]:checked').map(function() {
             return $(this).val(); // Return the value of each checked checkbox
         }).get();
-
-        if (selectedValues == 'Flange') {
-            var price = parseFloat($(".calFlangePrice").html());
-        } else if (selectedValues == 'Foot') {
+        if (selectedValues[0] == 'Flange') {
+            var flangeprice = parseFloat($(".calFlangePrice").html());
+            var price = originalPrice + flangeprice;
+        } else if (selectedValues[0] == 'Foot') {
             var price = parseFloat($(".priceOriginal").val());
         } else {
             var price = parseFloat($(".priceOriginal").val());
         }
         discountRate = parseFloat($("#finaldiscount").val());
-        AdditionalTax = parseFloat($('input[name="flange"]:checked').val());
+        AdditionalTax = parseFloat($('input[name="flange_cal"]:checked').val());
+        // let taxAmount = (price * AdditionalTax) / 100;
+        // let priceAfterTax = price + taxAmount;
+        // let discountAmount = (priceAfterTax * discountRate) / 100;
+        // let totalAfterDiscount = priceAfterTax - discountAmount;
+        // let extraTaxAmount = (totalAfterDiscount * taxOriginal) / 100;
+        // let finalTotal = totalAfterDiscount + extraTaxAmount;
 
-        let taxAmount = (price * AdditionalTax) / 100;
-        let priceAfterTax = price + taxAmount;
-        let discountAmount = (priceAfterTax * discountRate) / 100;
-        let totalAfterDiscount = priceAfterTax - discountAmount;
-        let extraTaxAmount = (totalAfterDiscount * taxOriginal) / 100;
-        let finalTotal = totalAfterDiscount + extraTaxAmount;
+        let discountPrice = (originalPrice * (discountRate / 100));
+        let AfterDiscount = (price - discountPrice);
+        let taxAmount = AfterDiscount + AdditionalTax;
+        let extraTaxAmount = taxAmount + taxOriginal;
+        let FinalPrice = extraTaxAmount;
+        console.log('price', price);
+        console.log('discountPrice', discountPrice);
+        console.log('AfterDiscount', AfterDiscount);
+        console.log('taxAmount', taxAmount);
+        console.log('extraTaxAmount', extraTaxAmount);
+        console.log('FinalPrice', FinalPrice);
 
-        $("#calculateData").html(finalTotal.toFixed(2) + (" Formula => (((FinalPrice(flange/foot) + AdditionalTax%) - discout%) + tax%) "));
+
+        $("#calculateData").html('Final Amount : <b>'+FinalPrice.toFixed(2) + '</b> ( Formula if flange selected (((flange+price) - dicount) + AT) + Tax' + 'Formula if foot selected (((price) - dicount) + AT) + Tax )');
     });
 
     function getFormData(ID) {
@@ -833,7 +845,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         typeOptionCheckBoc.forEach(function(optionCheckbox) {
                             $('input[name="typeOption[]"][value="' + optionCheckbox + '"]').prop('checked', true);
                         });
-                        // $('input[name="typeOption[]"][value="' + data[0].typeOption + '"]').prop('checked', true);
+
                         $(".calFlangePrice").text(finalPrice);
                         $("#bracketFlangeVal").html(percentage + '%');
                         $(".finalDiscount").removeAttr('style');
