@@ -178,12 +178,12 @@ $products = \App\Models\Product::where('status', '1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
-                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                class="btn btn-primary mt-6" style="width: 20%; ">
-                                <?php echo $value->product_name; ?>
-                            </button>&nbsp;&nbsp;
-                        </a>
+                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
+                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                        class="btn btn-primary mt-6" style="width: 20%; ">
+                                        <?php echo $value->product_name; ?>
+                                    </button>&nbsp;&nbsp;
+                                </a>
                         <?php }
                         } ?>
                     </div>
@@ -300,7 +300,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                 <div class="alert-container">
                     <!-- Alerts will be dynamically inserted here -->
                 </div>
-                <form id="catForm">
+                <form id="catFormEdit">
                     @csrf
                     <div class="mb-33 d-flex justify-content-between">
                         <label for="name" class="form-label">Select Category</label>
@@ -313,11 +313,18 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     </div>
                     <div id="subcategorys-containers">
                     </div>
-                    <input type="hidden" name="product_id" id="product_ids" value="" />
+                    <input type="hidden" name="product_id" id="product_id_edit" value="" />
+                    <div class="" id="">
+                        <div class="mb-33 d-flex justify-content-between">
+                            <label for="name" class="form-label">Frame Size</label>
+                            <input type="text" class="form-controls numericInput sizeVal" id="size_edit" name="size"
+                                placeholder="Frame Size" required>
+                        </div>
+                    </div>
                     <div class="" id="FootvalDiv">
                         <div class="mb-33 d-flex justify-content-between">
                             <label for="name" class="form-label">Price</label>
-                            <input type="text" class="form-controls numericInput Footval" id="Footval" name="Footval"
+                            <input type="text" class="form-controls numericInput Footval" id="Footval_edit" name="Footval"
                                 placeholder="Price" required>
                         </div>
                     </div>
@@ -339,32 +346,19 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         @if ($taxs->isNotEmpty())
                         @foreach ($taxs as $key => $value)
                         @if ($value->flange != '' || $value->flange !=null)
-                        <input type="radio" class="btn-check form-control" placeholder="Price" name="flange"
-                            id="flange{{ $value->flange }}" autocomplete="off" value="{{ $value->flange }}">
-                        <label class="btn btn-outline-success" for="flange{{ $value->flange }}">{{ $value->flange
+                        <input type="radio" class="btn-check form-control" placeholder="Price" name="flange_edit"
+                            id="flange_edit{{ $value->flange }}" autocomplete="off" value="{{ $value->flange }}">
+                        <label class="btn btn-outline-success" for="flange_edit{{ $value->flange }}">{{ $value->flange
                             }}</label>&nbsp;&nbsp;
 
                         @endif
                         @endforeach
                         @endif
                     </div>
-                    {{-- <div class="FlangevalDiv" id="FlangevalDiv">
-                        <div class="mb-33 d-flex justify-content-between">
-                            <label for="name" class="form-label">Price</label>
-                            <input type="text" class="form-controls numericInput Flangeval" id="Flangeval"
-                                name="Flangeval" placeholder="Price" required>
-                        </div>
-                    </div> --}}
-                    <div class="" id="">
-                        <div class="mb-33 d-flex justify-content-between">
-                            <label for="name" class="form-label">Frame Size</label>
-                            <input type="text" class="form-controls numericInput sizeVal" id="size" name="size"
-                                placeholder="Frame Size" required>
-                        </div>
-                    </div>
+
 
                     <button type="button" id="resetButton" class="btn btn-secondary">Reset</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
         </div>
@@ -385,11 +379,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                 <div class="alert-container">
                     <!-- Alerts will be dynamically inserted here -->
                 </div>
+                <button id="delete-selected" style="float: inline-end;margin-bottom: 5px;" class="btn btn-danger">Delete Selected</button>
                 <h6>View List</h6>
                 <table style="width: 100%;" id="viewTable" class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th><input type="checkbox" id="select-all"></th>
                             <th>Product Name</th>
                             <th>Category Name</th>
                             <th>Sub-Category Name</th>
@@ -423,12 +418,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
-                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                class="btn btn-primary mt-6" style="width: 20%; ">
-                                <?php echo $value->product_name; ?>
-                            </button>&nbsp;&nbsp;
-                        </a>
+                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
+                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                        class="btn btn-primary mt-6" style="width: 20%; ">
+                                        <?php echo $value->product_name; ?>
+                                    </button>&nbsp;&nbsp;
+                                </a>
                         <?php }
                         } ?>
                     </div>
@@ -609,7 +604,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         let AfterDiscount = (price - discountPrice);
         let taxAmount = AfterDiscount + AdditionalTax;
         let extraTaxAmount = taxAmount + taxOriginal;
-        let FinalPrice = extraTaxAmount;
+        let FinalPrice = Math.round(parseFloat(extraTaxAmount.toFixed(2)));
         console.log('price', price);
         console.log('discountPrice', discountPrice);
         console.log('AfterDiscount', AfterDiscount);
@@ -618,10 +613,31 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         console.log('FinalPrice', FinalPrice);
 
 
-        $("#calculateData").html('Final Amount : <b>'+FinalPrice.toFixed(2) + '</b> ( Formula if flange selected (((flange+price) - dicount) + AT) + Tax' + 'Formula if foot selected (((price) - dicount) + AT) + Tax )');
+        $("#calculateData").html('Final Amount : <b>' + FinalPrice.toFixed(2) + '</b> ( Formula if flange selected (((flange+price) - dicount) + AT) + Tax' + 'Formula if foot selected (((price) - dicount) + AT) + Tax )');
     });
+    $('#catFormEdit').on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: "{{ route('addform.update', ':id') }}".replace(':id', window.editId),
+            method: "PUT",
+            data: $(this).serialize(),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+            },
+            success: function(response) {
+                showAlert('success', 'Product updated successfully!');
+                table.ajax.reload();
+            },
+            error: function(error) {
+                console.error(error);
+                showAlert('danger', 'Something went wrong. Please try again.');
+            }
+        });
+    })
 
-    function getFormData(ID) {
+    function getFormData(ID, PrId) {
+        window.editId = ID;
+        $("#product_id_edit").val(PrId);
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -652,12 +668,19 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     $('#inlineRadio22').click();
                     $('#inlineRadio22').prop('checked', true);
                 }
-                $(".footval").val(response.data.footval);
-                $(".flange").val(response.data.flange);
+                $("#Footval_edit").val(response.data.footval);
+                // $("#flange_edit").val(response.data.flange);
                 $(".Flangeval").val(response.data.flange_val);
-                $(".sizeVal").val(response.data.size);
-                $('input[name="flange"][value="' + response.data.flange_percentage + '"]').prop('checked', true);
-                console.log(' === response === ', response.data);
+                $("#size_edit").val(response.data.size);
+                $('input[name="flange_edit"][value="' + response.data.flange_percentage + '"]').prop('checked', true);
+                // console.log(' === response === ', response.data);
+                let typeOptionCheckBoc = response.data.typeOption.split(', ');
+                console.log(typeOptionCheckBoc);
+
+                $('input[name="typeOption[]"]').prop('checked', false);
+                typeOptionCheckBoc.forEach(function(optionCheckbox) {
+                    $('input[name="typeOption[]"][value="' + optionCheckbox + '"]').prop('checked', true);
+                });
 
             },
             error: function(error) {
@@ -685,6 +708,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
             }
         });
     })
+
     document.getElementById('resetButton').addEventListener('click', function() {
         document.getElementById('catForm').reset();
     });
@@ -827,13 +851,19 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 
                         });
                         $('.priceOriginal').val(data[0].footval);
-                        if (data[0].flange_percentage != '') {
+                        if (data[0].flange_percentage) {
+
+
                             $(".flangePerShow").css('display', 'block');
+
+                            $(".flangeShow").css('display', 'block');
                             // $('button.btn-flange:contains("' + data[0].flange_percentage + '")').addClass('btn-success active').attr('disabled', true);
                             // $('button.btn-flange').attr('disabled', true);
                             $('input[name="flange"][value="' + data[0].flange_percentage + '"]').prop('checked', true);
                         } else {
                             $(".flangePerShow").css('display', 'none');
+
+                            $(".flangeShow").css('display', 'none');
                         }
 
                         var price = parseFloat(data[0].footval); // Base price
@@ -849,7 +879,6 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         $(".calFlangePrice").text(finalPrice);
                         $("#bracketFlangeVal").html(percentage + '%');
                         $(".finalDiscount").removeAttr('style');
-                        $(".flangeShow").css('display', 'block');
                         $(".frameOriginal").val(data[0].size);
                     } else {
                         $('#subcategorycal-containercal').append(newSubcategory);
@@ -876,7 +905,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                         if (subcategory_val.options && Array.isArray(subcategory_val.options)) {
                             $.each(subcategory_val.options, function(index, option) {
                                 var $selectElement = $('select[data-idval="' + subcategory_val.id + '"]');
-                                $selectElement.find('option[value="'+option.value+'"]').prop('selected', true);
+                                $selectElement.find('option[value="' + option.value + '"]').prop('selected', true);
                             });
                         }
                     });
@@ -896,6 +925,18 @@ $taxs = \App\Models\Tax::where('status','1')->get();
     $(document).on('click', '.btn-close', function() {
         location.reload(); // Reload the page
     });
+    $('#select-all').on('click', function() {
+        const rows = table.rows({
+            'search': 'applied'
+        }).nodes();
+        $('input[type="checkbox"].select-row', rows).prop('checked', this.checked);
+    });
+
+    $('#viewTable tbody').on('change', '.select-row', function() {
+        if (!this.checked) {
+            $('#select-all').prop('checked', false);
+        }
+    });
 
     // Load DataTables for main table
     var table = $('#viewTable').DataTable({
@@ -903,8 +944,13 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         serverSide: true,
         ajax: "{{ route('addform.index') }}",
         columns: [{
-                data: 'id',
-                name: 'id'
+                data: 'null',
+                name: 'id',
+                render: function(data, type, row, meta) {
+                    return `<input type="checkbox" class="select-row" data-id="${row.id}">`;
+                },
+                orderable: false,
+                searchable: false
             },
             {
                 data: 'product_name',
@@ -931,6 +977,35 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         ]
     });
     // Handle form submission
+
+    $('#delete-selected').on('click', function() {
+        const selectedIds = [];
+        table.$('input[type="checkbox"].select-row:checked').each(function() {
+            selectedIds.push($(this).data('id'));
+        });
+
+        if (selectedIds.length > 0) {
+            if (confirm('Are you sure you want to delete these items?')) {
+                $.ajax({
+                    url: "{{ route('addform.massDelete') }}",
+                    type: 'POST',
+                    data: {
+                        ids: selectedIds,
+                        _token: '{{ csrf_token() }}' // Include CSRF token
+                    },
+                    success: function(response) {
+                        table.ajax.reload();
+                        showAlert('success', 'Selected products deleted successfully!');
+                    },
+                    error: function(xhr) {
+                        showAlert('danger', 'Failed to delete selected items.');
+                    }
+                });
+            }
+        } else {
+            alert('No rows selected.');
+        }
+    });
 
     $('.numericInput').on('keypress', function(event) {
         // Allow digits only (ASCII codes 48-57 for '0' to '9')

@@ -28,7 +28,7 @@ class AddformController extends Controller
             return DataTables::of($products)
                 ->addColumn('action', function ($product) {
                     return '
-                <a href="" onClick="getFormData(' . $product->id . ')" id="edit_form_' . $product->id . '" class="btn btn-sm btn-primary"  data-bs-toggle="modal"
+                <a href="" onClick="getFormData(' . $product->id . ', ' . $product->product_id . ')" id="edit_form_' . $product->id . '" class="btn btn-sm btn-primary"  data-bs-toggle="modal"
                                     data-bs-target="#editFormModal">Edit</a>
 
                   <form action="' . route('addform.delete', $product->id) . '" method="POST" style="display:inline;">
@@ -60,12 +60,16 @@ class AddformController extends Controller
         // Get common fields (like GST)
         $category_id = $request->input('category_id');
         $product_id = $request->input('product_id');
-        $flangePercentage = $request->input('flange');
         $Footval = $request->input('Footval');
         $Flangeval = $request->input('Flangeval');
         $size = $request->input('size');
         $typeOption = $request->input('typeOption', []);
         $typeOption = is_array($typeOption) ? implode(', ', $typeOption) : $typeOption;
+        // $flangePercentage = '';
+        // if ($typeOption == 'Flange') {
+        //     $flangePercentage = $request->input('flange');
+        // }
+        $flangePercentage = strpos($typeOption, 'Flange') !== false ? $request->input('flange') : '';
         // Process each tax and flange value
         foreach ($request->input('subcategory_val') as $index => $subCatValues) {
             $subCatId = $request->input('subcategory_id')[$index] ?? null;
@@ -102,39 +106,30 @@ class AddformController extends Controller
             'typeOption' => 'required',
         ]);
         $input = $request->all();
-
+        // dd($request);
+        $typeOption = $request->input('typeOption', []);
+        $typeOption = is_array($typeOption) ? implode(', ', $typeOption) : $typeOption;
         $cms = ProductAddData::find($id);
         $cms->category_id = $request->category_id;
-        $cms->subcategory_val = $request->subcategory_val;
-        $cms->typeOption = $request->typeOption;
+        // $cms->subcategory_id = $request->subcategory_id[0];
+        $cms->subcategory_val = $request->subcategory_val[0];
+        $cms->typeOption = $typeOption;
+        $cms->footval = $request->Footval;
+        $cms->size = $request->size;
+        $cms->flange_percentage = $request->flange;
         $cms->save();
-        // dd($request);
 
-
-
-        // Get common fields (like GST)
-        $category_id = $request->input('category_id');
-        $product_id = $request->input('product_id');
-        $flangePercentage = ($request->input('Footval')) ? '' : $request->input('flange');
-        $Footval = $request->input('Footval');
-        $Flangeval = $request->input('Flangeval');
-        // Process each tax and flange value
-        $productsData = ProductAddData::find($id);
-        foreach ($request->input('subcategory_val') as $index => $subCatValues) {
-            $subCatId = $request->input('subcategory_id')[$index] ?? null;
-            DB::enableQueryLog();
-            $productsData->category_id = $category_id;
-            $productsData->subcategory_val = $subCatValues;
-            $productsData->subcategory_id = $subCatId;
-            $productsData->product_id = $product_id;
-            $productsData->flange_percentage = $flangePercentage;
-            $productsData->flange_val = $Flangeval;
-            $productsData->footval = $Footval;
-            $productsData->save();
-        }
-
-        // Tax::create($request->except('_token'));
         return response()->json(['success' => 'Product updated successfully']);
+    }
+
+    public function massDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+        if (!empty($ids)) {
+            ProductAddData::whereIn('id', $ids)->update(['status' => 0]);
+            return response()->json(['success' => 'Records deleted successfully.']);
+        }
+        return response()->json(['error' => 'No IDs provided.'], 400);
     }
 
     /**

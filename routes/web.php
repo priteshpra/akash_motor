@@ -62,7 +62,8 @@ Route::post('/addform/{id}/edit', [AddformController::class, 'edit'])->name('add
 // Route for deleting a product
 // Route::delete('/addform/{id}', [AddformController::class, 'destroy'])->name('addform.delete');
 Route::delete('/addform/{id}/delete', [AddformController::class, 'destroy'])->name('addform.delete');
-
+Route::put('/addform/{id}', [AddFormController::class, 'update'])->name('addform.update');
+Route::post('/addform/mass-delete', [AddFormController::class, 'massDelete'])->name('addform.massDelete');
 // });
 
 
