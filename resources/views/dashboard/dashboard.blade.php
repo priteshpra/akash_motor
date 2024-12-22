@@ -478,12 +478,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     </div>
                     <div class="mb-3">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input toggleRadio" type="checkbox" checked name="typeOption[]"
+                            <input class="form-check-input toggleRadio" type="checkbox" checked name="typeOption_cal[]"
                                 id="inlineRadio1" value="Foot">
                             <label class="form-check-label" for="inlineRadio1">Foot</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input toggleRadio" type="checkbox" name="typeOption[]"
+                            <input class="form-check-input toggleRadio" type="checkbox" name="typeOption_cal[]"
                                 id="inlineRadio2" value="Flange">
                             <label class="form-check-label" for="inlineRadio2">Flange</label>
                         </div>
@@ -580,16 +580,21 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         $(".frameOriginal").val();
         originalPrice = parseFloat($(".priceOriginal").val());
         taxOriginal = parseFloat($(".taxOriginal").val());
-        let selectedValues = $('input[name="typeOption[]"]:checked').map(function() {
+        let selectedValues = $('input[name="typeOption_cal[]"]:checked').map(function() {
             return $(this).val(); // Return the value of each checked checkbox
         }).get();
-        if (selectedValues[0] == 'Flange') {
-            var flangeprice = parseFloat($(".calFlangePrice").html());
-            var price = originalPrice + flangeprice;
-        } else if (selectedValues[0] == 'Foot') {
-            var price = parseFloat($(".priceOriginal").val());
+        let price;
+        let flangeprice;
+        if (selectedValues.length === 1 && selectedValues[0] === 'Flange') {
+            flangeprice = parseFloat($(".calFlangePrice").html());
+            price = originalPrice + flangeprice;
+        } else if (selectedValues.length === 1 && selectedValues[0] === 'Foot') {
+            price = originalPrice;
+        } else if (selectedValues.includes('Flange') && selectedValues.includes('Foot')) {
+            flangeprice = parseFloat($(".calFlangePrice").html());
+            price = originalPrice + flangeprice;
         } else {
-            var price = parseFloat($(".priceOriginal").val());
+            price = originalPrice;
         }
         discountRate = parseFloat($("#finaldiscount").val());
         AdditionalTax = parseFloat($('input[name="flange_cal"]:checked').val());
@@ -605,12 +610,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         let taxAmount = AfterDiscount + AdditionalTax;
         let extraTaxAmount = taxAmount + taxOriginal;
         let FinalPrice = Math.round(parseFloat(extraTaxAmount.toFixed(2)));
-        console.log('price', price);
-        console.log('discountPrice', discountPrice);
-        console.log('AfterDiscount', AfterDiscount);
-        console.log('taxAmount', taxAmount);
-        console.log('extraTaxAmount', extraTaxAmount);
-        console.log('FinalPrice', FinalPrice);
+        // console.log('price', price);
+        // console.log('discountPrice', discountPrice);
+        // console.log('AfterDiscount', AfterDiscount);
+        // console.log('taxAmount', taxAmount);
+        // console.log('extraTaxAmount', extraTaxAmount);
+        // console.log('FinalPrice', FinalPrice);
 
 
         $("#calculateData").html('Final Amount : <b>' + FinalPrice.toFixed(2) + '</b> ( Formula if flange selected (((flange+price) - dicount) + AT) + Tax' + 'Formula if foot selected (((price) - dicount) + AT) + Tax )');
@@ -871,9 +876,9 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 
                         var finalPrice = price + (price * percentage / 100);
                         let typeOptionCheckBoc = data[0].typeOption.split(', ');
-                        $('input[name="typeOption[]"]').prop('checked', false);
+                        $('input[name="typeOption_cal[]"]').prop('checked', false);
                         typeOptionCheckBoc.forEach(function(optionCheckbox) {
-                            $('input[name="typeOption[]"][value="' + optionCheckbox + '"]').prop('checked', true);
+                            $('input[name="typeOption_cal[]"][value="' + optionCheckbox + '"]').prop('checked', true);
                         });
 
                         $(".calFlangePrice").text(finalPrice);
