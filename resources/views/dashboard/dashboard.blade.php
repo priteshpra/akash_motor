@@ -178,12 +178,12 @@ $products = \App\Models\Product::where('status', '1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
-                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                class="btn btn-primary mt-6" style="width: 20%; ">
-                                <?php echo $value->product_name; ?>
-                            </button>&nbsp;&nbsp;
-                        </a>
+                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
+                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                        class="btn btn-primary mt-6" style="width: 20%; ">
+                                        <?php echo $value->product_name; ?>
+                                    </button>&nbsp;&nbsp;
+                                </a>
                         <?php }
                         } ?>
                     </div>
@@ -390,6 +390,8 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                             <th>Category Name</th>
                             <th>Sub-Category Name</th>
                             <th>Sub Cordinates</th>
+                            <th>Frame Size</th>
+                            <th>Price</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -419,12 +421,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
-                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                class="btn btn-primary mt-6" style="width: 20%; ">
-                                <?php echo $value->product_name; ?>
-                            </button>&nbsp;&nbsp;
-                        </a>
+                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
+                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                        class="btn btn-primary mt-6" style="width: 20%; ">
+                                        <?php echo $value->product_name; ?>
+                                    </button>&nbsp;&nbsp;
+                                </a>
                         <?php }
                         } ?>
                     </div>
@@ -543,7 +545,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     </div>
 
                     <div class="mb-33 d-flex justify-content-between">
-                        <label for="name" class="form-label">Tax</label>
+                        <label for="name" class="form-label">GST</label>
                         <div class="col-sm-9">
                             @if ($taxs->isNotEmpty())
                             @foreach ($taxs as $key => $value)
@@ -561,6 +563,8 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     </div>
                     <div class="mb-3">
                         <div id="calculateData"></div>
+                        <div id="calculateDataFlange"></div>
+                        <div id="calculateDataFoot"></div>
                     </div>
                     <button type="button" id="calculateButton" class="btn btn-secondary">Calculate</button>
                     <button type="button" class="btn btn-primary">Download</button>
@@ -579,8 +583,8 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 <script>
     $("#calculateButton").click(function() {
         $(".frameOriginal").val();
-        originalPrice = parseFloat($(".priceOriginal").val());
-        taxOriginal = parseFloat($(".taxOriginal").val());
+        let originalPrice = parseFloat($(".priceOriginal").val());
+        let taxOriginal = parseFloat($(".taxOriginal").val());
         let selectedValues = $('input[name="typeOption_cal[]"]:checked').map(function() {
             return $(this).val(); // Return the value of each checked checkbox
         }).get();
@@ -588,31 +592,53 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         let flangeprice;
         if (selectedValues.length === 1 && selectedValues[0] === 'Flange') {
             flangeprice = parseFloat($(".calFlangePrice").html());
-            price = originalPrice + flangeprice;
+            price = flangeprice;
         } else if (selectedValues.length === 1 && selectedValues[0] === 'Foot') {
             price = originalPrice;
         } else if (selectedValues.includes('Flange') && selectedValues.includes('Foot')) {
             flangeprice = parseFloat($(".calFlangePrice").html());
-            price = originalPrice + flangeprice;
+            footprice = originalPrice;
         } else {
             price = originalPrice;
         }
         discountRate = parseFloat($("#finaldiscount").val());
-        AdditionalTax = parseFloat($('input[name="flange_cal"]:checked').val());
-        // let taxAmount = (price * AdditionalTax) / 100;
-        // let priceAfterTax = price + taxAmount;
-        // let discountAmount = (priceAfterTax * discountRate) / 100;
-        // let totalAfterDiscount = priceAfterTax - discountAmount;
-        // let extraTaxAmount = (totalAfterDiscount * taxOriginal) / 100;
-        // let finalTotal = totalAfterDiscount + extraTaxAmount;
+        AdditionalTaxs = parseFloat($('input[name="flange_cal"]:checked').val());
 
-        let discountPrice = (originalPrice * (discountRate / 100));
+        let discountPrice = (price * (discountRate / 100));
         let AfterDiscount = (price - discountPrice);
-        AdditionalTax = AfterDiscount * (AdditionalTax / 100);
-        let taxAmount = AfterDiscount + AdditionalTax;
+        AdditionalTaxes = AfterDiscount * (AdditionalTaxs / 100);
+        let taxAmount = AfterDiscount + AdditionalTaxes;
         taxOriginal = taxAmount * (taxOriginal / 100);
         let extraTaxAmount = taxAmount + taxOriginal;
         let FinalPrice = Math.round(parseFloat(extraTaxAmount.toFixed(2)));
+
+        if (selectedValues.includes('Flange') && selectedValues.includes('Foot')) {
+            taxOriginal = parseFloat($(".taxOriginal").val());
+
+            let discountPriceflange = (flangeprice * (discountRate / 100));
+            let AfterDiscountFlange = (flangeprice - discountPriceflange);
+            AdditionalTaxFlane = AfterDiscountFlange * (AdditionalTaxs / 100);
+            let taxAmountFlange = AfterDiscountFlange + AdditionalTaxFlane;
+            taxOriginalflange = taxAmountFlange * (taxOriginal / 100);
+            let extraTaxAmountFlange = taxAmountFlange + taxOriginalflange;
+            let FinalPriceFlange = Math.round(parseFloat(extraTaxAmountFlange.toFixed(2)));
+            console.log('flangeprice', flangeprice);
+            console.log('discountPriceflange', discountPriceflange);
+            console.log('AdditionalTaxFlane', AdditionalTaxFlane);
+
+            let discountPricefoot = (footprice * (discountRate / 100));
+            let AfterDiscountFoot = (footprice - discountPricefoot);
+            AdditionalTaxFoot = AfterDiscountFoot * (AdditionalTaxs / 100);
+            let taxAmountFoot = AfterDiscountFoot + AdditionalTaxFoot;
+            taxOriginalFoot = taxAmountFoot * (taxOriginal / 100);
+            let extraTaxAmountFoot = taxAmountFoot + taxOriginalFoot;
+            let FinalPriceFoot = Math.round(parseFloat(extraTaxAmountFoot.toFixed(2)));
+
+            $("#calculateDataFlange").html('Final Amount Flange : <b>' + FinalPriceFlange.toFixed(2) + '</b>');
+            $("#calculateDataFoot").html('Final Amount Foot : <b>' + FinalPriceFoot.toFixed(2) + '</b>');
+            $("#calculateData").hide();
+        }
+
         // console.log('price', price);
         // console.log('discountPrice', discountPrice);
         // console.log('AfterDiscount', AfterDiscount);
@@ -917,6 +943,25 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                             });
                         }
                     });
+                    $(".priceOriginal").val(data[0].price);
+                    $(".frameOriginal").val(data[0].size);
+                    var price = parseFloat(data[0].price);
+                    let typeOptionCheckBoc = data[0].typeOption.split(', ');
+                    $('input[name="typeOption_cal[]"]').prop('checked', false);
+                    var percentage = parseFloat(data[0].flange_percentage);
+                    var finalPrice = price + (price * percentage / 100);
+                    typeOptionCheckBoc.forEach(function(optionCheckbox) {
+                        if (optionCheckbox == 'Flange') {
+                            $(".calFlangePrice").text(finalPrice);
+                            $("#bracketFlangeVal").html(percentage + '%');
+                            $(".flangeShow").css('display', 'block');
+                        } else if (optionCheckbox == 'Foot') {
+                            $(".flangeShow").css('display', 'none');
+                        } else {
+                            $(".flangeShow").css('display', 'none');
+                        }
+                        $('input[name="typeOption_cal[]"][value="' + optionCheckbox + '"]').prop('checked', true);
+                    });
                 }
             }
         });
@@ -975,6 +1020,14 @@ $taxs = \App\Models\Tax::where('status','1')->get();
             {
                 data: 'subcategory_val',
                 name: 'subcategory_val'
+            },
+            {
+                data: 'size',
+                name: 'size'
+            },
+            {
+                data: 'footval',
+                name: 'footval'
             },
             {
                 data: 'action',
