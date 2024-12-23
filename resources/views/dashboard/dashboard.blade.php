@@ -178,12 +178,12 @@ $products = \App\Models\Product::where('status', '1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
-                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                        class="btn btn-primary mt-6" style="width: 20%; ">
-                                        <?php echo $value->product_name; ?>
-                                    </button>&nbsp;&nbsp;
-                                </a>
+                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
+                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                class="btn btn-primary mt-6" style="width: 20%; ">
+                                <?php echo $value->product_name; ?>
+                            </button>&nbsp;&nbsp;
+                        </a>
                         <?php }
                         } ?>
                     </div>
@@ -324,8 +324,8 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div class="" id="FootvalDiv">
                         <div class="mb-33 d-flex justify-content-between">
                             <label for="name" class="form-label">Price</label>
-                            <input type="text" class="form-controls numericInput Footval" id="Footval_edit" name="Footval"
-                                placeholder="Price" required>
+                            <input type="text" class="form-controls numericInput Footval" id="Footval_edit"
+                                name="Footval" placeholder="Price" required>
                         </div>
                     </div>
 
@@ -379,7 +379,8 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                 <div class="alert-container">
                     <!-- Alerts will be dynamically inserted here -->
                 </div>
-                <button id="delete-selected" style="float: inline-end;margin-bottom: 5px;" class="btn btn-danger">Delete Selected</button>
+                <button id="delete-selected" style="float: inline-end;margin-bottom: 5px;" class="btn btn-danger">Delete
+                    Selected</button>
                 <h6>View List</h6>
                 <table style="width: 100%;" id="viewTable" class="table table-bordered table-striped">
                     <thead>
@@ -418,12 +419,12 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     <div class="mb-3 text-center">
                         <?php if ($products) {
                             foreach ($products as $key => $value) { ?>
-                                <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
-                                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                                        class="btn btn-primary mt-6" style="width: 20%; ">
-                                        <?php echo $value->product_name; ?>
-                                    </button>&nbsp;&nbsp;
-                                </a>
+                        <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
+                            data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                                class="btn btn-primary mt-6" style="width: 20%; ">
+                                <?php echo $value->product_name; ?>
+                            </button>&nbsp;&nbsp;
+                        </a>
                         <?php }
                         } ?>
                     </div>
@@ -607,7 +608,9 @@ $taxs = \App\Models\Tax::where('status','1')->get();
 
         let discountPrice = (originalPrice * (discountRate / 100));
         let AfterDiscount = (price - discountPrice);
+        AdditionalTax = AfterDiscount * (AdditionalTax / 100);
         let taxAmount = AfterDiscount + AdditionalTax;
+        taxOriginal = taxAmount * (taxOriginal / 100);
         let extraTaxAmount = taxAmount + taxOriginal;
         let FinalPrice = Math.round(parseFloat(extraTaxAmount.toFixed(2)));
         // console.log('price', price);
