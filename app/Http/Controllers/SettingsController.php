@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\ProductAddData;
 use App\Models\Setting;
 use App\Models\Tax;
 use Illuminate\Foundation\Auth\User;
@@ -57,10 +59,13 @@ class SettingsController extends Controller
         $gst = $request->input('gst');
         $taxValues = $request->input('tax');
         $flangeValues = $request->input('flange');
+        $getOldflangeData = Tax::pluck('flange')->toArray();
+        $productData = ProductAddData::where('status', 1)->whereNotNull('flange_percentage')->get();
 
         $maxCount = max(count($taxValues), count($flangeValues));
         Tax::where('gst', $gst)->delete();
         // Iterate over the maximum length
+        $oldToNewFlangeMap = [];
         for ($index = 0; $index < $maxCount; $index++) {
             // Get the tax and flange values for the current index
             $taxValue = $taxValues[$index] ?? null; // If tax is missing, use null
@@ -73,10 +78,16 @@ class SettingsController extends Controller
                 // Fields to update or create
                 ['flange' => $flangeValue]
             );
+            // Update ProductAddData if old flange matches
+            if (isset($getOldflangeData[$index]) && $flangeValue !== null) {
+                $oldToNewFlangeMap[$getOldflangeData[$index]] = $flangeValue;
+            }
         }
-
-
-
+        foreach ($productData as $product) {
+            if (isset($oldToNewFlangeMap[$product->flange_percentage])) {
+                $product->update(['flange_percentage' => $oldToNewFlangeMap[$product->flange_percentage]]);
+            }
+        }
         // Tax::create($request->except('_token'));
         return response()->json(['success' => 'Taxes added successfully']);
     }
