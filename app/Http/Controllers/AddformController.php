@@ -116,7 +116,7 @@ class AddformController extends Controller
         $cms->typeOption = $typeOption;
         $cms->footval = $request->Footval;
         $cms->size = $request->size;
-        $cms->flange_percentage = $request->flange;
+        $cms->flange_percentage = $request->flange_edit;
         $cms->save();
 
         return response()->json(['success' => 'Product updated successfully']);

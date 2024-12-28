@@ -563,8 +563,11 @@ $taxs = \App\Models\Tax::where('status','1')->get();
                     </div>
                     <div class="mb-3">
                         <div id="calculateData"></div>
+                        <div id="calculateDataWithoutTax"></div>
                         <div id="calculateDataFlange"></div>
+                        <div id="calculateDataFlangeWithoutTax"></div>
                         <div id="calculateDataFoot"></div>
+                        <div id="calculateDataFootWithouTax"></div>
                     </div>
                     <button type="button" id="calculateButton" class="btn btn-secondary">Calculate</button>
                     <button type="button" class="btn btn-primary">Download</button>
@@ -574,6 +577,26 @@ $taxs = \App\Models\Tax::where('status','1')->get();
     </div>
 </div>
 <!-- Calculate Form Model END -->
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the selected items?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Confirmation Box -->
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -611,6 +634,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         taxOriginal = taxAmount * (taxOriginal / 100);
         let extraTaxAmount = taxAmount + taxOriginal;
         let FinalPrice = Math.round(parseFloat(extraTaxAmount.toFixed(2)));
+        let FinalPriceWithoutTax = Math.round(parseFloat(taxAmount.toFixed(2)));
 
         if (selectedValues.includes('Flange') && selectedValues.includes('Foot')) {
             taxOriginal = parseFloat($(".taxOriginal").val());
@@ -622,6 +646,7 @@ $taxs = \App\Models\Tax::where('status','1')->get();
             taxOriginalflange = taxAmountFlange * (taxOriginal / 100);
             let extraTaxAmountFlange = taxAmountFlange + taxOriginalflange;
             let FinalPriceFlange = Math.round(parseFloat(extraTaxAmountFlange.toFixed(2)));
+            let FinalPriceFlangeWithoutTax = Math.round(parseFloat(taxAmountFlange.toFixed(2)));
             console.log('flangeprice', flangeprice);
             console.log('discountPriceflange', discountPriceflange);
             console.log('AdditionalTaxFlane', AdditionalTaxFlane);
@@ -633,10 +658,18 @@ $taxs = \App\Models\Tax::where('status','1')->get();
             taxOriginalFoot = taxAmountFoot * (taxOriginal / 100);
             let extraTaxAmountFoot = taxAmountFoot + taxOriginalFoot;
             let FinalPriceFoot = Math.round(parseFloat(extraTaxAmountFoot.toFixed(2)));
+            let FinalPriceFootWithoutTax = Math.round(parseFloat(taxAmountFoot.toFixed(2)));
 
-            $("#calculateDataFlange").html('Final Amount Flange : <b>' + FinalPriceFlange.toFixed(2) + '</b>');
-            $("#calculateDataFoot").html('Final Amount Foot : <b>' + FinalPriceFoot.toFixed(2) + '</b>');
+            $("#calculateDataFlange").html('Final Amount Flange With Tax : <b>' + FinalPriceFlange.toFixed(2) + '</b>');
+
+            $("#calculateDataFlangeWithoutTax").html('Final Amount Flange Without Tax : <b>' + FinalPriceFlangeWithoutTax.toFixed(2) + '</b>');
+
+            $("#calculateDataFoot").html('Final Amount Foot With Tax : <b>' + FinalPriceFoot.toFixed(2) + '</b>');
+
+            $("#calculateDataFootWithouTax").html('Final Amount Foot Without Tax : <b>' + FinalPriceFootWithoutTax.toFixed(2) + '</b>');
+
             $("#calculateData").hide();
+            $("#calculateDataWithoutTax").hide();
         }
 
         // console.log('price', price);
@@ -647,7 +680,8 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         // console.log('FinalPrice', FinalPrice);
 
 
-        $("#calculateData").html('Final Amount : <b>' + FinalPrice.toFixed(2) + '</b> ( Formula if flange selected (((flange+price) - dicount) + AT) + Tax' + 'Formula if foot selected (((price) - dicount) + AT) + Tax )');
+        $("#calculateData").html('Final Amount With Tax : <b>' + FinalPrice.toFixed(2));
+        $("#calculateDataWithoutTax").html('Final Amount Without Tax : <b>' + FinalPriceWithoutTax.toFixed(2));
     });
     $('#catFormEdit').on('submit', function(e) {
         e.preventDefault();
@@ -1037,36 +1071,67 @@ $taxs = \App\Models\Tax::where('status','1')->get();
             } // Action column
         ]
     });
+    const selectedIds = [];
     // Handle form submission
-
     $('#delete-selected').on('click', function() {
-        const selectedIds = [];
+        $('#deleteConfirmationModal').modal('show'); // Show the modal
+    });
+
+    $('#confirmDeleteButton').on('click', function() {
         table.$('input[type="checkbox"].select-row:checked').each(function() {
             selectedIds.push($(this).data('id'));
         });
+        // Hide the modal
+        $('#deleteConfirmationModal').modal('hide');
 
+        // Perform AJAX request to delete items
         if (selectedIds.length > 0) {
-            if (confirm('Are you sure you want to delete these items?')) {
-                $.ajax({
-                    url: "{{ route('addform.massDelete') }}",
-                    type: 'POST',
-                    data: {
-                        ids: selectedIds,
-                        _token: '{{ csrf_token() }}' // Include CSRF token
-                    },
-                    success: function(response) {
-                        table.ajax.reload();
-                        showAlert('success', 'Selected products deleted successfully!');
-                    },
-                    error: function(xhr) {
-                        showAlert('danger', 'Failed to delete selected items.');
-                    }
-                });
-            }
-        } else {
-            alert('No rows selected.');
+            $.ajax({
+                url: "{{ route('addform.massDelete') }}",
+                type: 'POST',
+                data: {
+                    ids: selectedIds,
+                    _token: '{{ csrf_token() }}' // Include CSRF token
+                },
+                success: function(response) {
+                    table.ajax.reload(); // Reload table data
+                    showAlert('success', 'Selected products deleted successfully!');
+                },
+                error: function(xhr) {
+                    showAlert('danger', 'Failed to delete selected items.');
+                }
+            });
         }
     });
+
+
+    // $('#delete-selected').on('click', function() {
+    //     table.$('input[type="checkbox"].select-row:checked').each(function() {
+    //         selectedIds.push($(this).data('id'));
+    //     });
+
+    //     if (selectedIds.length > 0) {
+    //         if (confirm('Are you sure you want to delete these items?')) {
+    //             $.ajax({
+    //                 url: "{{ route('addform.massDelete') }}",
+    //                 type: 'POST',
+    //                 data: {
+    //                     ids: selectedIds,
+    //                     _token: '{{ csrf_token() }}' // Include CSRF token
+    //                 },
+    //                 success: function(response) {
+    //                     table.ajax.reload();
+    //                     showAlert('success', 'Selected products deleted successfully!');
+    //                 },
+    //                 error: function(xhr) {
+    //                     showAlert('danger', 'Failed to delete selected items.');
+    //                 }
+    //             });
+    //         }
+    //     } else {
+    //         alert('No rows selected.');
+    //     }
+    // });
 
     $('.numericInput').on('keypress', function(event) {
         // Allow digits only (ASCII codes 48-57 for '0' to '9')
