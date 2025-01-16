@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddDataController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
@@ -9,6 +10,11 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\AddformController;
+use App\Http\Controllers\CalculateController;
+use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\SetTaxController;
+use App\Http\Controllers\ViewDataController;
+
 // use Illuminate\Auth\Middleware\Authenticate;
 
 
@@ -25,7 +31,7 @@ use App\Http\Controllers\AddformController;
 // Login Route
 
 // Route::middleware([Authenticate::class])->group(function () {
-Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth');
+Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
 Route::get('/del/{id}', [DashboardController::class, 'deleteUSer']);
 Route::get('/', [LoginController::class, 'index']);
 Route::get('register', function () {
@@ -33,9 +39,15 @@ Route::get('register', function () {
 })->name('signup');
 Route::post('submit', [LoginController::class, 'submitForm']);
 Route::post('insertUser', [RegisterController::class, 'registerUser']);
-Route::get('logout', [LoginController::class, 'logout']);
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 Route::resource('settings', SettingsController::class);
 Route::resource('addform', AddformController::class);
+Route::get('addform/list', [AddformController::class, 'list'])->name('addform.list');
+Route::get('calculate/list', [CalculateController::class, 'list'])->name('calculate.list');
+Route::get('viewdata/list', [ViewDataController::class, 'list'])->name('viewdata.list');
+Route::get('adddata/list', [AddDataController::class, 'list'])->name('adddata.list');
+Route::get('settax/list', [SetTaxController::class, 'list'])->name('settax.list');
+Route::get('password/list', [PasswordController::class, 'set'])->name('password.set');
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
 Route::get('/subcategories', [SubCategoryController::class, 'index'])->name('subcategories.index');
