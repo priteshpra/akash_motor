@@ -85,13 +85,13 @@
                     @if ($value->flange != '' || $value->flange != null)
                     <div id="flange-container">
                         <div class="mb-3 d-flex align-items-center">
-                            <input type="text" class="form-control" value="<?php            echo $value->flange ?>"
-                                name="flange[]" required>
+                            <input type="text" class="form-control" value="<?php echo $value->flange ?>" name="flange[]"
+                                required>
 
                             @if ($loop->first)
-                            <button type="button" class="btn btn-success add-flange ms-2">+</button>
+                            <button type="button" class="btn btn-success add-flange ms-2">Add</button>
                             @else
-                            <button type="button" class="btn btn-danger remove-flange ms-2">-</button>
+                            <button type="button" class="btn btn-danger remove-flange ms-2">Delete</button>
                             @endif
                         </div>
                     </div>
@@ -104,7 +104,7 @@
                     <div id="flange-container">
                         <div class="mb-3 d-flex align-items-center">
                             <input type="text" class="form-control" name="flange[]" required>
-                            <button type="button" class="btn btn-success add-flange ms-2">+</button>
+                            <button type="button" class="btn btn-success add-flange ms-2">Add</button>
                         </div>
                     </div>
                 </div>
@@ -146,7 +146,7 @@
         const newTaxField = `
         <div class="mb-3 d-flex align-items-center">
             <input type="text" class="form-control" name="tax[]" required>
-            <button type="button" class="btn btn-danger remove-tax ms-2">-</button>
+            <button type="button" class="btn btn-danger remove-tax ms-2">Delete</button>
         </div>
         `;
         $('#additional-taxes').append(newTaxField);
@@ -160,7 +160,7 @@
     $(document).on('click', '.add-flange', function () {
         const newTaxField = `<div class="mb-3 d-flex align-items-center">
         <input type="text" class="form-control" name="flange[]" required>
-        <button type="button" class="btn btn-danger remove-flange ms-2">-</button>
+        <button type="button" class="btn btn-danger remove-flange ms-2">Delete</button>
     </div>`;
         $('#additional-flange').append(newTaxField);
     });

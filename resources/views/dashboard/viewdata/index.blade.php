@@ -29,7 +29,8 @@
         {{-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">Add
             Category</button>
         --}}
-
+        <button id="delete-selected" style="float: inline-end;margin-bottom: 5px;" class="btn btn-danger">Delete
+            Selected</button>
         <table style="width: 100%;" id="viewTable" class="table table-bordered table-striped">
             <thead>
                 <tr>
