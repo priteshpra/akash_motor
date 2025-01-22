@@ -29,7 +29,7 @@
         {{-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">Add
             Category</button>
         --}}
-        <button id="delete-selected" style="float: inline-end;margin-bottom: 5px;" class="btn btn-danger">Delete
+        <button id="delete-selected" style="float: inline-end;margin-bottom: 5px;width: 12%;" class="btn btn-danger">Delete
             Selected</button>
         <table style="width: 100%;" id="viewTable" class="table table-bordered table-striped">
             <thead>
@@ -184,7 +184,7 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
             data: {
                 ID
             },
-            success: function (response) {
+            success: function(response) {
                 $("#categorys_d").val(response.data.category_id);
                 $("#categorys_d").trigger('change');
                 var newSubcategory = `<div class="mb-3 row">
@@ -214,17 +214,18 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
                 console.log(typeOptionCheckBoc);
 
                 $('input[name="typeOption[]"]').prop('checked', false);
-                typeOptionCheckBoc.forEach(function (optionCheckbox) {
+                typeOptionCheckBoc.forEach(function(optionCheckbox) {
                     $('input[name="typeOption[]"][value="' + optionCheckbox + '"]').prop('checked', true);
                 });
 
             },
-            error: function (error) {
+            error: function(error) {
                 console.error(error);
                 showAlert('danger', 'Something went wrong. Please try again.');
             }
         });
     }
+
     function showAlert(type, message) {
         const alertHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
             ${message}
@@ -233,14 +234,14 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
         $('.alert-container').html(alertHTML); // Insert alert into container
     }
 
-    $('#select-all').on('click', function () {
+    $('#select-all').on('click', function() {
         const rows = table.rows({
             'search': 'applied'
         }).nodes();
         $('input[type="checkbox"].select-row', rows).prop('checked', this.checked);
     });
 
-    $('#viewTable tbody').on('change', '.select-row', function () {
+    $('#viewTable tbody').on('change', '.select-row', function() {
         if (!this.checked) {
             $('#select-all').prop('checked', false);
         }
@@ -252,54 +253,54 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
         serverSide: true,
         ajax: "{{ route('addform.index') }}",
         columns: [{
-            data: 'null',
-            name: 'id',
-            render: function (data, type, row, meta) {
-                return `<input type="checkbox" class="select-row" data-id="${row.id}">`;
+                data: 'null',
+                name: 'id',
+                render: function(data, type, row, meta) {
+                    return `<input type="checkbox" class="select-row" data-id="${row.id}">`;
+                },
+                orderable: false,
+                searchable: false
             },
-            orderable: false,
-            searchable: false
-        },
-        {
-            data: 'product_name',
-            name: 'product_name'
-        },
-        {
-            data: 'category_name',
-            name: 'category_name'
-        },
-        {
-            data: 'subcategory_name',
-            name: 'subcategory_name'
-        },
-        {
-            data: 'subcategory_val',
-            name: 'subcategory_val'
-        },
-        {
-            data: 'size',
-            name: 'size'
-        },
-        {
-            data: 'footval',
-            name: 'footval'
-        },
-        {
-            data: 'action',
-            name: 'action',
-            orderable: false,
-            searchable: false
-        } // Action column
+            {
+                data: 'product_name',
+                name: 'product_name'
+            },
+            {
+                data: 'category_name',
+                name: 'category_name'
+            },
+            {
+                data: 'subcategory_name',
+                name: 'subcategory_name'
+            },
+            {
+                data: 'subcategory_val',
+                name: 'subcategory_val'
+            },
+            {
+                data: 'size',
+                name: 'size'
+            },
+            {
+                data: 'footval',
+                name: 'footval'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            } // Action column
         ]
     });
     const selectedIds = [];
     // Handle form submission
-    $('#delete-selected').on('click', function () {
+    $('#delete-selected').on('click', function() {
         $('#deleteConfirmationModal').modal('show'); // Show the modal
     });
 
-    $('#confirmDeleteButton').on('click', function () {
-        table.$('input[type="checkbox"].select-row:checked').each(function () {
+    $('#confirmDeleteButton').on('click', function() {
+        table.$('input[type="checkbox"].select-row:checked').each(function() {
             selectedIds.push($(this).data('id'));
         });
         // Hide the modal
@@ -314,11 +315,11 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
                     ids: selectedIds,
                     _token: '{{ csrf_token() }}' // Include CSRF token
                 },
-                success: function (response) {
+                success: function(response) {
                     table.ajax.reload(); // Reload table data
                     showAlert('success', 'Selected products deleted successfully!');
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     showAlert('danger', 'Failed to delete selected items.');
                 }
             });

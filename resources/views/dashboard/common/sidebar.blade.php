@@ -5,7 +5,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Akash <sup>365</sup></div>
+        <div class="sidebar-brand-text mx-3">Nilkanth <sup></sup></div>
     </a>
 
     <hr class="sidebar-divider my-0">
@@ -41,9 +41,9 @@
             <span>Add Product Data</span></a>
     </li>
     {{-- <li class="nav-item {{ request()->is('dashboard') ? 'active' : ''}}">
-        <a class="nav-link" href="dashboard">
-            <i class="fas fa-fw fa-box"></i>
-            <span>Product Data</span></a>
+    <a class="nav-link" href="dashboard">
+        <i class="fas fa-fw fa-box"></i>
+        <span>Product Data</span></a>
     </li>
     <li class="nav-item {{ request()->is('dashboard') ? 'active' : ''}}">
         <a class="nav-link" href="dashboard">

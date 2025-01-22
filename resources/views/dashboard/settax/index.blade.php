@@ -55,9 +55,9 @@
                                 required>
 
                             @if ($loop->first)
-                            <button type="button" class="btn btn-success add-tax ms-2">+</button>
+                            <button type="button" class="btn btn-success add-tax ms-2">Add</button>
                             @else
-                            <button type="button" class="btn btn-danger remove-tax ms-2">-</button>
+                            <button type="button" class="btn btn-danger remove-tax ms-2">Remove</button>
                             @endif
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                     <div id="tax-container">
                         <div class="mb-3 d-flex align-items-center">
                             <input type="text" class="form-control" name="tax[]" required>
-                            <button type="button" class="btn btn-success add-tax ms-2">+</button>
+                            <button type="button" class="btn btn-success add-tax ms-2">Add</button>
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
                             @if ($loop->first)
                             <button type="button" class="btn btn-success add-flange ms-2">Add</button>
                             @else
-                            <button type="button" class="btn btn-danger remove-flange ms-2">Delete</button>
+                            <button type="button" class="btn btn-danger remove-flange ms-2">Remove</button>
                             @endif
                         </div>
                     </div>
@@ -124,25 +124,25 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 
 <script>
-    $('#taxesForm').on('submit', function (e) {
+    $('#taxesForm').on('submit', function(e) {
         e.preventDefault();
 
         $.ajax({
             url: "{{ route('settings.store') }}", // Replace with your store route
             method: "POST",
             data: $(this).serialize(),
-            success: function (response) {
+            success: function(response) {
                 showAlert('success', 'Taxes added successfully!');
                 // location.reload();
             },
-            error: function (error) {
+            error: function(error) {
                 console.error(error);
                 showAlert('danger', 'Something went wrong. Please try again.');
             }
         });
     });
 
-    $(document).on('click', '.add-tax', function () {
+    $(document).on('click', '.add-tax', function() {
         const newTaxField = `
         <div class="mb-3 d-flex align-items-center">
             <input type="text" class="form-control" name="tax[]" required>
@@ -153,11 +153,11 @@
     });
 
     // Handler for removing a text box
-    $(document).on('click', '.remove-tax', function () {
+    $(document).on('click', '.remove-tax', function() {
         $(this).closest('.mb-3').remove();
     });
 
-    $(document).on('click', '.add-flange', function () {
+    $(document).on('click', '.add-flange', function() {
         const newTaxField = `<div class="mb-3 d-flex align-items-center">
         <input type="text" class="form-control" name="flange[]" required>
         <button type="button" class="btn btn-danger remove-flange ms-2">Delete</button>
@@ -166,7 +166,7 @@
     });
 
     // Handler for removing a text box
-    $(document).on('click', '.remove-flange', function () {
+    $(document).on('click', '.remove-flange', function() {
         $(this).closest('.mb-3').remove();
     });
 
