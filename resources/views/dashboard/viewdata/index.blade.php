@@ -26,11 +26,19 @@
     <div class="row">
         <h1>View List</h1>
 
-        {{-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">Add
-            Category</button>
-        --}}
         <button id="delete-selected" style="float: inline-end;margin-bottom: 5px;width: 12%;" class="btn btn-danger">Delete
             Selected</button>
+        <div style="margin-bottom: 10px; margin-left: 58%;">
+            <select id="productFilter" class="form-control" style="width: 20%; display: inline-block; margin-right: 10px;">
+                <option value="">Filter by Product</option>
+                <!-- Populate options dynamically via JavaScript -->
+            </select>
+
+            <select id="categoryFilter" class="form-control" style="width: 20%; display: inline-block; margin-right: 10px;">
+                <option value="">Filter by Category</option>
+                <!-- Populate options dynamically via JavaScript -->
+            </select>
+        </div>
         <table style="width: 100%;" id="viewTable" class="table table-bordered table-striped">
             <thead>
                 <tr>
@@ -292,6 +300,10 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
                 searchable: false
             } // Action column
         ]
+    });
+    // Event listeners for filter dropdowns
+    $('#productFilter, #categoryFilter').on('change', function() {
+        table.draw();
     });
     const selectedIds = [];
     // Handle form submission

@@ -11,6 +11,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\AddformController;
 use App\Http\Controllers\CalculateController;
+use App\Http\Controllers\FinaldataController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\SetTaxController;
 use App\Http\Controllers\ViewDataController;
@@ -46,6 +47,7 @@ Route::get('addform/list', [AddformController::class, 'list'])->name('addform.li
 Route::get('calculate/list', [CalculateController::class, 'list'])->name('calculate.list');
 Route::get('viewdata/list', [ViewDataController::class, 'list'])->name('viewdata.list');
 Route::get('adddata/list', [AddDataController::class, 'list'])->name('adddata.list');
+Route::get('finaldata/add/{productId}/', [FinaldataController::class, 'add'])->name('finaldata.add');
 Route::get('settax/list', [SetTaxController::class, 'list'])->name('settax.list');
 Route::get('password/list', [PasswordController::class, 'set'])->name('password.set');
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');

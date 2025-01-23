@@ -25,22 +25,19 @@
 <div class="container-fluid">
     <h1>Add Data</h1>
 
-    <form id="addForm">
-        @csrf
-        <div class="mb-3 text-center">
-            <?php if ($products) {
-                foreach ($products as $key => $value) {
-            ?>
-            <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#catFormModal"
-                data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                    class="btn btn-primary mt-6" style="width: 20%; ">
-                    <?php echo $value->product_name; ?>
-                </button>&nbsp;&nbsp;
-            </a>
-            <?php }
-            } ?>
-        </div>
-    </form>
+    <div class="mb-3 text-center">
+        <?php if ($products) {
+            foreach ($products as $key => $value) {
+        ?>
+                <a href="{{ route('finaldata.add', $value->id) }}"
+                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
+                        class="btn btn-primary mt-6" style="width: 20%; ">
+                        <?php echo $value->product_name; ?>
+                    </button>&nbsp;&nbsp;
+                </a>
+        <?php }
+        } ?>
+    </div>
 </div>
 </div>
 @php
@@ -60,17 +57,15 @@ $categorys = \App\Models\Category::select([
 $taxs = \App\Models\Tax::where('status', '1')->get();
 @endphp
 <!-- Sub Category Modal -->
-<div class="modal fade" id="catFormModal" tabindex="-1" aria-labelledby="catFormModalLabel" aria-hidden="true"
+<!-- <div class="modal fade" id="catFormModal" tabindex="-1" aria-labelledby="catFormModalLabel" aria-hidden="true"
     data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-full">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title catFormModalLabel" id="catFormModalLabel">Products</h5>
-                {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
             </div>
             <div class="modal-body">
                 <div class="alert-container">
-                    <!-- Alerts will be dynamically inserted here -->
                 </div>
                 <form id="catForm">
                     @csrf
@@ -134,7 +129,7 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- Product Model END -->
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -150,22 +145,22 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
         </div>`;
         $('.alert-container').html(alertHTML); // Insert alert into container
     }
-    $('#catForm').on('submit', function (e) {
-            e.preventDefault();
-            $.ajax({
-                url: "{{ route('addform.store') }}",
-                method: "POST",
-                data: $(this).serialize(),
-                success: function (response) {
-                    showAlert('success', 'Product added successfully!');
-                    $('#catForm')[0].reset();
-                },
-                error: function (error) {
-                    console.error(error);
-                    showAlert('danger', 'Something went wrong. Please try again.');
-                }
-            });
-        })
+    $('#catForm').on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: "{{ route('addform.store') }}",
+            method: "POST",
+            data: $(this).serialize(),
+            success: function(response) {
+                showAlert('success', 'Product added successfully!');
+                $('#catForm')[0].reset();
+            },
+            error: function(error) {
+                console.error(error);
+                showAlert('danger', 'Something went wrong. Please try again.');
+            }
+        });
+    })
 </script>
 </div>
 @endsection

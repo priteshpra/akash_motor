@@ -2,8 +2,9 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+        <img src="{{ url('admin_assets/images/logo-nil.png') }}" width="200" height="50" />
         <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
+            <!-- <i class="fas fa-laugh-wink"></i> -->
         </div>
         <div class="sidebar-brand-text mx-3">Nilkanth <sup></sup></div>
     </a>
@@ -24,7 +25,7 @@
     <li class="nav-item {{ request()->is('calculate/list') ? 'active' : ''}}">
         <a class="nav-link" href="{{ route('calculate.list') }}">
             <i class="fas fa-fw fa-calculator"></i>
-            <span>Calculate Data</span></a>
+            <span>Create Quatation</span></a>
     </li>
 
     <li class="nav-item {{ request()->is('viewdata/list') ? 'active' : ''}}">
