@@ -45,6 +45,7 @@ Route::resource('settings', SettingsController::class);
 Route::resource('addform', AddformController::class);
 Route::get('addform/list', [AddformController::class, 'list'])->name('addform.list');
 Route::get('calculate/list', [CalculateController::class, 'list'])->name('calculate.list');
+Route::get('calculate/show/{productId}/', [CalculateController::class, 'show'])->name('calculate.show');
 Route::get('viewdata/list', [ViewDataController::class, 'list'])->name('viewdata.list');
 Route::get('adddata/list', [AddDataController::class, 'list'])->name('adddata.list');
 Route::get('finaldata/add/{productId}/', [FinaldataController::class, 'add'])->name('finaldata.add');

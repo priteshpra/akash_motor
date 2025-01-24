@@ -1,12 +1,12 @@
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
-        <img src="{{ url('admin_assets/images/logo-nil.png') }}" width="200" height="50" />
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard.index') }}">
         <div class="sidebar-brand-icon rotate-n-15">
             <!-- <i class="fas fa-laugh-wink"></i> -->
         </div>
-        <div class="sidebar-brand-text mx-3">Nilkanth <sup></sup></div>
+        <img src="{{ url('admin_assets/images/logo-nil.png') }}" width="350" />
+        {{-- <div class="sidebar-brand-text mx-3">Nilkanth <sup></sup></div> --}}
     </a>
 
     <hr class="sidebar-divider my-0">
@@ -42,9 +42,9 @@
             <span>Add Product Data</span></a>
     </li>
     {{-- <li class="nav-item {{ request()->is('dashboard') ? 'active' : ''}}">
-    <a class="nav-link" href="dashboard">
-        <i class="fas fa-fw fa-box"></i>
-        <span>Product Data</span></a>
+        <a class="nav-link" href="dashboard">
+            <i class="fas fa-fw fa-box"></i>
+            <span>Product Data</span></a>
     </li>
     <li class="nav-item {{ request()->is('dashboard') ? 'active' : ''}}">
         <a class="nav-link" href="dashboard">

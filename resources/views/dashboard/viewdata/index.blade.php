@@ -4,18 +4,8 @@
 <!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 <style>
-    .modal-full {
-        max-width: 100%;
-        height: 91%;
-        margin: 0;
-        margin-left: 12.8%;
-        margin-top: 4%;
-    }
-
-    .modal-content {
-        height: 100%;
-        width: 100%;
-        border-radius: 0;
+    .modal-dialog.modal-lg {
+        margin-top: 10%;
     }
 
     a {
@@ -26,17 +16,28 @@
     <div class="row">
         <h1>View List</h1>
 
-        <button id="delete-selected" style="float: inline-end;margin-bottom: 5px;width: 12%;" class="btn btn-danger">Delete
+        <button id="delete-selected" style="float: inline-end;margin-bottom: 5px;width: 12%;"
+            class="btn btn-danger">Delete
             Selected</button>
         <div style="margin-bottom: 10px; margin-left: 58%;">
-            <select id="productFilter" class="form-control" style="width: 20%; display: inline-block; margin-right: 10px;">
+            <select id="productFilter" class="form-control"
+                style="width: 20%; display: inline-block; margin-right: 10px;">
                 <option value="">Filter by Product</option>
-                <!-- Populate options dynamically via JavaScript -->
+                @if ($products)
+                @foreach ($products as $pro)
+                <option value="{{ $pro->id }}">{{ $pro->product_name }}</option>
+                @endforeach
+                @endif
             </select>
 
-            <select id="categoryFilter" class="form-control" style="width: 20%; display: inline-block; margin-right: 10px;">
+            <select id="categoryFilter" class="form-control"
+                style="width: 20%; display: inline-block; margin-right: 10px;">
                 <option value="">Filter by Category</option>
-                <!-- Populate options dynamically via JavaScript -->
+                @if ($category)
+                @foreach ($category as $cat)
+                <option value="{{ $cat->id }}">{{ $cat->category_name }}</option>
+                @endforeach
+                @endif
             </select>
         </div>
         <table style="width: 100%;" id="viewTable" class="table table-bordered table-striped">
@@ -76,11 +77,11 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
 <!-- Edit Form Modal -->
 <div class="modal fade" id="editFormModal" tabindex="-1" aria-labelledby="editFormModalLabel" aria-hidden="true"
     data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-full">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editFormModalLabel">Products</h5>
-                {{-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> --}}
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="alert-container">
@@ -178,6 +179,25 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
 <script>
+    $('#catFormEdit').on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "{{ route('addform.update', ':id') }}".replace(':id', window.editId),
+            method: "PUT",
+            data: $(this).serialize(),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+            },
+            success: function (response) {
+                showAlert('success', 'Product updated successfully!');
+                table.ajax.reload();
+            },
+            error: function (error) {
+                console.error(error);
+                showAlert('danger', 'Something went wrong. Please try again.');
+            }
+        });
+    })
     function getFormData(ID, PrId) {
         window.editId = ID;
         $("#product_id_edit").val(PrId);
@@ -192,7 +212,7 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
             data: {
                 ID
             },
-            success: function(response) {
+            success: function (response) {
                 $("#categorys_d").val(response.data.category_id);
                 $("#categorys_d").trigger('change');
                 var newSubcategory = `<div class="mb-3 row">
@@ -222,12 +242,12 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
                 console.log(typeOptionCheckBoc);
 
                 $('input[name="typeOption[]"]').prop('checked', false);
-                typeOptionCheckBoc.forEach(function(optionCheckbox) {
+                typeOptionCheckBoc.forEach(function (optionCheckbox) {
                     $('input[name="typeOption[]"][value="' + optionCheckbox + '"]').prop('checked', true);
                 });
 
             },
-            error: function(error) {
+            error: function (error) {
                 console.error(error);
                 showAlert('danger', 'Something went wrong. Please try again.');
             }
@@ -242,14 +262,14 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
         $('.alert-container').html(alertHTML); // Insert alert into container
     }
 
-    $('#select-all').on('click', function() {
+    $('#select-all').on('click', function () {
         const rows = table.rows({
             'search': 'applied'
         }).nodes();
         $('input[type="checkbox"].select-row', rows).prop('checked', this.checked);
     });
 
-    $('#viewTable tbody').on('change', '.select-row', function() {
+    $('#viewTable tbody').on('change', '.select-row', function () {
         if (!this.checked) {
             $('#select-all').prop('checked', false);
         }
@@ -261,58 +281,58 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
         serverSide: true,
         ajax: "{{ route('addform.index') }}",
         columns: [{
-                data: 'null',
-                name: 'id',
-                render: function(data, type, row, meta) {
-                    return `<input type="checkbox" class="select-row" data-id="${row.id}">`;
-                },
-                orderable: false,
-                searchable: false
+            data: 'null',
+            name: 'id',
+            render: function (data, type, row, meta) {
+                return `<input type="checkbox" class="select-row" data-id="${row.id}">`;
             },
-            {
-                data: 'product_name',
-                name: 'product_name'
-            },
-            {
-                data: 'category_name',
-                name: 'category_name'
-            },
-            {
-                data: 'subcategory_name',
-                name: 'subcategory_name'
-            },
-            {
-                data: 'subcategory_val',
-                name: 'subcategory_val'
-            },
-            {
-                data: 'size',
-                name: 'size'
-            },
-            {
-                data: 'footval',
-                name: 'footval'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            } // Action column
+            orderable: false,
+            searchable: false
+        },
+        {
+            data: 'product_name',
+            name: 'product_name'
+        },
+        {
+            data: 'category_name',
+            name: 'category_name'
+        },
+        {
+            data: 'subcategory_name',
+            name: 'subcategory_name'
+        },
+        {
+            data: 'subcategory_val',
+            name: 'subcategory_val'
+        },
+        {
+            data: 'size',
+            name: 'size'
+        },
+        {
+            data: 'footval',
+            name: 'footval'
+        },
+        {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false
+        } // Action column
         ]
     });
     // Event listeners for filter dropdowns
-    $('#productFilter, #categoryFilter').on('change', function() {
+    $('#productFilter, #categoryFilter').on('change', function () {
         table.draw();
     });
     const selectedIds = [];
     // Handle form submission
-    $('#delete-selected').on('click', function() {
+    $('#delete-selected').on('click', function () {
         $('#deleteConfirmationModal').modal('show'); // Show the modal
     });
 
-    $('#confirmDeleteButton').on('click', function() {
-        table.$('input[type="checkbox"].select-row:checked').each(function() {
+    $('#confirmDeleteButton').on('click', function () {
+        table.$('input[type="checkbox"].select-row:checked').each(function () {
             selectedIds.push($(this).data('id'));
         });
         // Hide the modal
@@ -327,11 +347,11 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
                     ids: selectedIds,
                     _token: '{{ csrf_token() }}' // Include CSRF token
                 },
-                success: function(response) {
+                success: function (response) {
                     table.ajax.reload(); // Reload table data
                     showAlert('success', 'Selected products deleted successfully!');
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     showAlert('danger', 'Failed to delete selected items.');
                 }
             });

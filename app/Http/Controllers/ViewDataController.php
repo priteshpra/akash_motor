@@ -18,6 +18,7 @@ class ViewDataController extends Controller
         $data = $userModel->allUsers();
         $current = $userModel->getUserbyID($userID);
         $products = \App\Models\Product::where('status', '1')->get();
-        return view('dashboard.viewdata.index', compact('products', 'data', 'current'));
+        $category = \App\Models\Category::where('status', '1')->get();
+        return view('dashboard.viewdata.index', compact('products', 'data', 'current', 'category'));
     }
 }

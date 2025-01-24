@@ -41,22 +41,17 @@
 <div class="container-fluid">
     <h1>Calculate Data</h1>
 
-    <form id="addForm">
-        @csrf
-        <div class="mb-3 text-center">
-            <?php if ($products) {
-    foreach ($products as $key => $value) { ?>
-            <a href="#" data-bs-toggle="modal" class="productClick mt-6" data-bs-target="#calFormModal"
-                data-id='<?php        echo $value->id; ?>'
-                data-title='<?php        echo $value->product_name; ?>'><button class="btn btn-primary mt-6"
-                    style="width: 20%; ">
-                    <?php        echo $value->product_name; ?>
-                </button>&nbsp;&nbsp;
-            </a>
-            <?php    }
+    <div class="mb-3 text-center">
+        <?php if ($products) {
+            foreach ($products as $key => $value) { ?>
+        <a href="{{ route('calculate.show', $value->id) }}" class="mt-6" data-id='<?php echo $value->id; ?>'
+            data-title='<?php echo $value->product_name; ?>'><button class="btn btn-primary mt-6" style="width: 20%; ">
+                <?php echo $value->product_name; ?>
+            </button>&nbsp;&nbsp;
+        </a>
+        <?php    }
 } ?>
-        </div>
-    </form>
+    </div>
 </div>
 </div>
 @php
