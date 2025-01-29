@@ -11279,3 +11279,11 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
+
+.bg-login-image {
+    background: url(../admin_assets/images/LOGO_WITH_R_MARK.png);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-size: 400px;
+}

@@ -5,7 +5,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <!-- <i class="fas fa-laugh-wink"></i> -->
         </div>
-        <img src="{{ url('admin_assets/images/logo-nil.png') }}" width="350" />
+        <img src="{{ url('admin_assets/images/LOGO_WITH_R_MARK.png') }}" width="130" />
         {{-- <div class="sidebar-brand-text mx-3">Nilkanth <sup></sup></div> --}}
     </a>
 

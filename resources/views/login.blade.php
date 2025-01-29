@@ -1,7 +1,15 @@
 @include('dashboard.common.frontHeader')
 <!-- Outer Row -->
 <div class="row justify-content-center">
-
+    <style>
+        .bg-login-image {
+            background: url(../public/admin_assets/images/LOGO_WITH_R_MARK.png);
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-size: 400px;
+        }
+    </style>
     <div class="col-xl-10 col-lg-12 col-md-9">
 
         <div class="card o-hidden border-0 shadow-lg my-5">
@@ -14,6 +22,13 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                             </div>
+                            @if (session()->has('response'))
+                            @if (session('response')['status'] === 200)
+                            <p class="text-success"> {{ session('response')['message'] }}</p>
+                            @else
+                            <p class="text-danger"> {{ session('response')['message'] }}</p>
+                            @endif
+                            @endif
                             <form class="user" action="submit" method="POST">
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-user" name="email"
@@ -52,18 +67,12 @@
                             {{-- <div class="text-center">
                                 <a class="small" href="/register">Create an Account!</a>
                             </div> --}}
-                            <ul class="nav flex-column"">
+                            <ul class="nav flex-column">
                                 @foreach ($errors->all() as $item)
-                                    <li class=" nav-item text-danger">{{ $item }}</li>
+                                <li class=" nav-item text-danger">{{ $item }}</li>
                                 @endforeach
                             </ul>
-                            @if (session()->has('response'))
-                            @if (session('response')['status'] === 200)
-                            <p class="text-success"> {{ session('response')['message'] }}</p>
-                            @else
-                            <p class="text-danger"> {{ session('response')['message'] }}</p>
-                            @endif
-                            @endif
+
                         </div>
                     </div>
                 </div>
