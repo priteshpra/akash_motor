@@ -32,8 +32,16 @@ class AddformController extends Controller
                 ->leftJoin('categories', 'categories.id', '=', 'products_add_data.category_id')
                 ->leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
                 ->leftJoin('products', 'products.id', '=', 'products_add_data.product_id')
-                ->where('products_add_data.status', '1')->get();
-            // ' . route('addform.edit', $product->id) . '
+                ->where('products_add_data.status', '1');
+            //->get();
+            if ($request->has('product_id') && !empty($request->product_id)) {
+                $products->where('products_add_data.product_id', $request->product_id);
+            }
+
+            if ($request->has('category_id') && !empty($request->category_id)) {
+                $products->where('products_add_data.category_id', $request->category_id);
+            }
+
             return DataTables::of($products)
                 ->addColumn('action', function ($product) {
                     return '

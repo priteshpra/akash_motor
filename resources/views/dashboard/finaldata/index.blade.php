@@ -14,7 +14,8 @@
         <h1>{{ $products[0]['product_name'] }}</h1>
         @php
         $categorys = \App\Models\Category::select(['categories.id', 'categories.category_name', 'categories.product_id',
-        'products.product_name', 'products.id as productID', 'categories.created_at'])->leftJoin('products', 'products.id', '=',
+        'products.product_name', 'products.id as productID', 'categories.created_at'])->leftJoin('products',
+        'products.id', '=',
         'categories.product_id')->where('categories.status','1')->get();
         $taxs = \App\Models\Tax::where('status','1')->get();
         @endphp
@@ -72,7 +73,7 @@
                     <input type="radio" class="btn-check form-control" placeholder="Price" name="flange"
                         id="flange{{ $value->flange }}" autocomplete="off" value="{{ $value->flange }}" checked>
                     <label class="btn btn-outline-success" for="flange{{ $value->flange }}">{{ $value->flange
-                            }}</label>&nbsp;&nbsp;
+                        }}</label>&nbsp;&nbsp;
 
                     @endif
                     @endforeach
@@ -84,7 +85,6 @@
             </form>
         </div>
     </div>
-</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -179,5 +179,4 @@
         }
     }
 </script>
-</div>
 @endsection

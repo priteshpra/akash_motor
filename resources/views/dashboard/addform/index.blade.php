@@ -29,16 +29,14 @@
         <?php if ($products) {
             foreach ($products as $key => $value) {
         ?>
-                <a href="{{ route('finaldata.add', $value->id) }}"
-                    data-id='<?php echo $value->id; ?>' data-title='<?php echo $value->product_name; ?>'><button
-                        class="btn btn-primary mt-6" style="width: 20%; ">
-                        <?php echo $value->product_name; ?>
-                    </button>&nbsp;&nbsp;
-                </a>
+        <a href="{{ route('finaldata.add', $value->id) }}" data-id='<?php echo $value->id; ?>'
+            data-title='<?php echo $value->product_name; ?>'><button class="btn btn-primary mt-6" style="width: 20%; ">
+                <?php echo $value->product_name; ?>
+            </button>&nbsp;&nbsp;
+        </a>
         <?php }
         } ?>
     </div>
-</div>
 </div>
 @php
 $categorys = \App\Models\Category::select([
@@ -162,5 +160,4 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
         });
     })
 </script>
-</div>
 @endsection

@@ -20,7 +20,8 @@
             class="btn btn-danger">Delete
             Selected</button>
         <div style="margin-bottom: 10px; margin-left: 58%;">
-            <select id="productFilter" class="form-control"
+            {{-- <label for="productFilter" style="margin-right: 10px;">Filter by Product:</label> --}}
+            <select id="productFilter" class="form-control form-select"
                 style="width: 20%; display: inline-block; margin-right: 10px;">
                 <option value="">Filter by Product</option>
                 @if ($products)
@@ -29,8 +30,8 @@
                 @endforeach
                 @endif
             </select>
-
-            <select id="categoryFilter" class="form-control"
+            {{-- <label for="categoryFilter" style="margin-right: 10px;">Filter by Category:</label> --}}
+            <select id="categoryFilter" class="form-control form-select"
                 style="width: 20%; display: inline-block; margin-right: 10px;">
                 <option value="">Filter by Category</option>
                 @if ($category)
@@ -56,7 +57,6 @@
             <tbody></tbody>
         </table>
     </div>
-</div>
 </div>
 @php
 $categorys = \App\Models\Category::select([
@@ -279,7 +279,13 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
     var table = $('#viewTable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('addform.index') }}",
+        ajax: {
+            url: "{{ route('addform.index') }}",
+            data: function (d) {
+                d.product_id = $('#productFilter').val();
+                d.category_id = $('#categoryFilter').val();
+            }
+        },
         columns: [{
             data: 'null',
             name: 'id',
@@ -358,5 +364,4 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
         }
     });
 </script>
-</div>
 @endsection

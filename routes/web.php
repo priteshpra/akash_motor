@@ -13,6 +13,7 @@ use App\Http\Controllers\AddformController;
 use App\Http\Controllers\CalculateController;
 use App\Http\Controllers\FinaldataController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\SetTaxController;
 use App\Http\Controllers\ViewDataController;
 
@@ -79,6 +80,8 @@ Route::post('/addform/{id}/edit', [AddformController::class, 'edit'])->name('add
 Route::delete('/addform/{id}/delete', [AddformController::class, 'destroy'])->name('addform.delete');
 Route::put('/addform/{id}', [AddFormController::class, 'update'])->name('addform.update');
 Route::post('/addform/mass-delete', [AddFormController::class, 'massDelete'])->name('addform.massDelete');
+
+Route::post('/generate-pdf', [PDFController::class, 'generatePDF']);
 // });
 
 

@@ -2,19 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
+
 class DashboardController extends Controller
 {
-    public function index(Request $request){
-       $userID = $request->session()->get('userID');
-       $userModel = new \App\Models\UserModel();
+    public function index(Request $request)
+    {
+        $userID = $request->session()->get('userID');
+        $userModel = new \App\Models\UserModel();
         $data = $userModel->allUsers();
         $currentUserData = $userModel->getUserbyID($userID);
-        return view('dashboard.dashboard', ['data' => $data, 'current' => $currentUserData]);
+        $productCount = Product::where('status', 1)->count();
+        $categoryCount = Category::where('status', 1)->count();
+        $subCategoryCount = SubCategory::where('status', 1)->count();
+        return view('dashboard.dashboard', ['data' => $data, 'current' => $currentUserData, 'productCount' => $productCount, 'categoryCount' => $categoryCount, 'subCategoryCount' => $subCategoryCount]);
     }
 
-    public function deleteUSer($userID){
+    public function deleteUSer($userID)
+    {
         $userModel = new \App\Models\UserModel();
         $data = $userModel->deleteUser($userID);
         if ($data) {

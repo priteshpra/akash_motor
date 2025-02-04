@@ -127,11 +127,44 @@
                 </div>
                 <button type="button" class="btn btn-info" data-bs-dismiss="modal" aria-label="Close">Back</button>
                 <button type="button" id="calculateButton" class="btn btn-secondary">Calculate</button>
-                <button type="button" class="btn btn-primary">Download</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#pdfModal">Download</button>
             </form>
         </div>
     </div>
 </div>
+
+<!-- Bootstrap Modal Download-->
+<div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pdfModalLabel">Enter Your Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url('/generate-pdf') }}" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name:</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address:</label>
+                        <textarea class="form-control" name="address" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone:</label>
+                        <input type="text" class="form-control" name="phone" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Countinue</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -349,5 +382,4 @@
         }
     }
 </script>
-</div>
 @endsection

@@ -53,7 +53,6 @@
 } ?>
     </div>
 </div>
-</div>
 @php
 $categorys = \App\Models\Category::select([
 'categories.id',
@@ -376,5 +375,4 @@ $taxs = \App\Models\Tax::where('status', '1')->get();
         }
     });
 </script>
-</div>
 @endsection
