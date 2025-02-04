@@ -59,6 +59,16 @@
             </div>
         </div>
     </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Monthly Growth Chart</h5>
+                    <canvas id="growthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="container-fluid">
     {{-- <div class="row">
@@ -1121,41 +1131,54 @@ $taxs = \App\Models\Tax::where('status','1')->get();
         }
     });
 
-
-    // $('#delete-selected').on('click', function() {
-    //     table.$('input[type="checkbox"].select-row:checked').each(function() {
-    //         selectedIds.push($(this).data('id'));
-    //     });
-
-    //     if (selectedIds.length > 0) {
-    //         if (confirm('Are you sure you want to delete these items?')) {
-    //             $.ajax({
-    //                 url: "{{ route('addform.massDelete') }}",
-    //                 type: 'POST',
-    //                 data: {
-    //                     ids: selectedIds,
-    //                     _token: '{{ csrf_token() }}' // Include CSRF token
-    //                 },
-    //                 success: function(response) {
-    //                     table.ajax.reload();
-    //                     showAlert('success', 'Selected products deleted successfully!');
-    //                 },
-    //                 error: function(xhr) {
-    //                     showAlert('danger', 'Failed to delete selected items.');
-    //                 }
-    //             });
-    //         }
-    //     } else {
-    //         alert('No rows selected.');
-    //     }
-    // });
-
     $('.numericInput').on('keypress', function(event) {
         // Allow digits only (ASCII codes 48-57 for '0' to '9')
         var charCode = event.which ? event.which : event.keyCode;
 
         if (charCode < 48 || charCode > 57) {
             event.preventDefault(); // Prevent non-digit input
+        }
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('growthChart').getContext('2d');
+    var growthChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($months) !!}, // Month names from backend
+            datasets: [
+                {
+                    label: 'Products',
+                    data: {!! json_encode($monthlyProducts) !!},
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.2)',
+                    borderWidth: 2,
+                    fill: true
+                },
+                {
+                    label: 'Categories',
+                    data: {!! json_encode($monthlyCategories) !!},
+                    borderColor: 'green',
+                    backgroundColor: 'rgba(0, 255, 0, 0.2)',
+                    borderWidth: 2,
+                    fill: true
+                },
+                {
+                    label: 'Subcategories',
+                    data: {!! json_encode($monthlySubCategories) !!},
+                    borderColor: 'orange',
+                    backgroundColor: 'rgba(255, 165, 0, 0.2)',
+                    borderWidth: 2,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' }
+            }
         }
     });
 </script>

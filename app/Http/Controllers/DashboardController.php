@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
+use Carbon\Carbon;
+
 
 class DashboardController extends Controller
 {
@@ -19,7 +21,41 @@ class DashboardController extends Controller
         $productCount = Product::where('status', 1)->count();
         $categoryCount = Category::where('status', 1)->count();
         $subCategoryCount = SubCategory::where('status', 1)->count();
-        return view('dashboard.dashboard', ['data' => $data, 'current' => $currentUserData, 'productCount' => $productCount, 'categoryCount' => $categoryCount, 'subCategoryCount' => $subCategoryCount]);
+        // Get last 6 months' data
+        $months = collect(range(0, 5))->map(function ($i) {
+            return Carbon::now()->subMonths($i)->format('F Y');
+        })->reverse()->values();
+
+        $monthlyProducts = $months->map(function ($month) {
+            return Product::whereMonth('created_at', Carbon::parse($month)->month)
+                ->whereYear('created_at', Carbon::parse($month)->year)
+                ->count();
+        });
+
+        $monthlyCategories = $months->map(function ($month) {
+            return Category::whereMonth('created_at', Carbon::parse($month)->month)
+                ->whereYear('created_at', Carbon::parse($month)->year)
+                ->count();
+        });
+
+        $monthlySubCategories = $months->map(function ($month) {
+            return SubCategory::whereMonth('created_at', Carbon::parse($month)->month)
+                ->whereYear('created_at', Carbon::parse($month)->year)
+                ->count();
+        });
+
+
+        return view('dashboard.dashboard', [
+            'data' => $data,
+            'current' => $currentUserData,
+            'productCount' => $productCount,
+            'categoryCount' => $categoryCount,
+            'subCategoryCount' => $subCategoryCount,
+            'months' => $months,
+            'monthlyProducts' => $monthlyProducts,
+            'monthlyCategories' => $monthlyCategories,
+            'monthlySubCategories' => $monthlySubCategories
+        ]);
     }
 
     public function deleteUSer($userID)
