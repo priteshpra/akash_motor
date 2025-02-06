@@ -31,6 +31,9 @@ use App\Http\Controllers\ViewDataController;
 |
 */
 // Login Route
+Route::get("/quem-somos", function () {
+    return view("Pdf_template");
+});
 
 // Route::middleware([Authenticate::class])->group(function () {
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('auth');
