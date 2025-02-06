@@ -31,7 +31,7 @@ use App\Http\Controllers\ViewDataController;
 |
 */
 // Login Route
-Route::get("/quem-somos", function () {
+Route::get("/pdf", function () {
     return view("Pdf_template");
 });
 

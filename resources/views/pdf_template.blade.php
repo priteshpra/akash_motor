@@ -8,12 +8,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Quotation Format</title>
     <style type="text/css">
-        table,
-        tbody {
-
-            width: auto;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -272,7 +266,7 @@
 </head>
 
 <body>
-    <table style="border-collapse:collapse;margin-left:6.125pt;width:100%" cellspacing="0">
+    <table style="border-collapse:collapse;margin-left:0.3pt;" cellspacing="0">
         <tr style="height:73pt">
             <td style="width:537pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
                 colspan="10">
