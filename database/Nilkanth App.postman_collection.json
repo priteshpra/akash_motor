@@ -1,0 +1,268 @@
+{
+	"info": {
+		"_postman_id": "20450a69-840f-44c9-a40e-10c742e40b62",
+		"name": "Nilkanth App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29222208",
+		"_collection_link": "https://red-pritesh-web-spring-money-916581.postman.co/workspace/Pritesh-Web-Workspace~602fbf42-9c60-4092-856c-22f03d9b188a/collection/29222208-20450a69-840f-44c9-a40e-10c742e40b62?action=share&source=collection_link&creator=29222208"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "user@example.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "password",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/akash_motor/public/api/v1/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"akash_motor",
+						"public",
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getProductCoasting",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "1|jcl5kMyieKbrjk4pIpcuqEUPlYuyOdslP62BrGMr",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "product_id",
+							"value": "6",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "subcategory_id",
+							"value": "9",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/akash_motor/public/api/v1/getProductCoasting",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"akash_motor",
+						"public",
+						"api",
+						"v1",
+						"getProductCoasting"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getSubCategory",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "2|VbN6jFPHV4Z4H7OZgcGhLG4fuPd8AMsfLxdjoBMm",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "product_id",
+							"value": "6",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
+							"value": "6",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/akash_motor/public/api/v1/getSubCategory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"akash_motor",
+						"public",
+						"api",
+						"v1",
+						"getSubCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getCategory",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "2|VbN6jFPHV4Z4H7OZgcGhLG4fuPd8AMsfLxdjoBMm",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "product_id",
+							"value": "7",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/akash_motor/public/api/v1/getCategory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"akash_motor",
+						"public",
+						"api",
+						"v1",
+						"getCategory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getProducts",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "2|VbN6jFPHV4Z4H7OZgcGhLG4fuPd8AMsfLxdjoBMm",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost/akash_motor/public/api/v1/getProducts",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"akash_motor",
+						"public",
+						"api",
+						"v1",
+						"getProducts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getSubProductCoasting",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "2|VbN6jFPHV4Z4H7OZgcGhLG4fuPd8AMsfLxdjoBMm",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "date",
+							"value": "2024-12-23 16:43:27",
+							"type": "text"
+						},
+						{
+							"key": "subcategory_id",
+							"value": "6",
+							"type": "text"
+						},
+						{
+							"key": "product_id",
+							"value": "6",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost/akash_motor/public/api/v1/getSubProductCoasting",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"akash_motor",
+						"public",
+						"api",
+						"v1",
+						"getSubProductCoasting"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
