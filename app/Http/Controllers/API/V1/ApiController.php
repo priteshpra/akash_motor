@@ -223,13 +223,14 @@ class ApiController extends Controller
             $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
                 ->where('products_add_data.category_id', $category_id)->where('products_add_data.product_id', $product_id)->where('products_add_data.status', '1')->distinct()->get();
             $groupedSubcat = $subcat->groupBy('subcategory_name');
-
             $response = $groupedSubcat->map(function ($items, $name) {
                 // Use the first item for fixed fields like `flange_percentage`, `footval`, `typeOption`
                 $firstItem = $items->first();
+                // dd($firstItem);
 
                 // Consolidate options
                 $options = $items->map(function ($item) {
+                    // dd($item);
                     return [
                         'id' => $item->id,
                         'value' => $item->date,
@@ -246,6 +247,56 @@ class ApiController extends Controller
                     'footval' => $firstItem->footval,
                     'typeOption' => $firstItem->typeOption,
                     'options' => $options->unique('label')->values()
+                ];
+            })->values();
+
+            return response()->json(['status' => true, 'message' => 'Get Sub category list successfully', 'data' => $response], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'message' => 'Something went wrong. Please try after some time.', 'data' => []], 200);
+        }
+    }
+
+    /**
+     * get Sub Category list data.
+     */
+    public function getSubProductCoasting(Request $request)
+    {
+        $user_id = $request->user_id;
+        $created_at = $request->date;
+        $product_id = $request->product_id;
+        $category_id = $request->subcategory_id;
+        $page_number = $request->page;
+        $token = $request->header('token');
+        $base_url = $this->base_url;
+        try {
+            $checkToken = $this->tokenVerify($token);
+            // Decode the JSON response
+            $userData = json_decode($checkToken->getContent(), true);
+            if ($userData['status'] == false) {
+                return $checkToken->getContent();
+            }
+            $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
+                ->where('products_add_data.date', $created_at)->where('products_add_data.product_id', $product_id)->where('products_add_data.category_id', $category_id)->where('products_add_data.status', '1')->distinct()->get();
+            $groupedSubcat = $subcat->groupBy('subcategory_name');
+            // Structure the response
+            $response = $groupedSubcat->map(function ($items, $name) {
+                // Use the first item for fixed fields like `flange_percentage`, `footval`, `typeOption`
+                $firstItem = $items->first();
+
+                // Consolidate options
+                $options = $items->map(function ($item) {
+                    return [
+                        'value' => $item->date
+                    ];
+                });
+
+                return [
+                    'id' => $firstItem->subcategory_id,
+                    'price' => $firstItem->footval,
+                    'size' => $firstItem->size,
+                    'typeOption' => $firstItem->typeOption,
+                    'flange_percentage' => $firstItem->flange_percentage,
+                    'options' => $options->unique('value')->values()
                 ];
             })->values();
 
