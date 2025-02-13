@@ -37,7 +37,7 @@
                 </div>
                 <div id="subcategory-container">
                 </div>
-                <input type="hidden" name="product_id" id="product_ids" value="" />
+                <input type="hidden" name="product_id" id="product_ids" value="{{ $products[0]['id'] }}" />
                 <div class="" id="">
                     <div class="mb-33 d-flex justify-content-between">
                         <label for="name" class="form-label">Frame Size</label>

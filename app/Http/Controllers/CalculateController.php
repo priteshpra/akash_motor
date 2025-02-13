@@ -38,6 +38,6 @@ class CalculateController extends Controller
             $options .= '<option value="' . $id . '">' . $name . '</option>';
         }
 
-        return view('dashboard.calculate.add', compact('products', 'data', 'current', 'options'));
+        return view('dashboard.calculate.add', compact('products', 'data', 'current', 'options', 'product_id'));
     }
 }

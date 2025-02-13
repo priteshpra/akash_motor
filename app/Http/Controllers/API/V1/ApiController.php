@@ -233,7 +233,7 @@ class ApiController extends Controller
                     // dd($item);
                     return [
                         'id' => $item->id,
-                        'value' => $item->date,
+                        'date' => $item->date,
                         'label' => $item->subcategory_val
                     ];
                 });
@@ -241,7 +241,7 @@ class ApiController extends Controller
                 return [
                     'id' => $firstItem->subcategory_id,
                     'cat_id' => $firstItem->category_id,
-                    'name' => $name,
+                    'lable' => $name,
                     'flange_percentage' => $firstItem->flange_percentage,
                     'size' => $firstItem->size,
                     'footval' => $firstItem->footval,
@@ -259,12 +259,12 @@ class ApiController extends Controller
     /**
      * get Sub Category list data.
      */
-    public function getSubProductCoasting(Request $request)
+    public function getSubProductData(Request $request)
     {
         $user_id = $request->user_id;
         $created_at = $request->date;
         $product_id = $request->product_id;
-        $category_id = $request->subcategory_id;
+        $category_id = $request->category_id;
         $page_number = $request->page;
         $token = $request->header('token');
         $base_url = $this->base_url;
@@ -286,7 +286,9 @@ class ApiController extends Controller
                 // Consolidate options
                 $options = $items->map(function ($item) {
                     return [
-                        'value' => $item->date
+                        // 'value' => $item->date
+                        'date' => $item->date,
+                        'label' => $item->subcategory_val
                     ];
                 });
 
@@ -296,11 +298,15 @@ class ApiController extends Controller
                     'size' => $firstItem->size,
                     'typeOption' => $firstItem->typeOption,
                     'flange_percentage' => $firstItem->flange_percentage,
-                    'options' => $options->unique('value')->values()
+                    'options' => $options->unique('date')->values()
                 ];
             })->values();
 
-            return response()->json(['status' => true, 'message' => 'Get Sub category list successfully', 'data' => $response], 200);
+            $taxs = \App\Models\Tax::select('gst', 'id')->where('status', '1')->first();
+            $additionalTax = \App\Models\Tax::select('tax', 'id')->where('status', '1')->whereNotNull('tax')->get();
+            $configData = ['taxs' => $taxs, 'additionalTax' => $additionalTax];
+
+            return response()->json(['status' => true, 'message' => 'Get data successfully', 'configData' => $configData, 'data' => $response], 200);
         } catch (\Throwable $th) {
             return response()->json(['status' => false, 'message' => 'Something went wrong. Please try after some time.', 'data' => []], 200);
         }
@@ -309,13 +315,13 @@ class ApiController extends Controller
     /**
      * get Sub Category list data.
      */
-    public function getProductCoasting(Request $request)
+    public function getCoasting(Request $request)
     {
         $user_id = $request->user_id;
-        $product_id = $request->product_id;
-        $category_id = $request->category_id;
-        $subcategory_id = $request->subcategory_id;
-        $page_number = $request->page;
+        $frame_val = $request->frame_val;
+        $price = $request->price;
+        $tax = $request->tax;
+        $typeOption = $request->typeOption;
         $token = $request->header('token');
         $base_url = $this->base_url;
         try {
@@ -325,9 +331,16 @@ class ApiController extends Controller
             if ($userData['status'] == false) {
                 return $checkToken->getContent();
             }
-            $categoryList = ProductAddData::where(['product_id' => $product_id, 'category_id' => $category_id, 'subcategory_id' => $subcategory_id])->get();
 
-            return response()->json(['status' => true, 'message' => 'Get Data successfully', 'data' => $categoryList], 200);
+            if ($typeOption == 'Foot') {
+                $priceVal = $price;
+            } elseif ($typeOption == 'Flange') {
+                $priceVal = $price / 3.28084;
+            } elseif ($typeOption == 'Both') {
+                $priceVal = $price / 3.28084;
+            }
+            dd($priceVal);
+            return response()->json(['status' => true, 'message' => 'Get Data successfully', 'data' => $priceVal], 200);
         } catch (\Throwable $th) {
             return response()->json(['status' => false, 'message' => 'Something went wrong. Please try after some time.', 'data' => []], 200);
         }

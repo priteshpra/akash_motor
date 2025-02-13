@@ -24,5 +24,5 @@ Route::post('v1/login', [ApiController::class, 'login']);
 Route::get('v1/getProducts', [ApiController::class, 'getProducts']);
 Route::post('v1/getCategory', [ApiController::class, 'getCategory']);
 Route::post('v1/getSubCategory', [ApiController::class, 'getSubCategory']);
-Route::post('v1/getProductCoasting', [ApiController::class, 'getProductCoasting']);
-Route::post('v1/getSubProductCoasting', [ApiController::class, 'getSubProductCoasting']);
+Route::post('v1/getCoasting', [ApiController::class, 'getCoasting']);
+Route::post('v1/getSubProductData', [ApiController::class, 'getSubProductData']);
