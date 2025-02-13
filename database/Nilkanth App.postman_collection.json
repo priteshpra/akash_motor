@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "20450a69-840f-44c9-a40e-10c742e40b62",
+		"_postman_id": "3112ac3b-05b3-465b-b66a-4db61c4f61bf",
 		"name": "Nilkanth App",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "29222208",
-		"_collection_link": "https://red-pritesh-web-spring-money-916581.postman.co/workspace/Pritesh-Web-Workspace~602fbf42-9c60-4092-856c-22f03d9b188a/collection/29222208-20450a69-840f-44c9-a40e-10c742e40b62?action=share&source=collection_link&creator=29222208"
+		"_exporter_id": "33470357"
 	},
 	"item": [
 		{
@@ -45,7 +44,7 @@
 			"response": []
 		},
 		{
-			"name": "getProductCoasting",
+			"name": "getCoasting",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -54,7 +53,7 @@
 				"header": [
 					{
 						"key": "token",
-						"value": "1|jcl5kMyieKbrjk4pIpcuqEUPlYuyOdslP62BrGMr",
+						"value": "1|ZzMsKlTfCYd3jyPh44HBZf5VjXUyMloPCjvWPB01",
 						"type": "text"
 					}
 				],
@@ -62,24 +61,50 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "product_id",
-							"value": "6",
-							"type": "text"
-						},
-						{
-							"key": "category_id",
+							"key": "frame_val",
 							"value": "5",
 							"type": "text"
 						},
 						{
-							"key": "subcategory_id",
-							"value": "9",
+							"key": "price",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "tax",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "typeOption",
+							"value": "Both",
+							"description": "Flange/Foot/Both",
+							"type": "text"
+						},
+						{
+							"key": "discount",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "additionalTax",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "calculateFlangeFootPrice",
+							"value": "112",
+							"type": "text"
+						},
+						{
+							"key": "flange_percentage",
+							"value": "12",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost/akash_motor/public/api/v1/getProductCoasting",
+					"raw": "http://localhost/akash_motor/public/api/v1/getCoasting",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -89,7 +114,7 @@
 						"public",
 						"api",
 						"v1",
-						"getProductCoasting"
+						"getCoasting"
 					]
 				}
 			},
@@ -105,7 +130,7 @@
 				"header": [
 					{
 						"key": "token",
-						"value": "2|VbN6jFPHV4Z4H7OZgcGhLG4fuPd8AMsfLxdjoBMm",
+						"value": "1|ZzMsKlTfCYd3jyPh44HBZf5VjXUyMloPCjvWPB01",
 						"type": "text"
 					}
 				],
@@ -114,7 +139,7 @@
 					"formdata": [
 						{
 							"key": "product_id",
-							"value": "6",
+							"value": "7",
 							"type": "text"
 						},
 						{
@@ -151,7 +176,7 @@
 				"header": [
 					{
 						"key": "token",
-						"value": "2|VbN6jFPHV4Z4H7OZgcGhLG4fuPd8AMsfLxdjoBMm",
+						"value": "1|ZzMsKlTfCYd3jyPh44HBZf5VjXUyMloPCjvWPB01",
 						"type": "text"
 					}
 				],
@@ -192,7 +217,7 @@
 				"header": [
 					{
 						"key": "token",
-						"value": "2|VbN6jFPHV4Z4H7OZgcGhLG4fuPd8AMsfLxdjoBMm",
+						"value": "1|ZzMsKlTfCYd3jyPh44HBZf5VjXUyMloPCjvWPB01",
 						"type": "text"
 					}
 				],
@@ -214,7 +239,7 @@
 			"response": []
 		},
 		{
-			"name": "getSubProductCoasting",
+			"name": "getSubProductData",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -223,7 +248,7 @@
 				"header": [
 					{
 						"key": "token",
-						"value": "2|VbN6jFPHV4Z4H7OZgcGhLG4fuPd8AMsfLxdjoBMm",
+						"value": "1|ZzMsKlTfCYd3jyPh44HBZf5VjXUyMloPCjvWPB01",
 						"type": "text"
 					}
 				],
@@ -232,23 +257,23 @@
 					"formdata": [
 						{
 							"key": "date",
-							"value": "2024-12-23 16:43:27",
-							"type": "text"
-						},
-						{
-							"key": "subcategory_id",
-							"value": "6",
+							"value": "2024-12-17 15:49:55",
 							"type": "text"
 						},
 						{
 							"key": "product_id",
+							"value": "7",
+							"type": "text"
+						},
+						{
+							"key": "category_id",
 							"value": "6",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://localhost/akash_motor/public/api/v1/getSubProductCoasting",
+					"raw": "http://localhost/akash_motor/public/api/v1/getSubProductData",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -258,7 +283,7 @@
 						"public",
 						"api",
 						"v1",
-						"getSubProductCoasting"
+						"getSubProductData"
 					]
 				}
 			},

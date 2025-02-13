@@ -125,7 +125,7 @@
                     <div id="calculateDataFoot"></div>
                     <div id="calculateDataFootWithouTax"></div>
                 </div>
-                <button type="button" class="btn btn-info" data-bs-dismiss="modal" aria-label="Close">Back</button>
+                <button type="button" onclick="goBack()" class="btn btn-info" aria-label="Close">Back</button>
                 <button type="button" id="calculateButton" class="btn btn-secondary">Calculate</button>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#pdfModal">Download</button>

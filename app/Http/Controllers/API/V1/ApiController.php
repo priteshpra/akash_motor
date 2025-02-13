@@ -322,6 +322,8 @@ class ApiController extends Controller
         $price = $request->price;
         $tax = $request->tax;
         $typeOption = $request->typeOption;
+        $discount = $request->discount;
+        $additionalTax = $request->additionalTax;
         $token = $request->header('token');
         $base_url = $this->base_url;
         try {
@@ -331,16 +333,40 @@ class ApiController extends Controller
             if ($userData['status'] == false) {
                 return $checkToken->getContent();
             }
-
+            $calculateFlangeFootPrice = 0;
+            if ($request->flange_percentage) {
+                $calculateFlangeFootPrice = $price + ($price * $request->flange_percentage / 100);
+            }
             if ($typeOption == 'Foot') {
                 $priceVal = $price;
             } elseif ($typeOption == 'Flange') {
-                $priceVal = $price / 3.28084;
+                $priceVal = $calculateFlangeFootPrice;
             } elseif ($typeOption == 'Both') {
-                $priceVal = $price / 3.28084;
+                $priceVal = $calculateFlangeFootPrice;
             }
-            dd($priceVal);
-            return response()->json(['status' => true, 'message' => 'Get Data successfully', 'data' => $priceVal], 200);
+            // dd($priceVal);
+            $discountPrice = ($priceVal * ($discount / 100));
+            $AfterDiscount = ($priceVal - $discountPrice);
+            $AdditionalTaxes = $AfterDiscount * ($additionalTax / 100);
+            $taxAmount = $AfterDiscount + $AdditionalTaxes;
+            $taxs = $taxAmount * ($tax / 100);
+            $extraTaxAmount = $taxAmount + $taxs;
+            $FinalPrice = round($extraTaxAmount);
+            $FinalPriceWithoutTax = round($taxAmount);
+
+            $taxOriginal = $tax;
+            $discountPricefoot = ($price * ($discount / 100));
+            $AfterDiscountFoot = ($price - $discountPricefoot);
+            $AdditionalTaxFoot = $AfterDiscountFoot * ($additionalTax / 100);
+            $taxAmountFoot = $AfterDiscountFoot + $AdditionalTaxFoot;
+            $taxOriginalFoot = $taxAmountFoot * ($taxOriginal / 100);
+            $extraTaxAmountFoot = $taxAmountFoot + $taxOriginalFoot;
+            $FinalPriceFoot = round($extraTaxAmountFoot);
+            $FinalPriceFootWithoutTax = round($taxAmountFoot);
+
+
+            $data = ['FinalPrice' => $FinalPrice, 'FinalPriceWithoutTax' => $FinalPriceWithoutTax, 'FinalPriceWithoutTaxFoot' => $FinalPriceFoot, 'FinalPriceFootWithoutTax' => $FinalPriceFootWithoutTax];
+            return response()->json(['status' => true, 'message' => 'Get Data successfully', 'data' => $data], 200);
         } catch (\Throwable $th) {
             return response()->json(['status' => false, 'message' => 'Something went wrong. Please try after some time.', 'data' => []], 200);
         }
