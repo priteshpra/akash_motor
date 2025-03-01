@@ -26,3 +26,6 @@ Route::post('v1/getCategory', [ApiController::class, 'getCategory']);
 Route::post('v1/getSubCategory', [ApiController::class, 'getSubCategory']);
 Route::post('v1/getCoasting', [ApiController::class, 'getCoasting']);
 Route::post('v1/getSubProductData', [ApiController::class, 'getSubProductData']);
+Route::post('v1/forgotPassword', [ApiController::class, 'resetPassword']);
+
+Route::post('v1/download-pdf', [ApiController::class, 'downloadPDF']);

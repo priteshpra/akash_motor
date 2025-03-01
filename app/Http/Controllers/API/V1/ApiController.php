@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\CategoryController;
 use App\Models\ProductAddData;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 
 class ApiController extends Controller
 {
@@ -390,5 +394,85 @@ class ApiController extends Controller
             $result['status'] = true;
             return response()->json($result, 200);
         }
+    }
+
+    public function resetPassword(Request $request)
+    {
+        // Validate request
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            $result['status'] = false;
+            $result['message'] = $validator->errors()->first();
+            $result['data'] = (object) [];
+            return response()->json($result, 200);
+        }
+
+        // Find user by email
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found.'], 404);
+        }
+
+        // Update password
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return response()->json(['status' => true, 'message' => 'Password reset successfully'], 200);
+    }
+
+    public function downloadPDF(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'address' => 'required',
+            'mobile_number' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $result['status'] = false;
+            $result['message'] = $validator->errors()->first();
+            $result['data'] = (object) [];
+            return response()->json($result, 200);
+        }
+
+        // Sample data
+        $data = [
+            'name' => $request->name,
+            'address' => $request->address,
+            'mobile_number' => $request->mobile_number,
+        ];
+
+        // Load view and generate PDF
+        // $pdf = PDF::loadView('pdf.invoice', $data);
+
+        $pdf = PDF::loadView('pdf_template', $data);
+
+        // $filename = 'invoice_' . Str::random(10) . '.pdf';
+
+        // Storage::put("public/pdf/$filename", $pdf->output());
+
+        // return response()->json([
+        //     'message' => 'PDF generated successfully!',
+        //     'download_url' => asset("storage/pdf/$filename")
+        // ], 200);
+
+        $filePath = 'pdfs/UserDetails.pdf';
+
+        // Store the PDF in storage (public directory)
+        Storage::put('public/' . $filePath, $pdf->output());
+
+        // Generate a URL to access the file
+        $downloadUrl = Storage::url($filePath);
+
+        return response()->json([
+            'message' => 'PDF generated successfully!',
+            'download_url' => $downloadUrl
+        ], 200);
     }
 }
