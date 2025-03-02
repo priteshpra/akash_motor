@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost/admin-panel-designs/laravel'),
+    'url' => env('APP_URL', 'http://localhost/akash_motor'),
 
     'asset_url' => env('ASSET_URL', null),
 

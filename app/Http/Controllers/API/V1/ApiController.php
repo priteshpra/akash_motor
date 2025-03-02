@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\CategoryController;
 use App\Models\ProductAddData;
-use Barryvdh\DomPDF\Facade as PDF;
+// use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -238,6 +239,7 @@ class ApiController extends Controller
                     return [
                         'id' => $item->id,
                         'date' => $item->date,
+                        // 'date' => strtotime($item->date),
                         'label' => $item->subcategory_val
                     ];
                 });
@@ -280,7 +282,12 @@ class ApiController extends Controller
                 return $checkToken->getContent();
             }
             $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
-                ->where('products_add_data.date', $created_at)->where('products_add_data.product_id', $product_id)->where('products_add_data.category_id', $category_id)->where('products_add_data.status', '1')->distinct()->get();
+                // ->where('products_add_data.date', $created_at)
+                ->where('products_add_data.product_id', $product_id)
+                ->where('products_add_data.category_id', $category_id)
+                ->where('products_add_data.status', '1')
+                ->distinct()
+                ->get();
             $groupedSubcat = $subcat->groupBy('subcategory_name');
             // Structure the response
             $response = $groupedSubcat->map(function ($items, $name) {
@@ -290,8 +297,8 @@ class ApiController extends Controller
                 // Consolidate options
                 $options = $items->map(function ($item) {
                     return [
-                        // 'value' => $item->date
                         'date' => $item->date,
+                        // 'date' => strtotime($item->date),
                         'label' => $item->subcategory_val
                     ];
                 });
@@ -451,7 +458,7 @@ class ApiController extends Controller
         // Load view and generate PDF
         // $pdf = PDF::loadView('pdf.invoice', $data);
 
-        $pdf = PDF::loadView('pdf_template', $data);
+        $pdf = Pdf::loadView('pdf_template', $data);
 
         // $filename = 'invoice_' . Str::random(10) . '.pdf';
 
@@ -472,7 +479,7 @@ class ApiController extends Controller
 
         return response()->json([
             'message' => 'PDF generated successfully!',
-            'download_url' => $downloadUrl
+            'download_url' => config('app.url') . '/public' . $downloadUrl
         ], 200);
     }
 }
