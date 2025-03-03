@@ -290,9 +290,13 @@ class ApiController extends Controller
                 ->get();
             $groupedSubcat = $subcat->groupBy('subcategory_name');
             // Structure the response
-            $response = $groupedSubcat->map(function ($items, $name) {
+            $response = $groupedSubcat->map(function ($items, $name) use ($created_at) {
                 // Use the first item for fixed fields like `flange_percentage`, `footval`, `typeOption`
                 $firstItem = $items->first();
+
+                $dateFilter = $created_at;
+                $matchingItem = $items->firstWhere('date', $dateFilter);
+
 
                 // Consolidate options
                 $options = $items->map(function ($item) {
@@ -305,10 +309,12 @@ class ApiController extends Controller
 
                 return [
                     'id' => $firstItem->subcategory_id,
+                    'label' => $firstItem->subcategory_name,
                     'price' => $firstItem->footval,
                     'size' => $firstItem->size,
-                    'typeOption' => $firstItem->typeOption,
+                    'typeOption' => $matchingItem->typeOption,
                     'flange_percentage' => $firstItem->flange_percentage,
+                    'flangePriceCal' => $firstItem->footval + ($firstItem->footval * $firstItem->flange_percentage / 100),
                     'options' => $options->unique('date')->values()
                 ];
             })->values();
@@ -479,7 +485,7 @@ class ApiController extends Controller
 
         return response()->json([
             'message' => 'PDF generated successfully!',
-            'download_url' => config('app.url') . '/public' . $downloadUrl
+            'download_url' => config('app.url') . '' . $downloadUrl
         ], 200);
     }
 }
