@@ -317,15 +317,13 @@
                 colspan="5" rowspan="2">
                 <p class="s5"
                     style="padding-top: 4pt;padding-left: 41pt;padding-right: 162pt;text-indent: -35pt;line-height: 115%;text-align: left;">
-                    M/s. : <span class="s6">SHARDA EXTRUSION </span><span class="s7">PLOT NO.12, GELI ESTATE SHED
-                        NO.245</span></p>
-                <p class="s7" style="padding-left: 41pt;text-indent: 0pt;line-height: 10pt;text-align: left;">REPUTE
-                    FOOD GATE</p>
+                    M/s. : <span class="s6">{{ $name }} </span><span class="s7">{{$address}}</span></p>
                 <p style="padding-top: 5pt;text-indent: 0pt;text-align: left;"><br /></p>
-                <p style="text-indent: 0pt;text-align: left;" />
-                <p class="s8" style="padding-left: 41pt;text-indent: 0pt;text-align: left;">SHAPAR(VERAVAL) - 360024</p>
-                <p class="s8" style="padding-left: 4pt;text-indent: 0pt;text-align: left;">Mo No : <span
-                        class="s9">12345 67890</span></p>
+                <p style="text-indent: 0pt;text-align: left;"></p>
+                {{-- <p class="s8" style="padding-left: 41pt;text-indent: 0pt;text-align: left;">SHAPAR(VERAVAL) -
+                    360024</p> --}}
+                <p class="s8" style="padding-left: 4pt;text-indent: 0pt;text-align: left;">Mo No : <span class="s9">{{
+                        $phone }}</span></p>
                 <p class="s8" style="padding-top: 2pt;padding-left: 4pt;text-indent: 0pt;text-align: left;">Place of
                     Supply : <span class="s10">24-Gujarat</span></p>
                 <p class="s11" style="padding-top: 2pt;padding-left: 4pt;text-indent: 0pt;text-align: left;">GSTIN No. :
@@ -343,8 +341,10 @@
             </td>
             <td style="border-top-style:solid;border-top-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
                 colspan="3" bgcolor="#EAEAEA">
-                <p class="s8" style="padding-top: 5pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">: 93</p>
-                <p class="s8" style="padding-top: 5pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">: 04/01/2025
+                <p class="s8" style="padding-top: 5pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">: {{
+                    $randomNumber }}</p>
+                <p class="s8" style="padding-top: 5pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">: {{ $date
+                    }}
                 </p>
             </td>
         </tr>
@@ -430,7 +430,8 @@
             </td>
             <td
                 style="border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s14" style="padding-top: 6pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">75KP4 IE3
+                <p class="s14" style="padding-top: 6pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">{{
+                    $response['produc_name'] }}
                 </p>
             </td>
             <td
@@ -440,12 +441,13 @@
             </td>
             <td
                 style="border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s17" style="padding-top: 5pt;padding-left: 19pt;text-indent: 0pt;text-align: left;">5.000</p>
+                <p class="s17" style="padding-top: 5pt;padding-left: 19pt;text-indent: 0pt;text-align: left;">1</p>
             </td>
             <td
                 style="border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
                 <p style="text-indent: 0pt;text-align: left;" />
-                <p class="s9" style="padding-top: 4pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">12345.00
+                <p class="s9" style="padding-top: 4pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">{{
+                    $response['price'] }}
                 </p>
             </td>
             <td
@@ -455,7 +457,8 @@
             </td>
             <td
                 style="border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s17" style="padding-top: 5pt;padding-left: 8pt;text-indent: 0pt;text-align: center;">18.0</p>
+                <p class="s17" style="padding-top: 5pt;padding-left: 8pt;text-indent: 0pt;text-align: center;">{{ $GST
+                    }}</p>
             </td>
             <td style="border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
                 rowspan="7">
@@ -477,10 +480,8 @@
                 <p style="text-indent: 0pt;text-align: left;"><br /></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s7" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">CG MAKE 100
-                    HP 3-PH 1440 RPM IE3 MOTOR</p>
-                <p class="s14" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">SR. No. :
-                </p>
+                <p class="s7" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;text-align: left;"></p>
+                <p class="s14" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;text-align: left;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
                 <p style="text-indent: 0pt;text-align: left;"><br /></p>
@@ -503,32 +504,31 @@
         </tr>
         <tr style="height:15pt">
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s17" style="padding-top: 3pt;text-indent: 0pt;text-align: center;">2</p>
+                <p class="s17" style="padding-top: 3pt;text-indent: 0pt;text-align: center;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s14" style="padding-top: 3pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">110KP4 IE3
-                </p>
+                <p class="s14" style="padding-top: 3pt;padding-left: 2pt;text-indent: 0pt;text-align: left;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s18" style="padding-top: 3pt;padding-left: 3pt;text-indent: 0pt;text-align: center;">85015210
+                <p class="s18" style="padding-top: 3pt;padding-left: 3pt;text-indent: 0pt;text-align: center;">
                 </p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
                 <p style="text-indent: 0pt;text-align: left;" />
-                <p class="s17" style="padding-top: 3pt;padding-left: 19pt;text-indent: 0pt;text-align: left;">5.000</p>
+                <p class="s17" style="padding-top: 3pt;padding-left: 19pt;text-indent: 0pt;text-align: left;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
                 <p style="text-indent: 0pt;text-align: left;"><br /></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
                 <p style="text-indent: 0pt;text-align: left;" />
-                <p class="s17" style="padding-top: 3pt;text-indent: 0pt;text-align: right;">0</p>
+                <p class="s17" style="padding-top: 3pt;text-indent: 0pt;text-align: right;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s17" style="padding-top: 3pt;padding-left: 8pt;text-indent: 0pt;text-align: center;">18.0</p>
+                <p class="s17" style="padding-top: 3pt;padding-left: 8pt;text-indent: 0pt;text-align: center;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s17" style="padding-top: 3pt;text-indent: 0pt;text-align: right;">5</p>
+                <p class="s17" style="padding-top: 3pt;text-indent: 0pt;text-align: right;"></p>
             </td>
         </tr>
         <tr style="height:27pt">
@@ -536,9 +536,8 @@
                 <p style="text-indent: 0pt;text-align: left;"><br /></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s7" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">CG MAKE 150
-                    HP 3-PH 1440 RPM IE3 MOTOR</p>
-                <p class="s14" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">SR. No. :
+                <p class="s7" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;text-align: left;"></p>
+                <p class="s14" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">
                 </p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -562,32 +561,31 @@
         </tr>
         <tr style="height:15pt">
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s17" style="padding-top: 3pt;text-indent: 0pt;text-align: center;">3</p>
+                <p class="s17" style="padding-top: 3pt;text-indent: 0pt;text-align: center;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s14" style="padding-top: 3pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">3.70PN4 FLG
-                    IE3</p>
+                <p class="s14" style="padding-top: 3pt;padding-left: 2pt;text-indent: 0pt;text-align: left;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s18" style="padding-top: 3pt;padding-left: 3pt;text-indent: 0pt;text-align: center;">85015210
+                <p class="s18" style="padding-top: 3pt;padding-left: 3pt;text-indent: 0pt;text-align: center;">
                 </p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s17" style="padding-top: 3pt;padding-left: 19pt;text-indent: 0pt;text-align: left;">5.000</p>
+                <p class="s17" style="padding-top: 3pt;padding-left: 19pt;text-indent: 0pt;text-align: left;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
                 <p style="text-indent: 0pt;text-align: left;" />
                 <p style="text-indent: 0pt;text-align: left;" />
-                <p class="s17" style="padding-top: 3pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">0</p>
+                <p class="s17" style="padding-top: 3pt;padding-right: 1pt;text-indent: 0pt;text-align: right;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
                 <p style="text-indent: 0pt;text-align: left;"><br /></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s17" style="padding-top: 3pt;padding-left: 8pt;text-indent: 0pt;text-align: center;">18.0</p>
+                <p class="s17" style="padding-top: 3pt;padding-left: 8pt;text-indent: 0pt;text-align: center;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
-                <p class="s17" style="padding-top: 3pt;text-indent: 0pt;text-align: right;">0</p>
+                <p class="s17" style="padding-top: 3pt;text-indent: 0pt;text-align: right;"></p>
             </td>
         </tr>
         <tr style="height:131pt">
@@ -596,9 +594,8 @@
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
                 <p class="s7"
-                    style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 112%;text-align: left;">CG
-                    MAKE 5 HP 3-PH 1440 RPM FLANGE IE3 MOTOR</p>
-                <p class="s14" style="padding-left: 2pt;text-indent: 0pt;text-align: left;">SR. No. :</p>
+                    style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 112%;text-align: left;"></p>
+                <p class="s14" style="padding-left: 2pt;text-indent: 0pt;text-align: left;"></p>
             </td>
             <td style="border-left-style:solid;border-left-width:1pt;border-right-style:solid;border-right-width:1pt">
                 <p style="text-indent: 0pt;text-align: left;"><br /></p>
@@ -627,7 +624,7 @@
             <td
                 style="border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
                 <p style="text-indent: 0pt;text-align: left;"><br /></p>
-                <p class="s14" style="padding-left: 61pt;text-indent: 0pt;text-align: left;">Toll Free No. :</p>
+                <p class="s14" style="padding-left: 61pt;text-indent: 0pt;text-align: left;"></p>
             </td>
             <td
                 style="border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
@@ -665,7 +662,7 @@
                 bgcolor="#EAEAEA">
                 <p class="s8"
                     style="padding-top: 2pt;padding-left: 12pt;text-indent: 0pt;line-height: 10pt;text-align: left;">
-                    Total</p>
+                </p> <!-- Total -->
             </td>
             <td style="border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-left-color:#EDEDED;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:1pt;border-right-color:#EDEDED"
                 bgcolor="#FFFFFF">
@@ -687,11 +684,10 @@
             <td style="border-top-style:solid;border-top-width:2pt;border-bottom-style:solid;border-bottom-width:1pt"
                 colspan="2" rowspan="2">
                 <p style="text-indent: 0pt;text-align: left;" />
-                <p class="s9" style="padding-top: 3pt;text-indent: 0pt;text-align: left;">ONLY GST IN
-                    WORDS</p>
+                <p class="s9" style="padding-top: 3pt;text-indent: 0pt;text-align: left;">{{ucfirst($GSTWord)}} Rupees
+                </p>
                 <p style="padding-top: 8pt;text-indent: 0pt;text-align: left;"><br /></p>
-                <p class="s9" style="text-indent: 0pt;text-align: left;">BILL AMOUNT IN WORDS INCLUDE
-                    GST</p>
+                <p class="s9" style="text-indent: 0pt;text-align: left;">{{ucfirst($AmountWord)}} Rupees</p>
             </td>
             <td style="border-top-style:solid;border-top-width:2pt;border-bottom-style:solid;border-bottom-width:1pt"
                 rowspan="2">
@@ -719,7 +715,7 @@
             </td>
             <td style="border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-left-color:#BDBDBD;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
                 bgcolor="#FFFFFF">
-                <p style="text-indent: 0pt;text-align: left;margin-bottom: 6px;"><br />15255.00</p>
+                <p style="text-indent: 0pt;text-align: left;margin-bottom: 6px;"><br />{{ $pdfCalculate }}</p>
             </td>
         </tr>
         <tr style="height:41pt">

@@ -156,6 +156,11 @@
                     <div class="mb-3">
                         <label for="phone" class="form-label">Phone:</label>
                         <input type="text" class="form-control" name="phone" required>
+                        <input type="hidden" class="form-control" name="product_id" id="pdfProductId" value="">
+                        <input type="hidden" class="form-control" name="category_id" id="pdfCategory" value="">
+                        <input type="hidden" class="form-control" name="pdfDate" id="pdfDate" value=""><input
+                            type="hidden" class="form-control" name="pdfCalculate" id="pdfCalculate" value="">
+
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">Countinue</button>
@@ -252,6 +257,7 @@
             $("#calculateDataWithoutTax").hide();
         }
         $("#calculateData").html('Final Amount With Tax : <b>' + FinalPrice.toFixed(2));
+        $("#pdfCalculate").val(FinalPrice.toFixed(2));
         $("#calculateDataWithoutTax").html('Final Amount Without Tax : <b>' + FinalPriceWithoutTax.toFixed(2));
     });
 
@@ -259,6 +265,8 @@
         var category_id = $(this).val();
         $('#subcategory-dropdown').html('<option value="">Select Subcategory</option>');
         let productId = "{{ $products[0]['id'] }}";
+       $("#pdfCategory").val(category_id);
+       $("#pdfProductId").val(productId);
         let url = "{{ route('get.subcategory', [':categoryId', ':productId']) }}";
         url = url.replace(':categoryId', category_id).replace(':productId', productId);
         if (category_id) {
@@ -275,6 +283,9 @@
                             let options = ''; // Initialize an empty string for options
                             if (subcategory_val.options && Array.isArray(subcategory_val.options)) {
                                 $.each(subcategory_val.options, function (index, option) {
+                                    if (index == 0) {
+                                        $("#pdfDate").val(option.value);
+                                    }
                                     options += `<option value="${option.value}">${option.label}</option>`;
                                 });
                             }
@@ -335,6 +346,7 @@
         var created_at = sel.value;
         let productId = {{ $product_id }};
         let url = "{{ route('get.subvalcategory', [':created_at', ':productId', ':catId']) }}";
+        $("#pdfDate").val(created_at);
         url = url.replace(':created_at', created_at).replace(':productId', productId).replace(':catId', cat_id);
         $.ajax({
             url: url,

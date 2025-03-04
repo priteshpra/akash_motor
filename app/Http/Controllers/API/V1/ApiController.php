@@ -474,8 +474,8 @@ class ApiController extends Controller
         //     'message' => 'PDF generated successfully!',
         //     'download_url' => asset("storage/pdf/$filename")
         // ], 200);
-
-        $filePath = 'pdfs/UserDetails.pdf';
+        $namePdfFile = $request->name . '_invoice';
+        $filePath = 'pdfs/' . $namePdfFile . '.pdf';
 
         // Store the PDF in storage (public directory)
         Storage::put('public/' . $filePath, $pdf->output());
