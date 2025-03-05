@@ -56,8 +56,7 @@
         <div class="tab-content" id="addDataTabsContent">
             <!-- Product Tab -->
             <div class="tab-pane fade show active" id="product" role="tabpanel" aria-labelledby="product-tab">
-                <form id="addProductForm" class="mt-4">
-                    @csrf
+                
                     <div class="alert-container">
                         <!-- Alerts will be dynamically inserted here -->
                     </div>
@@ -84,7 +83,6 @@
                         </thead>
                         <tbody></tbody>
                     </table>
-                </form>
             </div>
 
             <!-- Category Tab -->
@@ -136,7 +134,7 @@
                     @csrf
                     <div class="mb-33 d-flex justify-content-between">
                         <label for="product_ids" class="form-label">Select Product</label>
-                        <select id="product_ids" name="product_id" class="form-controls form-select" required>
+                        <select id="product_ids_sub" name="product_id" class="form-controls form-select" required>
                             <option value="">Select Product</option>
                             @foreach ($products as $product)
                             <option value="{{$product->id}}">{{$product->product_name}}</option>
@@ -248,6 +246,24 @@
     });
 
     $('#product_ids').change(function () {
+        var product_id = $(this).val();
+        $('#product-dropdown').html('<option value="">Select Product</option>');
+        $('#subcategory-dropdown').html('<option value="">Select Subcategory</option>');
+
+        if (product_id) {
+            $.ajax({
+                url: '{{ route("get.categorys", "") }}/' + product_id,
+                type: 'GET',
+                success: function (data) {
+                    $('#category_ids').html('<option value="">Select Category</option>');
+                    $.each(data, function (id, category_name) {
+                        $('#category_ids').append('<option value="' + id + '">' + category_name + '</option>');
+                    });
+                }
+            });
+        }
+    });
+    $('#product_ids_sub').change(function () {
         var product_id = $(this).val();
         $('#product-dropdown').html('<option value="">Select Product</option>');
         $('#subcategory-dropdown').html('<option value="">Select Subcategory</option>');
