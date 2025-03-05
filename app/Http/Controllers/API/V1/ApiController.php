@@ -20,7 +20,7 @@ use App\Models\ProductAddData;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use NumberFormatter;
 
 class ApiController extends Controller
 {
@@ -310,10 +310,10 @@ class ApiController extends Controller
                 return [
                     'id' => $firstItem->subcategory_id,
                     'label' => $firstItem->subcategory_name,
-                    'price' => $firstItem->footval,
-                    'size' => $firstItem->size,
+                    'price' => $matchingItem->footval,
+                    'size' => $matchingItem->size,
                     'typeOption' => $matchingItem->typeOption,
-                    'flange_percentage' => $firstItem->flange_percentage,
+                    'flange_percentage' => $matchingItem->flange_percentage,
                     'flangePriceCal' => $firstItem->footval + ($firstItem->footval * $firstItem->flange_percentage / 100),
                     'options' => $options->unique('date')->values()
                 ];
@@ -323,7 +323,7 @@ class ApiController extends Controller
             $additionalTax = \App\Models\Tax::select('tax', 'id')->where('status', '1')->whereNotNull('tax')->get();
             $configData = ['taxs' => $taxs, 'additionalTax' => $additionalTax];
 
-            return response()->json(['status' => true, 'message' => 'Get data successfully', 'configData' => $configData, 'data' => $response], 200);
+            return response()->json(['status' => true, 'message' => 'Get data successfully', 'data' => $response, 'configData' => $configData], 200);
         } catch (\Throwable $th) {
             return response()->json(['status' => false, 'message' => 'Something went wrong. Please try after some time.', 'data' => []], 200);
         }
@@ -445,6 +445,9 @@ class ApiController extends Controller
             'name' => 'required',
             'address' => 'required',
             'mobile_number' => 'required',
+            'product_id' => 'required',
+            'category_id' => 'required',
+            'date' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -458,29 +461,70 @@ class ApiController extends Controller
         $data = [
             'name' => $request->name,
             'address' => $request->address,
-            'mobile_number' => $request->mobile_number,
+            'phone' => $request->mobile_number,
+            'randomNumber' => rand(1000, 9999),
+            'date' => date('d/m/Y'),
+            'pdfCalculate' => $request->input('date'),
         ];
 
-        // Load view and generate PDF
-        // $pdf = PDF::loadView('pdf.invoice', $data);
+        $product_id = $request->input('product_id');
+        $category_id = $request->input('category_id');
+        $created_at = $request->input('date');
+        // dd($created_at);
+        $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
+            ->leftJoin('products', 'products.id', '=', 'products_add_data.product_id')
+            ->where('products_add_data.date', $created_at)
+            ->where('products_add_data.product_id', $product_id)
+            ->where('products_add_data.category_id', $category_id)
+            ->where('products_add_data.status', '1')
+            ->distinct()
+            ->get();
+        $groupedSubcat = $subcat->groupBy('subcategory_name');
+
+        $response = $groupedSubcat->map(function ($items, $name) use ($created_at) {
+            // Use the first item for fixed fields like `flange_percentage`, `footval`, `typeOption`
+            $firstItem = $items->first();
+
+            $dateFilter = $created_at;
+            $matchingItem = $items->firstWhere('date', $dateFilter);
+
+
+            // Consolidate options
+            $options = $items->map(function ($item) {
+                return [
+                    'date' => $item->date,
+                    // 'date' => strtotime($item->date),
+                    'label' => $item->subcategory_val
+                ];
+            });
+
+            return [
+                'id' => $firstItem->subcategory_id,
+                'produc_name' => $firstItem->product_name,
+                'label' => $firstItem->subcategory_name,
+                'price' => $firstItem->footval,
+                'size' => $firstItem->size,
+                'typeOption' => $matchingItem->typeOption,
+                'flange_percentage' => $firstItem->flange_percentage,
+                'flangePriceCal' => $firstItem->footval + ($firstItem->footval * $firstItem->flange_percentage / 100),
+                'options' => $options->unique('date')->values()
+            ];
+        })->values();
+        $data['GST'] = \App\Models\Tax::select('gst', 'id')->where('status', '1')->first()['gst'];
+
+        $formatter = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+        $data['GSTWord'] = $formatter->format($data['GST']);
+        $data['AmountWord'] = $formatter->format($request->input('pdfCalculate'));
+        $data['response'] = ($response[0]) ? $response[0] : array();
+
 
         $pdf = Pdf::loadView('pdf_template', $data);
 
-        // $filename = 'invoice_' . Str::random(10) . '.pdf';
-
-        // Storage::put("public/pdf/$filename", $pdf->output());
-
-        // return response()->json([
-        //     'message' => 'PDF generated successfully!',
-        //     'download_url' => asset("storage/pdf/$filename")
-        // ], 200);
-        $namePdfFile = $request->name . '_invoice';
+        $namePdfFile = str_replace(' ', '_', $request->name) . '_invoice';
         $filePath = 'pdfs/' . $namePdfFile . '.pdf';
 
-        // Store the PDF in storage (public directory)
         Storage::put('public/' . $filePath, $pdf->output());
 
-        // Generate a URL to access the file
         $downloadUrl = Storage::url($filePath);
 
         return response()->json([
