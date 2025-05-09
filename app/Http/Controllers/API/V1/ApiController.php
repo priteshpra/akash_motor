@@ -281,6 +281,9 @@ class ApiController extends Controller
             if ($userData['status'] == false) {
                 return $checkToken->getContent();
             }
+
+
+            
             $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
                 // ->where('products_add_data.date', $created_at)
                 ->where('products_add_data.product_id', $product_id)

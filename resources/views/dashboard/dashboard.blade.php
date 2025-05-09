@@ -988,8 +988,8 @@ $taxs = \App\Models\Tax::where('status','1')->get();
     function getSabCatval(sel, cat_id) {
         var created_at = sel.value;
         let productId = window.product_id;
-        let url = "{{ route('get.subvalcategory', [':created_at', ':productId', ':catId']) }}";
-        url = url.replace(':created_at', created_at).replace(':productId', productId).replace(':catId', cat_id);
+        let url = "{{ route('get.subvalcategory', [':created_at', ':productId', ':catId', ':catId']) }}";
+        url = url.replace(':created_at', created_at).replace(':productId', productId).replace(':catId', cat_id).replace(':catId', cat_id);
         $.ajax({
             url: url,
             type: 'GET',

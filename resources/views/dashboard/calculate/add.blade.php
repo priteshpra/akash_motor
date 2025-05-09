@@ -127,8 +127,7 @@
                 </div>
                 <button type="button" onclick="goBack()" class="btn btn-info" aria-label="Close">Back</button>
                 <button type="button" id="calculateButton" class="btn btn-secondary">Calculate</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#pdfModal">Download</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="downloadBtn">Download</button>
             </form>
         </div>
     </div>
@@ -155,13 +154,21 @@
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">Phone:</label>
-                        <input type="text" class="form-control" name="phone" required>
+                        <input type="tel" title="Enter a 10-digit phone number numericInput" class="form-control"
+                            name="phone" required pattern="[0-9]{10}" maxlength="10">
                         <input type="hidden" class="form-control" name="product_id" id="pdfProductId" value="">
                         <input type="hidden" class="form-control" name="category_id" id="pdfCategory" value="">
-                        <input type="hidden" class="form-control" name="pdfDate" id="pdfDate" value=""><input
-                            type="hidden" class="form-control" name="pdfCalculate" id="pdfCalculate" value="">
+                        <input type="hidden" class="form-control" name="pdfDate" id="pdfDate" value="">
+                        <input type="hidden" class="form-control" name="pdfCalculate" id="pdfCalculate" value="">
+                        <input type="hidden" class="form-control" name="pdfCalculateWithoutTax"
+                            id="pdfCalculateWithoutTax" value="">
+                        <input type="hidden" class="form-control" name="quantity" id="quantity" value="">
 
                     </div>
+                    <!-- <div class="mb-3">
+                        <label for="number" class="form-label">Quantity:</label>
+                        <input type="number" class="form-control" name="quantity" id="quantity" value="1" maxlength="999" minlength="1"  min="1">
+                    </div> -->
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success">Countinue</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -171,7 +178,24 @@
         </div>
     </div>
 </div>
-
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="quantityModal" tabindex="-1" aria-labelledby="quantityModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Enter Quantity</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="number" maxlength="999" minlength="1" value="1" id="quantityInput" class="form-control"
+                    placeholder="Enter quantity" min="1">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submitQuantity" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables JS -->
@@ -189,8 +213,87 @@
     $(".flangeShow").css('display', 'none');
     $(".flangePerShow").css('display', 'none');
     $(".FlangevalDiv").css('display', 'none');
+    $("#downloadBtn").click(function () {
+        // Show Bootstrap modal
+        var catIdCh = $('#category_cal').val();
+        var flange_calw = $('input[name="flange_cal"]:checked').val();
+        var finaldiscountSDS = $("#finaldiscount").val();
+        if(catIdCh && flange_calw && finaldiscountSDS) {
+            $("#pdfModal").modal('show');
+            $('#category_cal').css('border', 'none');
+            $("#submitQuantity").click();
+        } else {
+            $('#category_cal').css('border', '1px solid red');
+        }
+    });
     $("#calculateButton").click(function () {
+        // Show Bootstrap modal
+            var catIdChk = $('#category_cal').val();
+            var flange_cal = $('input[name="flange_cal"]:checked').val();
+            var finaldiscountSD = $("#finaldiscount").val();
+            var frameOriginal = $(".frameOriginal").val();
+            var priceOriginal = $(".priceOriginal").val();
+            // if(catIdChk && flange_cal && finaldiscountSD) {
+            //     $("#quantityModal").modal('show');
+            //     $('#category_cal').css('border', 'none');
+            // } else {
+            //     $('#category_cal').css('border', '1px solid red');
+            // }
+            let hasError = false;
+
+            // Validate category
+            if (!catIdChk) {
+                $('#category_cal').css('border', '1px solid red');
+                hasError = true;
+            } else {
+                $('#category_cal').css('border', 'none');
+            }
+
+            // Validate flange_cal
+            if (!flange_cal) {
+                $('.setPosition').css('border', '1px solid red');
+                hasError = true;
+            } else {
+                $('.setPosition').css('border', 'none');
+            }
+
+            // Validate flange_cal
+            if (!frameOriginal) {
+                $('input[name="frame"]').css('border', '1px solid red');
+                hasError = true;
+            } else {
+                $('input[name="frame"]').css('border', 'none');
+            }
+
+            // Validate flange_cal
+            if (!priceOriginal) {
+                $('input[name="price"]').css('border', '1px solid red');
+                hasError = true;
+            } else {
+                $('input[name="price"]').css('border', 'none');
+            }
+
+            // Validate discount
+            if (!finaldiscountSD) {
+                $('#finaldiscount').css('border', '1px solid red');
+                hasError = true;
+            } else {
+                $('#finaldiscount').css('border', 'none');
+            }
+
+            if (!hasError) {
+                $("#quantityModal").modal('show');
+            }
+    });
+    $("#submitQuantity").click(function () {
         $(".frameOriginal").val();
+        let quantity = parseInt($("#quantityInput").val());
+         if (!quantity || quantity <= 0) {
+            alert("Please enter a valid quantity.");
+            return;
+        }
+        $("#quantity").val(quantity);
+        $("#quantityModal").modal('hide');
         let originalPrice = parseFloat($(".priceOriginal").val());
         let taxOriginal = parseFloat($(".taxOriginal").val());
         let selectedValues = $('input[name="typeOption_cal[]"]:checked').map(function () {
@@ -218,8 +321,8 @@
         let taxAmount = AfterDiscount + AdditionalTaxes;
         taxOriginal = taxAmount * (taxOriginal / 100);
         let extraTaxAmount = taxAmount + taxOriginal;
-        let FinalPrice = Math.round(parseFloat(extraTaxAmount.toFixed(2)));
-        let FinalPriceWithoutTax = Math.round(parseFloat(taxAmount.toFixed(2)));
+        let FinalPrice = Math.round(parseFloat(extraTaxAmount.toFixed(2))) * quantity;
+        let FinalPriceWithoutTax = Math.round(parseFloat(taxAmount.toFixed(2))) * quantity;
 
         if (selectedValues.includes('Flange') && selectedValues.includes('Foot')) {
             taxOriginal = parseFloat($(".taxOriginal").val());
@@ -230,8 +333,8 @@
             let taxAmountFlange = AfterDiscountFlange + AdditionalTaxFlane;
             taxOriginalflange = taxAmountFlange * (taxOriginal / 100);
             let extraTaxAmountFlange = taxAmountFlange + taxOriginalflange;
-            let FinalPriceFlange = Math.round(parseFloat(extraTaxAmountFlange.toFixed(2)));
-            let FinalPriceFlangeWithoutTax = Math.round(parseFloat(taxAmountFlange.toFixed(2)));
+            let FinalPriceFlange = Math.round(parseFloat(extraTaxAmountFlange.toFixed(2))) * quantity;
+            let FinalPriceFlangeWithoutTax = Math.round(parseFloat(taxAmountFlange.toFixed(2))) * quantity;
             console.log('flangeprice', flangeprice);
             console.log('discountPriceflange', discountPriceflange);
             console.log('AdditionalTaxFlane', AdditionalTaxFlane);
@@ -242,8 +345,8 @@
             let taxAmountFoot = AfterDiscountFoot + AdditionalTaxFoot;
             taxOriginalFoot = taxAmountFoot * (taxOriginal / 100);
             let extraTaxAmountFoot = taxAmountFoot + taxOriginalFoot;
-            let FinalPriceFoot = Math.round(parseFloat(extraTaxAmountFoot.toFixed(2)));
-            let FinalPriceFootWithoutTax = Math.round(parseFloat(taxAmountFoot.toFixed(2)));
+            let FinalPriceFoot = Math.round(parseFloat(extraTaxAmountFoot.toFixed(2))) * quantity;
+            let FinalPriceFootWithoutTax = Math.round(parseFloat(taxAmountFoot.toFixed(2))) * quantity;
 
             $("#calculateDataFlange").html('Final Amount Flange With Tax : <b>' + FinalPriceFlange.toFixed(2) + '</b>');
 
@@ -258,11 +361,18 @@
         }
         $("#calculateData").html('Final Amount With Tax : <b>' + FinalPrice.toFixed(2));
         $("#pdfCalculate").val(FinalPrice.toFixed(2));
+        $("#pdfCalculateWithoutTax").val(FinalPriceWithoutTax.toFixed(2));
         $("#calculateDataWithoutTax").html('Final Amount Without Tax : <b>' + FinalPriceWithoutTax.toFixed(2));
     });
 
     $('#category_cal').change(function () {
         var category_id = $(this).val();
+        $("#calculateData").html('');
+        $("#calculateDataWithoutTax").html('');
+        $("#calculateDataFlange").html('');
+        $("#calculateDataFlangeWithoutTax").html('');
+        $("#calculateDataFoot").html('');
+        $("#finaldiscount").val('');
         $('#subcategory-dropdown').html('<option value="">Select Subcategory</option>');
         let productId = "{{ $products[0]['id'] }}";
        $("#pdfCategory").val(category_id);
@@ -298,12 +408,14 @@
                                             ${options}
                                         </select>
                                     </div>
-                                </div>`;
+                                </div>`; //onchange="getSabCatval(this, ${subcategory_val.cat_id});"
                             $('#subcategorycal-containercal').append(newSubcategory);
 
                         });
-                        $('.priceOriginal').val(data[0].footval);
-                        if (data[0].flange_percentage) {
+                        if (data[0]) {
+                            $('.priceOriginal').val(data[0].footval);
+                        }
+                        if (data[0] && data[0].flange_percentage) {
 
 
                             $(".flangePerShow").css('display', 'block');
@@ -318,11 +430,11 @@
                             $(".flangeShow").css('display', 'none');
                         }
 
-                        var price = parseFloat(data[0].footval); // Base price
-                        var percentage = parseFloat(data[0].flange_percentage);
+                        var price = (data[0]) ? parseFloat(data[0].footval) : 0; // Base price
+                        var percentage = (data[0]) ? parseFloat(data[0].flange_percentage) : 0;
 
                         var finalPrice = price + (price * percentage / 100);
-                        let typeOptionCheckBoc = data[0].typeOption.split(', ');
+                        let typeOptionCheckBoc = (data[0]) ? data[0].typeOption.split(', ') : [];
                         $('input[name="typeOption_cal[]"]').prop('checked', false);
                         typeOptionCheckBoc.forEach(function (optionCheckbox) {
                             $('input[name="typeOption_cal[]"][value="' + optionCheckbox + '"]').prop('checked', true);
@@ -331,7 +443,7 @@
                         $(".calFlangePrice").text(finalPrice);
                         $("#bracketFlangeVal").html(percentage + '%');
                         $(".finalDiscount").removeAttr('style');
-                        $(".frameOriginal").val(data[0].size);
+                        $(".frameOriginal").val((data[0]) ? data[0].size : '');
                     } else {
                         $('#subcategorycal-containercal').append(newSubcategory);
                     }
@@ -345,14 +457,32 @@
     function getSabCatval(sel, cat_id) {
         var created_at = sel.value;
         let productId = {{ $product_id }};
-        let url = "{{ route('get.subvalcategory', [':created_at', ':productId', ':catId']) }}";
+
+        let selectedDropDownVals = [];
+
+        $('.subCat').each(function(index) {
+            let currentDropdownTexts = $(this).find("option:selected").map(function() {
+                return $(this).val();
+            }).get();
+
+            selectedDropDownVals = selectedDropDownVals.concat(currentDropdownTexts); // append to the main array
+        });
+
+        $("#calculateData").html('');
+        $("#calculateDataWithoutTax").html('');
+        $("#calculateDataFlange").html('');
+        $("#calculateDataFlangeWithoutTax").html('');
+        $("#calculateDataFoot").html('');
+        $("#finaldiscount").val('');
+
+        let url = "{{ route('get.subvalcategory', [':created_at', ':productId', ':catId', ':selectedDropDownVals']) }}";
         $("#pdfDate").val(created_at);
-        url = url.replace(':created_at', created_at).replace(':productId', productId).replace(':catId', cat_id);
+        url = url.replace(':created_at', created_at).replace(':productId', productId).replace(':catId', cat_id).replace(':selectedDropDownVals', selectedDropDownVals);
         $.ajax({
             url: url,
             type: 'GET',
             success: function (data) {
-                if (data) {
+                if (Array.isArray(data) && data.length > 0) {
                     $.each(data, function (id, subcategory_val) {
                         let options = ''; // Initialize an empty string for options
                         if (subcategory_val.options && Array.isArray(subcategory_val.options)) {
@@ -381,6 +511,11 @@
                         }
                         $('input[name="typeOption_cal[]"][value="' + optionCheckbox + '"]').prop('checked', true);
                     });
+                } else {
+                    $(".priceOriginal").val('');
+                    $(".frameOriginal").val('');
+                    $('input[name="typeOption_cal[]"]').prop('checked', false);
+                    alert('No data found for the selected subcategory.');
                 }
             }
         });
@@ -393,5 +528,13 @@
             window.location.href = '/'; // Redirect to a default page
         }
     }
+    $('.numericInput').on('keypress', function(event) {
+        // Allow digits only (ASCII codes 48-57 for '0' to '9')
+        var charCode = event.which ? event.which : event.keyCode;
+
+        if (charCode < 48 || charCode > 57) {
+            event.preventDefault(); // Prevent non-digit input
+        }
+    });
 </script>
 @endsection

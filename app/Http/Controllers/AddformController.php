@@ -208,7 +208,50 @@ class AddformController extends Controller
         return response()->json($response);
     }
 
-    public function geSubValCategory($created_at, $product_id, $cat_id)
+    public function geSubValCategory($created_at, $product_id, $cat_id, $dropDownId)
+    {
+        $dropSelectedIDs = explode(',', $dropDownId);
+        if (!empty($dropSelectedIDs) && count($dropSelectedIDs) === count(array_filter($dropSelectedIDs, function ($val) use ($created_at) {
+            return $val === $created_at;
+        }))) {
+            // DB::enableQueryLog();
+            $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
+                ->where('products_add_data.date', $created_at)->where('products_add_data.product_id', $product_id)->where('products_add_data.category_id', $cat_id)->where('products_add_data.status', '1')->distinct()->get();
+            $groupedSubcat = $subcat->groupBy('subcategory_name');
+            // Structure the response
+            $response = $groupedSubcat->map(function ($items, $name) {
+                // Use the first item for fixed fields like `flange_percentage`, `footval`, `typeOption`
+                $firstItem = $items->first();
+
+                // Consolidate options
+                $options = $items->map(function ($item) {
+                    return [
+                        'dropId' => $item->id,
+                        'value' => $item->date
+                    ];
+                });
+
+                return [
+                    'id' => $firstItem->subcategory_id,
+                    'price' => $firstItem->footval,
+                    'size' => $firstItem->size,
+                    'typeOption' => $firstItem->typeOption,
+                    'flange_percentage' => $firstItem->flange_percentage,
+                    'options' => $options->unique('value')->values()
+                ];
+            })->values();
+            $queryLog = DB::getQueryLog();
+            // dd(end($queryLog));
+            // dd($subcat);
+            return response()->json($response);
+            // dd("All match", $dropSelectedIDs, $created_at);
+        } else {
+            // dd("Mismatch", $dropSelectedIDs, $created_at);
+            return response()->json(['message' => 'Selected dropdown values do not match combination values.'], 200);
+        }
+    }
+
+    public function geSubValCategoryBk($created_at, $product_id, $cat_id)
     {
         // DB::enableQueryLog();
         $subcat = ProductAddData::leftJoin('sub_categories', 'sub_categories.id', '=', 'products_add_data.subcategory_id')
